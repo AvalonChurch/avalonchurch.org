@@ -1173,6 +1173,60 @@ function et_image_add_srcset_and_sizes( $image, $echo = false ) {
 }
 endif;
 
+if ( ! function_exists( 'et_get_attachment_id_by_url_sql' ) ) :
+	/**
+	 * Generate SQL query syntax to compute attachment ID by URL.
+	 *
+	 * @since ??
+	 *
+	 * @param string $url The URL being looked up.
+	 *
+	 * @return string SQL query syntax.
+	 */
+	function et_get_attachment_id_by_url_sql( $normalized_url ) {
+		global $wpdb;
+
+		// Strip the HTTP/S protocol.
+		$cleaned_url = preg_replace( '/^https?:/i', '', $normalized_url );
+
+		// Remove any thumbnail size suffix from the filename and use that as a fallback.
+		$fallback_url = preg_replace( '/-(\d+)x(\d+)\.(jpg|jpeg|gif|png)$/', '.$3', $cleaned_url );
+
+		if ( $cleaned_url === $fallback_url ) {
+			$attachments_query = $wpdb->prepare(
+				"SELECT id
+				FROM $wpdb->posts
+				WHERE `post_type` = %s
+					AND `guid` IN ( %s, %s )",
+				'attachment',
+				esc_url_raw( "https:{$cleaned_url}" ),
+				esc_url_raw( "http:{$cleaned_url}" )
+			);
+		} else {
+			// Scenario: Trying to find the attachment for a file called x-150x150.jpg.
+			// 1. Since WordPress adds the -150x150 suffix for thumbnail sizes we cannot be
+			// sure if this is an attachment or an attachment's generated thumbnail.
+			// 2. Since both x.jpg and x-150x150.jpg can be uploaded as separate attachments
+			// we must decide which is a better match.
+			// 3. The above is why we order by guid length and use the first result.
+			$attachments_query = $wpdb->prepare(
+				"SELECT id
+				FROM $wpdb->posts
+				WHERE `post_type` = %s
+					AND `guid` IN ( %s, %s, %s, %s )
+				ORDER BY CHAR_LENGTH( `guid` ) DESC",
+				'attachment',
+				esc_url_raw( "https:{$cleaned_url}" ),
+				esc_url_raw( "https:{$fallback_url}" ),
+				esc_url_raw( "http:{$cleaned_url}" ),
+				esc_url_raw( "http:{$fallback_url}" )
+			);
+		}
+
+		return $attachments_query;
+	}
+endif;
+
 if ( ! function_exists( 'et_get_attachment_id_by_url' ) ) :
 /**
  * Tries to get attachment ID by URL.
@@ -1236,44 +1290,22 @@ function et_get_attachment_id_by_url( $url ) {
 		ET_Core_Cache_File::set( 'attachment_id_by_url', $cache );
 	}
 
-	// Strip the HTTP/S protocol.
-	$cleaned_url = preg_replace( '/^https?:/i', '', $normalized_url );
+	$attachments_sql_query = et_get_attachment_id_by_url_sql( $normalized_url );
+	$attachment_id         = (int) $wpdb->get_var( $attachments_sql_query );
 
-	// Remove any thumbnail size suffix from the filename and use that as a fallback.
-	$fallback_url = preg_replace( '/-(\d+)x(\d+)\.(jpg|jpeg|gif|png)$/', '.$3', $cleaned_url );
-
-	if ( $cleaned_url === $fallback_url ) {
-		$attachments_query = $wpdb->prepare(
-			"SELECT id
-			FROM $wpdb->posts
-			WHERE `post_type` = %s
-				AND `guid` IN ( %s, %s )",
-			'attachment',
-			esc_url_raw( "https:{$cleaned_url}" ),
-			esc_url_raw( "http:{$cleaned_url}" )
-		);
-	} else {
-		// Scenario: Trying to find the attachment for a file called x-150x150.jpg.
-		// 1. Since WordPress adds the -150x150 suffix for thumbnail sizes we cannot be
-		// sure if this is an attachment or an attachment's generated thumbnail.
-		// 2. Since both x.jpg and x-150x150.jpg can be uploaded as separate attachments
-		// we must decide which is a better match.
-		// 3. The above is why we order by guid length and use the first result.
-		$attachments_query = $wpdb->prepare(
-			"SELECT id
-			FROM $wpdb->posts
-			WHERE `post_type` = %s
-				AND `guid` IN ( %s, %s, %s, %s )
-			ORDER BY CHAR_LENGTH( `guid` ) DESC",
-			'attachment',
-			esc_url_raw( "https:{$cleaned_url}" ),
-			esc_url_raw( "https:{$fallback_url}" ),
-			esc_url_raw( "http:{$cleaned_url}" ),
-			esc_url_raw( "http:{$fallback_url}" )
-		);
+	// There is this new feature in WordPress 5.3 that allows users to upload big image file 
+	// (threshold being either width or height of 2560px) and the core will scale it down.
+	// This causing the GUID URL info stored is no more relevant since the WordPress core system
+	// will append "-scaled." string into the image URL when serving it in the frontend.
+	// Hence we run another query as fallback in case the attachment ID is not found and 
+	// there is "-scaled." string appear in the image URL
+	// @see https://make.wordpress.org/core/2019/10/09/introducing-handling-of-big-images-in-wordpress-5-3/
+	// @see https://wordpress.org/support/topic/media-images-renamed-to-xyz-scaled-jpg/
+	if ( ! $attachment_id && false !== strpos( $normalized_url, '-scaled.' ) ) {
+		$normalized_url_not_scaled = str_replace( '-scaled.', '.', $normalized_url );
+		$attachments_sql_query     = et_get_attachment_id_by_url_sql( $normalized_url_not_scaled );
+		$attachment_id             = (int) $wpdb->get_var( $attachments_sql_query );
 	}
-
-	$attachment_id = (int) $wpdb->get_var( $attachments_query );
 
 	// Cache data only if attachment ID is found.
 	if ( $attachment_id && et_core_is_uploads_dir_url( $normalized_url ) ) {

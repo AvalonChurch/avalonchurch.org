@@ -63,14 +63,51 @@ class ET_Builder_Module_Woocommerce_Tabs extends ET_Builder_Module_Tabs {
 	 * Get product all possible tabs data
 	 *
 	 * @since 3.29
+	 * @since ??   Fix to include Custom tabs.
+	 *
+	 * @global WP_Post    $post    WordPress Post.
+	 * @global WC_Product $product WooCommerce Product.
 	 *
 	 * @return array
 	 */
 	public function get_product_tabs() {
+		static $tabs = null;
+
+		if ( ! is_null( $tabs ) ) {
+			return $tabs;
+		}
+
+		global $post, $product;
+
+		// Save existing $post and $product global.
+		$original_post    = $post;
+		$original_product = $product;
+
+		$post_id = 'product' === $this->get_post_type()
+			? ET_Builder_Element::get_current_post_id()
+			: ET_Builder_Module_Helper_Woocommerce_Modules::get_product_id( 'latest' );
+
+		// Overwriting global $post is necessary as WooCommerce relies on it.
+		$post    = get_post( $post_id );
+		$product = wc_get_product( $post_id );
+
+		/*
+		 * Get relevant product tabs data. Product tabs hooks use global based conditional
+		 * for adding / removing product tabs data via filter hoook callback, hence the
+		 * need to overwrite the global for determining product tabs data
+		 */
+		$tabs = is_object( $product )
+			? apply_filters( 'woocommerce_product_tabs', array() )
+			: ET_Builder_Module_Helper_Woocommerce_Modules::get_default_product_tabs();
+
+		// Reset $post and $product global.
+		$post    = $original_post;
+		$product = $original_product;
+
 		/*
 		 * Always return all possible tabs
 		 */
-		return ET_Builder_Module_Helper_Woocommerce_Modules::get_default_product_tabs();
+		return $tabs;
 	}
 
 	/**
@@ -121,35 +158,31 @@ class ET_Builder_Module_Woocommerce_Tabs extends ET_Builder_Module_Tabs {
 		$fields = array_merge(
 			parent::get_fields(),
 			array(
-				'product'        => ET_Builder_Module_Helper_Woocommerce_Modules::get_field(
+				'product'      => ET_Builder_Module_Helper_Woocommerce_Modules::get_field(
 					'product',
 					array(
 						'default'          => ET_Builder_Module_Helper_Woocommerce_Modules::get_product_default(),
 						'computed_affects' => array(
 							'__tabs',
+							'include_tabs',
 						),
 					)
 				),
-				'product_filter' => ET_Builder_Module_Helper_Woocommerce_Modules::get_field(
-					'product_filter',
-					array(
-						'computed_affects' => array(
-							'__tabs',
-						),
-					)
+				'include_tabs' => array(
+					'label'               => esc_html__( 'Include Tabs', 'et_builder' ),
+					'type'                => 'checkboxes_advanced_woocommerce',
+					'option_category'     => 'configuration',
+					'default'             =>
+						ET_Builder_Module_Helper_Woocommerce_Modules::get_woo_default_tabs(),
+					'description'         => esc_html__( 'Here you can select the tabs that you would like to display.', 'et_builder' ),
+					'toggle_slug'         => 'main_content',
+					'mobile_options'      => true,
+					'hover'               => 'tabs',
+					'computed_depends_on' => array(
+						'product',
+					),
 				),
-				'include_tabs'   => array(
-					'label'           => esc_html__( 'Include Tabs', 'et_builder' ),
-					'type'            => 'checkboxes',
-					'option_category' => 'configuration',
-					'default'         => $this->get_tab_defaults(),
-					'description'     => esc_html__( 'Here you can select the tabs that you would like to display.', 'et_builder' ),
-					'options'         => $this->get_tab_options(),
-					'toggle_slug'     => 'main_content',
-					'mobile_options'  => true,
-					'hover'           => 'tabs',
-				),
-				'__tabs'         => array(
+				'__tabs'       => array(
 					'type'                => 'computed',
 					'computed_callback'   => array(
 						'ET_Builder_Module_Woocommerce_Tabs',
@@ -199,7 +232,7 @@ class ET_Builder_Module_Woocommerce_Tabs extends ET_Builder_Module_Tabs {
 	/**
 	 * Get tabs content output
 	 *
-	 * @since ?? Fix [embed][/embed] shortcodes not working in tab content
+	 * @since 4.4.1 Fix [embed][/embed] shortcodes not working in tab content
 	 * @since 3.29
 	 *
 	 * @return string
@@ -327,7 +360,7 @@ class ET_Builder_Module_Woocommerce_Tabs extends ET_Builder_Module_Tabs {
 			if ( 'description' === $name ) {
 				if ( ! et_builder_tb_enabled() && ! et_pb_is_pagebuilder_used( $product_id ) ) {
 					// If selected product doesn't use builder, retrieve post content.
-					$tab_content = apply_filters( 'the_content', $post->post_content );
+					$tab_content = $post->post_content;
 				} else {
 					/*
 					 * Description can't use built in callback data because it gets `the_content`

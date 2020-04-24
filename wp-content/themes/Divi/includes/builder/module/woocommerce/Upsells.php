@@ -283,8 +283,6 @@ class ET_Builder_Module_Woocommerce_Upsells extends ET_Builder_Module {
 				'name' => esc_html__( 'Divi WooCommerce Modules', 'et_builder' ),
 			),
 		);
-
-		add_filter( 'woocommerce_style_smallscreen_breakpoint', array( 'ET_Builder_Module_Helper_Woocommerce_Modules', 'set_woocommerce_smallscreen_breakpoint' ) );
 	}
 
 	/**

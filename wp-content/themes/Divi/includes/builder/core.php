@@ -2188,6 +2188,7 @@ function et_fb_get_nonces() {
 		'retrieveCustomDefaultsHistory'   => wp_create_nonce( 'et_builder_retrieve_custom_defaults_history' ),
 		'migrateModuleCustomizerPhaseTwo' => wp_create_nonce( 'et_builder_migrate_module_customizer_phase_two' ),
 		'searchPosts'                     => wp_create_nonce( 'et_builder_search_posts' ),
+		'getWoocommerceTabs'              => wp_create_nonce( 'et_builder_get_woocommerce_tabs' ),
 	);
 
 	return array_merge( $nonces, $fb_nonces );

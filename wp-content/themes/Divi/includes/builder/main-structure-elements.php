@@ -1749,6 +1749,9 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 				),
 			),
 			'max_width'             => array(
+				'css' => array(
+					'main' => '%%order_class%%.et_pb_row_inner',
+				),
 				'options' => array(
 					'module_alignment' => array(
 						'label' => esc_html__( 'Row Alignment', 'et_builder' ),

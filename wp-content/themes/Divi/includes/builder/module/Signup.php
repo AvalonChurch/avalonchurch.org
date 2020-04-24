@@ -957,6 +957,9 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 						esc_attr( $ip_address )
 					);
 				}
+
+				$html .= sprintf( '<input type="hidden" value="%1$d" name="et_pb_signup_post_id" />', self::get_layout_id() );
+
 				break;
 		}
 

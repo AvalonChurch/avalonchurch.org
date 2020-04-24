@@ -246,7 +246,7 @@ class ET_GB_Block_Layout {
 	 * Early scripts and styles queue for Layout Block Preview page
 	 * Need to queue early because `et-builder-modules-script` uses localize scripts on this method
 	 *
-	 * @since ?? Compatibility fixes for WP 5.4
+	 * @since 4.4.1 Compatibility fixes for WP 5.4
 	 * @since 4.1.0
 	 */
 	public function enqueue_block_preview_styles_scripts() {
@@ -295,7 +295,7 @@ class ET_GB_Block_Layout {
 	 * Late scripts and styles queue for Layout Block Preview page
 	 * Need to queue late because localize script needs to populate settings from rendered modules
 	 *
-	 * @since ?? Renamed into `enqueue_block_preview_footer_styles_scripts`. Localize script
+	 * @since 4.4.1 Renamed into `enqueue_block_preview_footer_styles_scripts`. Localize script
 	 *                 value which is used by `et-builder-modules-script` is queued on earlier hook
 	 * @since 4.1.0
 	 */
@@ -412,7 +412,7 @@ class ET_GB_Block_Layout {
 	 * Modify layout content condition. Preview template should consider itself is_single = true
 	 *
 	 * @since 4.1.0
-	 * @since ?? don't overwrite `p` and `post_type` query vars if homepage displays static page
+	 * @since 4.4.1 don't overwrite `p` and `post_type` query vars if homepage displays static page
 	 *
 	 * @param object
 	 */

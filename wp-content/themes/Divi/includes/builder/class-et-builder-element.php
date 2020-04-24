@@ -17131,7 +17131,6 @@ class ET_Builder_Element {
 		}
 
 		if ( ! is_null( $predefined_value ) ) {
-			$raw       = $predefined_value;
 			$formatted = $predefined_value;
 		}
 

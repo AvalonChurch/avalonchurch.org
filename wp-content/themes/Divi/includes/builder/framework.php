@@ -104,6 +104,7 @@ if ( wp_doing_ajax() && ! is_customize_preview() ) {
 			'et_builder_retrieve_custom_defaults_history',
 			'et_theme_builder_api_import_theme_builder_step',
 			'et_pb_submit_subscribe_form',
+			'et_builder_get_woocommerce_tabs',
 		),
 	);
 

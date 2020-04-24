@@ -1,3 +1,51 @@
+version 4.4.2 ( updated 03-27-2020 )
+- Fixed incorrect Layout Block preview dimension on editor item inserter menu selector at WordPress 5.4.
+- Fixed possible error when gutenberg is loaded if the menu's collapse-button isn't ready when the script is loaded.
+- Fixed the dynamic content field getting escaped twice.
+- Fixed header z-index.
+- Fixed Email Optin Module in Theme Builder Footer does not work.
+- Fixed a PHP 7.4+ notice that occurred in some cases with the Backend Divi Builder.
+- Fixed Circle Counter animation not working with hidden header or sidebar.
+- Fixed border radii not working for Woo Image module in Safari browser.
+- Improved icons in Layers panel.
+- Fixed Child Row alignment of specialty sections don't respect their alignment on the FE.
+- Fixed a bug which prevented Layers panel to be opened from shortcut in some cases.
+- Fixed Shop module showing incorrect number of columns in mobile mode when Column layout is set to default.
+- Fixed undefined Woocommerce related fatal error on builder load.
+- Fixed PHP fatal error when Menu module is added in TB.
+- Fixed Featured Image on Product pages not being full width on mobile.
+- Added Custom tabs in Woo Tabs module in non-product Pages.
+- Includes Divi module's images on Rank Math sitemap and add ability to reload Rank Math app on rendered content update.
+- Fixed the "wp is not defined" error that could show up in console when loading the builder.
+- Fixed srset attributes not being generated properly for images that were scaled down by WordPress core.
+- Fixed rollback to use fallback version format for trailing dot zero case.
+- Fixed ES6 Promise enqueuing from jsDelivr CDN instead of local.
+- Fixed a Javascript error when loading a page inside an iframe on a different domain.
+	* core/admin/js/es6-promise.auto.min.js
+	* core/admin/js/frame-helpers.js
+	* core/components/VersionRollback.php
+	* core/components/api/spam/ReCaptcha.php
+	* core/functions.php
+	* core/ui/components/icon/icon.jsx
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/core.php
+	* includes/builder/deprecations.php
+	* includes/builder/feature/gutenberg/blocks/Layout.php
+	* includes/builder/feature/woocommerce-modules.php
+	* includes/builder/framework.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/functions.php
+	* includes/builder/main-structure-elements.php
+	* includes/builder/module/Signup.php
+	* includes/builder/module/helpers/WooCommerceModules.php
+	* includes/builder/module/woocommerce/Images.php
+	* includes/builder/module/woocommerce/RelatedProducts.php
+	* includes/builder/module/woocommerce/Tabs.php
+	* includes/builder/module/woocommerce/Upsells.php
+	* includes/builder/plugin-compat/seo-by-rank-math.php
+	* includes/builder/scripts/frontend/scripts.js
+	* includes/builder/scripts/src/block-layout-frontend-preview.js
+
 version 4.4.1 ( updated 03-11-2020 )
 - Fixed Gutenberg's Snackbar and Publish sidebar that is being rendered on top of Divi Library's overlay.
 - Fixed price text hover styles in Shop module.

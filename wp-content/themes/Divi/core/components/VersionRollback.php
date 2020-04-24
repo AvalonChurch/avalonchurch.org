@@ -283,7 +283,17 @@ class ET_Core_VersionRollback {
 		$available = $api->is_product_available( $this->product_name, $previous_version );
 
 		if ( is_wp_error( $available ) ) {
-			return $available;
+			$major_minor = implode( '.', array_slice( explode( '.', $previous_version ), 0, 2 ) );
+
+			if ( $major_minor . '.0' === $previous_version ) {
+				// Skip the trailing 0 in the version number and retry.
+				$previous_version = $major_minor;
+				$available        = $api->is_product_available( $this->product_name, $previous_version );	
+			}
+
+			if ( is_wp_error( $available ) ) {
+				return $available;
+			}
 		}
 
 		$download_url = $api->get_download_url( $this->product_name, $previous_version );
