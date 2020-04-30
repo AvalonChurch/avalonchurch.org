@@ -7236,38 +7236,7 @@ function et_divi_disable_theme_builder_header_footer_on_blank_template( $layouts
 }
 add_filter( 'et_theme_builder_template_layouts', 'et_divi_disable_theme_builder_header_footer_on_blank_template' );
 
-add_filter( 'sm_attachments_htmlllll', function () {
-	return '';
-	if ( ! get_wpfc_sermon_meta( 'sermon_notes' ) && ! get_wpfc_sermon_meta( 'sermon_bulletin' ) ) {
-		return '';
-	}
-
-	ob_start();
-	?>
-	<div id="wpfc-attachments" class="cf">
-		<p>
-			<strong><?php echo __( 'Download Files', 'sermon-manager-for-wordpress' ); ?></strong>
-			<?php if ( get_wpfc_sermon_meta( 'sermon_notes' ) ) : ?>
-				<a href="<?php echo get_wpfc_sermon_meta( 'sermon_notes' ); ?>"
-						class="sermon-attachments"
-						download="<?php echo basename( get_wpfc_sermon_meta( 'sermon_notes' ) ); ?>">
-					<span class="dashicons dashicons-media-document"></span>
-					<?php echo __( 'Sermon Notes', 'sermon-manager-for-wordpress' ); ?>
-				</a>
-			<?php endif; ?>
-
-			<?php if ( get_wpfc_sermon_meta( 'sermon_bulletin' ) ) : ?>
-				<a href="<?php echo get_wpfc_sermon_meta( 'sermon_bulletin' ); ?>"
-						class="sermon-attachments"
-						download="<?php echo basename( get_wpfc_sermon_meta( 'sermon_bulletin' ) ); ?>">
-					<span class="dashicons dashicons-media-document"></span>
-					<?php echo __( 'Discussion Questions', 'sermon-manager-for-wordpress' ); ?>
-				</a>
-			<?php endif; ?>
-		</p>
-	</div>
-	<?php
-
-	return ob_get_clean();
+add_action( 'et_after_main_content', function() {
+   echo do_shortcode('[smbtoolbar]');
 } );
 
