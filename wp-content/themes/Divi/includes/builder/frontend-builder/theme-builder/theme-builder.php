@@ -28,6 +28,10 @@ if ( ! defined( 'ET_THEME_BUILDER_SETTING_SEPARATOR' ) ) {
 	define( 'ET_THEME_BUILDER_SETTING_SEPARATOR', ':' );
 }
 
+if ( ! defined( 'ET_THEME_BUILDER_DYNAMIC_CONTENT_REGEX' ) ) {
+	define( 'ET_THEME_BUILDER_DYNAMIC_CONTENT_REGEX', '/@ET-DC@(.*?)@/' );
+}
+
 require_once ET_THEME_BUILDER_DIR . 'ThemeBuilderApiErrors.php';
 require_once ET_THEME_BUILDER_DIR . 'ThemeBuilderRequest.php';
 require_once ET_THEME_BUILDER_DIR . 'template-setting-validations.php';

@@ -154,6 +154,9 @@ class ET_Builder_Element {
 	// woocommerce module
 	private $_is_woocommerce_module;
 
+	// uses for ligatures disabling at elements with letter-spacing CSS property
+	private $letter_spacing_fix_selectors = array();
+
 	/**
 	 * Holds module styles for the current request.
 	 *
@@ -393,6 +396,9 @@ class ET_Builder_Element {
 		$this->_additional_fields_options = array();
 		$slug                             = $this->slug;
 
+		// Use module cache compression only when we sure we can also decompress.
+		$use_compression = function_exists( 'gzinflate' ) && function_exists( 'gzdeflate' );
+
 		if ( ! empty( self::$_cache[ $slug ] ) ) {
 			// We got sum cache, let's use it.
 			$cache              = self::$_cache[ $slug ];
@@ -409,7 +415,7 @@ class ET_Builder_Element {
 			} else {
 				// New cache storage format (string) key1,field1\n ... keyN,fieldN
 				// Decompress data when possible.
-				if ( function_exists( 'gzinflate' ) ) {
+				if ( $use_compression ) {
 					$fields_map = gzinflate( $fields_map );
 				}
 
@@ -453,7 +459,7 @@ class ET_Builder_Element {
 				// Trim last newline.
 				$fields_unprocessed = trim( $fields_unprocessed );
 				// Compress data when possible.
-				if ( function_exists( 'gzdeflate' ) ) {
+				if ( $use_compression ) {
 					$fields_unprocessed = gzdeflate( $fields_unprocessed );
 				}
 
@@ -1451,8 +1457,15 @@ class ET_Builder_Element {
 					$processed_attr_value
 				) );
 			} else {
-				$shortcode_attributes[ $attribute_key ] = str_replace( array( '%22', '%92', '%91', '%93', '%5c' ), array( '"', '\\', '&#91;', '&#93;', '\\' ),
-				$processed_attr_value );
+				// Manipulate string for font icon attribute with value "%%xx%%" to "##xx##".
+				$processed_attr_value = preg_replace( '/%%([0-9]+)%%/', '##$1##', $processed_attr_value );
+
+				$processed_attr_value = str_replace( array( '%22', '%92', '%91', '%93', '%5c' ), array( '"', '\\', '&#91;', '&#93;', '\\' ),$processed_attr_value );
+
+				// Restore string for font icon attribute from "##xx##" to "%%xx%%".
+				$processed_attr_value = preg_replace( '/##([0-9]+)##/', '%%$1%%', $processed_attr_value );
+
+				$shortcode_attributes[ $attribute_key ] = $processed_attr_value;
 			}
 		}
 
@@ -2199,8 +2212,8 @@ class ET_Builder_Element {
 		// JS-based calculation (i.e. .et_pb_column in column inner)
 		if ( $this->slug !== $render_slug ) {
 			$this->add_classname( $this->slug );
-			
-			// Apply classnames added to the module that uses other module's shortcode callback 
+
+			// Apply classnames added to the module that uses other module's shortcode callback
 			// (i.e. `process_additional_options` for the column inner)
 			$module = self::get_module( $render_slug, $this->get_post_type() );
 			$this->add_classname( $module->classname );
@@ -2409,9 +2422,13 @@ class ET_Builder_Element {
 
 			foreach( $disabled_on_array as $value ) {
 				if ( 'on' === $value ) {
+					// Added specific declaration to fix the problem when
+					// Video module is hidden for desktop the fullscreen
+					// won't work on mobile screen size.
+					$declaration = 'et_pb_video' === $render_slug ? 'height: 0; padding: 0; overflow: hidden;' : 'display: none !important;';
 					ET_Builder_Module::set_style( $render_slug, array(
 						'selector'    => '%%order_class%%',
-						'declaration' => 'display: none !important;',
+						'declaration' => $declaration,
 						'media_query' => ET_Builder_Element::get_media_query( $current_media_query ),
 					) );
 				}
@@ -2714,7 +2731,7 @@ class ET_Builder_Element {
 		$unsynced_global_attributes = array();
 		$use_updated_global_sync_method = false;
 		$global_module_id = isset( $atts['global_module'] ) ? $atts['global_module'] : false;
-		$is_specialty_placeholder = isset( $atts['template_type'] ) && 'section' === $atts['template_type'] && isset( $atts['specialty'] ) && 'on' === $atts['specialty'];
+		$is_specialty_placeholder = isset( $atts['template_type'] ) && 'section' === $atts['template_type'] && isset( $atts['specialty'] ) && 'on' === $atts['specialty'] && ( ! $content || '' === trim( $content ) );
 		$is_global_template = false;
 		$real_parent_type = $parent_type;
 
@@ -10978,6 +10995,8 @@ class ET_Builder_Element {
 								'declaration' => rtrim( $style ),
 								'priority'    => $this->_style_priority,
 							) );
+
+							$this->maybe_push_element_to_letter_spacing_fix_list( $selector, array( 'body.safari ', 'body.iphone ', 'body.uiwebview ' ), rtrim( $style ), $default_letter_spacing );
 						}
 					} else {
 						if ( $is_hover ) {
@@ -10989,6 +11008,8 @@ class ET_Builder_Element {
 							'declaration' => rtrim( $style ),
 							'priority'    => $this->_style_priority,
 						) );
+
+						$this->maybe_push_element_to_letter_spacing_fix_list( $css_element, array( 'body.safari ', 'body.iphone ', 'body.uiwebview ' ), rtrim( $style ), $default_letter_spacing );
 
 						if ( $is_placeholder ) {
 							self::set_style( $function_name, array(
@@ -11108,6 +11129,18 @@ class ET_Builder_Element {
 							'priority'    => $this->_style_priority,
 							'media_query' => ET_Builder_Element::get_media_query( $current_media_query ),
 						) );
+
+						if( ! empty( $selector ) &&  in_array( $mobile_option, array( 'letter_spacing_phone', 'letter_spacing_tablet' ) ) ) {
+							switch( $mobile_option ) {
+								case 'letter_spacing_phone':
+									$css_prefix = 'body.iphone ';
+								break;
+								case 'letter_spacing_tablet':
+									$css_prefix = 'body.uiwebview ';
+								break;
+							}
+							$this->maybe_push_element_to_letter_spacing_fix_list( $selector, $css_prefix, $declaration, $default_letter_spacing );
+						}
 
 						if ( $is_placeholder ) {
 							self::set_style( $function_name, array(
@@ -11242,6 +11275,51 @@ class ET_Builder_Element {
 							),
 						) );
 					}
+				}
+			}
+		}
+		// sets ligatures disabling for all selectors
+		// from the list $this->letter_spacing_fix_selectors
+		foreach ($this->letter_spacing_fix_selectors as $selector_with_prefix) {
+			self::set_style( $function_name, array(
+				'selector'    => $selector_with_prefix,
+				'declaration' => 'font-variant-ligatures: no-common-ligatures;',
+				'priority'    => $this->_style_priority
+			) );
+		}
+	}
+
+	/**
+	 * Maybe push element to the letter spacing fix list
+	 *
+	 * @since 4.4.3 Checks a element for the having of the letter-spacing property,
+	 * adds a prefix to all its selectors, push prefixed selector
+	 * to the array ($this->letter_spacing_fix_selectors) of elements
+	 * that need to have ligature fix (same elements will be overridden).
+	 *
+	 * @param string $selector CSS selector of the current element.
+	 * @param array $css_prefixes array or string of CSS prefixes which will be added to the current element selector.
+	 * @param string $declaration CSS declaration of the current element.
+	 * @param string $default_letter_spacing default letter-spacing value at the current element.
+	 */
+	function maybe_push_element_to_letter_spacing_fix_list( $selector, $css_prefixes, $declaration, $default_letter_spacing ) {
+		if ( false === strpos( trim( $declaration ), 'letter-spacing' ) || empty( $css_prefixes ) ) {
+			return;
+		}
+		$css_value = str_replace( 'letter-spacing', '', $declaration );
+		$css_value = preg_replace( '/[^a-zA-Z0-9]/', '', $css_value );
+		if ( ! ( 0 === intval( $default_letter_spacing ) &&  0 === intval( $css_value ) ) || ( $css_value === $default_letter_spacing ) ) {
+			if( ! is_array( $css_prefixes ) ) {
+				$css_prefixes = array( $css_prefixes );
+			}
+			foreach( $css_prefixes as $css_prefix ) {
+				$selector_with_prefix = '';
+				$selector_elements    = explode( ',', $selector );
+				if( is_array( $selector_elements ) && count( $selector_elements ) > 0 ) {
+					$selector_with_prefix = implode( ',', preg_filter( '/^/', $css_prefix, $selector_elements ) );
+				}
+				if ( ! empty( $selector_with_prefix ) ) {
+					$this->letter_spacing_fix_selectors[ crc32( $selector_with_prefix ) ] = $selector_with_prefix;
 				}
 			}
 		}
@@ -15655,6 +15733,17 @@ class ET_Builder_Element {
 		}
 
 		return isset( $styles[ $key ] ) ? $styles[ $key ] : array();
+	}
+
+	/**
+	 * Intended to be used for unit testing
+	 * 
+	 * @intendedForTesting
+	 */
+	static function reset_styles() {
+		self::$internal_modules_styles = array();
+		self::$styles  = array();
+		self::$media_queries = array();
 	}
 
 	static function get_style( $internal = false, $key = 0 ) {

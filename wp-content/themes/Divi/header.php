@@ -358,7 +358,3 @@
 		 * @since 3.10
 		 */
 		do_action( 'et_before_main_content' );
-        ?>
-		<div class="breadcrumbs" typeof="BreadcrumbList" vocab="http://schema.org/">
-    		  <?php if(function_exists('bcn_display')) { bcn_display(); }?>
-                </div>

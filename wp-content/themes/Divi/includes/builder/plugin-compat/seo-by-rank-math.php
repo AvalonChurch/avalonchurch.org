@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Compatibility for the Rank Math SEO plugin.
  *
- * @since ??
+ * @since 4.4.2
  *
  * @link https://wordpress.org/plugins/seo-by-rank-math/
  */
@@ -15,7 +15,7 @@ class ET_Builder_Plugin_Compat_Rank_Math_SEO extends ET_Builder_Plugin_Compat_Ba
 	/**
 	 * Constructor.
 	 *
-	 * @since ??
+	 * @since 4.4.2
 	 */
 	public function __construct() {
 		$this->plugin_id = 'seo-by-rank-math/rank-math.php';
@@ -25,7 +25,7 @@ class ET_Builder_Plugin_Compat_Rank_Math_SEO extends ET_Builder_Plugin_Compat_Ba
 	/**
 	 * Hook methods to WordPress.
 	 *
-	 * @since ??
+	 * @since 4.4.2
 	 *
 	 * @return void
 	 */
@@ -41,7 +41,7 @@ class ET_Builder_Plugin_Compat_Rank_Math_SEO extends ET_Builder_Plugin_Compat_Ba
 	/**
 	 * Add Divi builder module's images to Rank Math sitemap.
 	 *
-	 * @since ??
+	 * @since 4.4.2
 	 *
 	 * @param  array $images  Existing images.
 	 * @param  int   $post_id
@@ -146,7 +146,7 @@ class ET_Builder_Plugin_Compat_Rank_Math_SEO extends ET_Builder_Plugin_Compat_Ba
 	/**
 	 * Get module shortcode from post content.
 	 *
-	 * @since ??
+	 * @since 4.4.2
 	 *
 	 * @param  string $content
 	 * @param  string $module
@@ -161,7 +161,7 @@ class ET_Builder_Plugin_Compat_Rank_Math_SEO extends ET_Builder_Plugin_Compat_Ba
 	 * Get image attributes value and collect them as an array. Attributes list:
 	 * source URL, title text, and alternative text.
 	 *
-	 * @since ??
+	 * @since 4.4.2
 	 *
 	 * @param  string $module
 	 * @param  array  $module_attrs
@@ -203,7 +203,7 @@ class ET_Builder_Plugin_Compat_Rank_Math_SEO extends ET_Builder_Plugin_Compat_Ba
 	/**
 	 * Get image attribute value from the module shortcode.
 	 *
-	 * @since ??
+	 * @since 4.4.2
 	 *
 	 * @param  string $content
 	 * @param  string $attr

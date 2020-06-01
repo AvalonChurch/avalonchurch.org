@@ -1080,6 +1080,15 @@ function et_pb_retrieve_templates( $layout_type = 'layout', $module_width = '', 
 		$limit_to = $boundaries[1];
 	}
 
+	/**
+	 * Filter suppress_filters argument.
+	 *
+	 * @since 4.4.5
+	 *
+	 * @param boolean $suppress_filters
+	 */
+	$suppress_filters = wp_validate_boolean( apply_filters( 'et_pb_show_all_layouts_suppress_filters', $suppress_filters ) );
+
 	$query = new WP_Query( array(
 		'tax_query'        => $tax_query,
 		'post_type'        => ET_BUILDER_LAYOUT_POST_TYPE,
@@ -1221,14 +1230,21 @@ if ( ! function_exists( 'et_pb_add_new_layout' ) ) {
 			die();
 		}
 
+		$layout_type      = et_()->array_get_sanitized( $processed_data_array, 'new_template_type', 'layout' );
+		$layout_is_global = 'global' === et_()->array_get( $processed_data_array, 'et_pb_template_global', 'not_global' );
+		if ( 'layout' === $layout_type ) {
+			// Layouts of type 'layout' are not allowed to be global.
+			$layout_is_global = false;
+		}
+
 		$args = array(
-			'layout_type'          => ! empty( $processed_data_array['new_template_type'] ) ? sanitize_text_field( $processed_data_array['new_template_type'] ) : 'layout',
+			'layout_type'          => $layout_type,
 			'layout_selected_cats' => ! empty( $processed_data_array['selected_cats'] ) ? sanitize_text_field( $processed_data_array['selected_cats'] ) : '',
 			'built_for_post_type'  => ! empty( $processed_data_array['et_builder_layout_built_for_post_type'] ) ? sanitize_text_field( $processed_data_array['et_builder_layout_built_for_post_type'] ) : 'page',
 			'layout_new_cat'       => ! empty( $processed_data_array['et_pb_new_cat_name'] ) ? sanitize_text_field( $processed_data_array['et_pb_new_cat_name'] ) : '',
 			'columns_layout'       => ! empty( $processed_data_array['et_columns_layout'] ) ? sanitize_text_field( $processed_data_array['et_columns_layout'] ) : '0',
 			'module_type'          => ! empty( $processed_data_array['et_module_type'] ) ? sanitize_text_field( $processed_data_array['et_module_type'] ) : 'et_pb_unknown',
-			'layout_scope'         => ! empty( $processed_data_array['et_pb_template_global'] ) ? sanitize_text_field( $processed_data_array['et_pb_template_global'] ) : 'not_global',
+			'layout_scope'         => $layout_is_global ? 'global' : 'not_global',
 			'module_width'         => 'regular',
 			'layout_content'       => ! empty( $processed_data_array['template_shortcode'] ) ? $processed_data_array['template_shortcode'] : '',
 			'layout_name'          => ! empty( $processed_data_array['et_pb_new_template_name'] ) ? sanitize_text_field( $processed_data_array['et_pb_new_template_name'] ) : '',
@@ -3670,6 +3686,13 @@ function et_pb_detect_cache_plugins() {
 		);
 	}
 
+	if ( class_exists( 'Hummingbird\\WP_Hummingbird' ) ) {
+		return array(
+			'name' => 'Hummingbird',
+			'page' => 'admin.php?page=wphb',
+		);
+	}
+
 	return false;
 }
 endif;
@@ -3777,6 +3800,8 @@ function et_pb_add_stats_record( $stats_data_array ) {
 /**
  * Set AB Testing formatted cookie
  *
+ * @since 4.4.3 Set cookie path, so the cookie will be available on overall site.
+ *
  * @param int    post ID
  * @param string record type
  * @param mixed  cookie value
@@ -3787,7 +3812,7 @@ function et_pb_ab_set_visitor_cookie( $post_id, $record_type, $value = true ) {
 	$unique_test_id = get_post_meta( $post_id, '_et_pb_ab_testing_id', true );
 	$cookie_name    = sanitize_text_field( "et_pb_ab_{$record_type}_{$post_id}{$unique_test_id}" );
 
-	return setcookie( $cookie_name, $value );
+	return setcookie( $cookie_name, $value, 0, SITECOOKIEPATH );
 }
 
 /**
@@ -4349,7 +4374,7 @@ endif;
  * Retrieve list of uploaded user fonts stored in `et_uploaded_fonts` option.
  *
  * @since 3.0
- * 
+ *
  * @return array fonts list
  */
 if ( ! function_exists( 'et_builder_get_custom_fonts' ) ) :
@@ -5880,6 +5905,10 @@ function et_fb_delete_builder_assets() {
 	 */
 	do_action( 'et_builder_ajax_cache_clear' );
 }
+
+// Since Google data is included in static helpers, we have to delete assets
+// whenever the option is updated to avoid Builder reloads.
+add_action( 'update_option_et_google_api_settings', 'et_fb_delete_builder_assets' );
 endif;
 
 if ( ! function_exists( 'et_fb_enqueue_open_sans' ) ):

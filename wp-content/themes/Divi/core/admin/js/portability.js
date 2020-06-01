@@ -329,7 +329,7 @@
 						// because before exportFB(), shortcode should've been prepared via another
 						// ajax request first
 						if (0 < progress) {
-							const remainingProgress = (100 - updatedProgress) / 100;
+							const remainingProgress = (100 - progress) / 100;
 							updatedProgress = (updatedProgress * remainingProgress) + progress;
 						}
 

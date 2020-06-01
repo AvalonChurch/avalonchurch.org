@@ -1229,8 +1229,15 @@ var isBuilder = 'object' === _typeof(window.ET_Builder);
     });
 
     var et_pb_window_side_nav_get_sections = function et_pb_window_side_nav_get_sections() {
-      var $inPost = $('.et-l--post .et_pb_section');
+      var $postRoot = $('.et-l--post');
       var $inTBBody = $('.et-l--body .et_pb_section').not('.et-l--post .et_pb_section');
+      var $inPost;
+
+      if (isBuilder) {
+        $inPost = $postRoot.find('.et-fb-post-content > .et_pb_section');
+      } else {
+        $inPost = $postRoot.find('.et_builder_inner_content > .et_pb_section');
+      }
 
       if (0 === $inTBBody.length || $inPost.length > 1) {
         return $inPost;

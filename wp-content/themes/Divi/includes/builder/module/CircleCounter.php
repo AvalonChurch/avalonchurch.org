@@ -138,7 +138,7 @@ class ET_Builder_Module_Circle_Counter extends ET_Builder_Module {
 				'type'              => 'text',
 				'option_category'   => 'basic_option',
 				'number_validation' => true,
-				'value_type'        => 'int',
+				'value_type'        => 'float',
 				'value_min'         => 0,
 				'value_max'         => 100,
 				'description'       => et_get_safe_localization( __( "Define a number for the circle counter. (Don't include the percentage sign, use the option below.). <strong>Note: You can use only natural numbers from 0 to 100</strong>", 'et_builder' ) ),

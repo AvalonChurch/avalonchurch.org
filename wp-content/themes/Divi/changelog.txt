@@ -1,3 +1,168 @@
+version 4.4.7 ( updated 05-15-2020 )
+- Fixed the incorrect letter spacing in a title of Number Counter Divi Module in Safari browser (7.1+).
+- Fixed admin bar missing when global header enabled with Divi Builder plugin.
+- Disabled resize on the textareas  from the Custom CSS  at the advanced tab in a settings modal.
+- Fixed incorrect align on small screens for Blog Module with Grid Layout.
+- Fixed Quick Action modal opening when you typed something outside of Builder Area and used SHIFT + SPACE.
+- Fixed the issue when border-radius was ignored when using the box-shadow into the Post Navigation Module.
+- Removed any HTML tags from the name of options at the Contact Form Module on the Divi Builder.
+- Fixed module status line double click not loading saved content and settings.
+- Fixed incorrect import context message when importing fails.
+- Added dismissible "Get Recommended Divi Hosting" Card in Divi Support Center to show if any system status item is in a warning state.
+- Added slashes for post content at layout's import.
+- Fixed page dots navigation to show the dots only for main sections.
+- Fixed javascript error Uncaught ReferenceError: et_pb_first_row_padding_top is not defined when you are working with some settings in Theme Customizer > Header, like a changing header style option.
+	* core/admin/css/support-center.css
+	* core/admin/images/svg/backups.svg
+	* core/admin/images/svg/migrate.svg
+	* core/admin/images/svg/security.svg
+	* core/admin/images/svg/server.svg
+	* core/admin/images/svg/speed.svg
+	* core/admin/images/svg/staging.svg
+	* core/admin/js/popper.min.js
+	* core/admin/js/support-center.js
+	* core/admin/js/tippy.min.js
+	* core/components/Portability.php
+	* core/components/SupportCenter.php
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/frontend-builder/theme-builder/frontend-header-template.php
+	* includes/builder/frontend-builder/theme-builder/frontend.php
+	* includes/builder/module/PostsNavigation.php
+	* includes/builder/plugin-compat/imagify.php
+	* includes/builder/plugin-compat/the-events-calendar.php
+	* js/src/custom.js
+	* js/src/theme-customizer.js
+
+version 4.4.6 ( updated 05-08-2020 )
+- Improved logic to keep collapse/expand state consistent for Add/Clone/Delete/DnD actions in Layers panel.
+- Updated Layers panel to allow selecting Goal and Winner for Split Testing from Layers panel.
+- Improved the Visual Builder scroll performance.
+- Added vmin and vmax to css allowed units in module settings.
+- Fixed person module image broken layout in 6 column row when viewing from tablet.
+- Fixed broken Divi logo when WebP with picture tag feature is enabled on Imagify plugin.
+- Fixed showing data from the latest published product when a new draft product is created.
+- Removed extra margin in menu module that causes horizontal scroll bar if you make row fullwidth.
+- Fixed an issue that allowed setting a layout as Global in the Divi Library.
+- Fixed Post Content module incorrect details on event post type of The Event Calendar.
+- Fixed slide from top animation incorrect position when animated.
+- Fixed js error "Uncaught TypeError: Cannot read property 'trim' of undefined" with the Slider Modules on the frontend.
+- Fixed unable to set Rank Math focus keyword on BFB.
+- Fixed issue so that our plugins wont clear cache if Divi, Extra, or the Divi Builder are not active.
+	* core/components/init.php
+	* includes/builder/core.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/module/helpers/WooCommerceModules.php
+	* includes/builder/plugin-compat/imagify.php
+	* includes/builder/plugin-compat/megamenu.php
+	* includes/builder/plugin-compat/the-events-calendar.php
+	* includes/builder/plugin-compat/wpml-sticky-links.php
+	* includes/builder/scripts/frontend/scripts.js
+	* includes/builder/scripts/src/library_scripts.js
+
+version 4.4.5 ( updated 04-30-2020 )
+- Removed theme builder override warning message from already saved layout.
+- Fixed Max Mega Menu plugin sometimes causing the Builder to reload.
+- Fixed issue where layouts from different languages were not being loaded on builder library layouts.
+- Fixed theme builder template hover option buttons not appearing on Safari.
+- Fixed incorrect running of the Video Module to the fullscreen mode with resized browser window to the mobile size, when the Video Module's Visibility option desktop is turned off.
+- Fixed a bug which prevented to expand/collapse layers from right click menu in Layers panel.
+- Added support for Hummingbird plugin to clean up the cache on some circumstances.
+- Fixed incorrect alignment of the slide's content after resizing the Chrome browser with the zoom level less than 100% while using the Slider module.
+- Fixed Builder reloading itself after changing some Google related Divi Options.
+- Fixed sticky links are not translated into permalinks on Global items.
+- Fixed Specialty Sections editing from the Divi Library using the Latest Divi Builder Experience.
+- Fixed broken column layout on Product Category and Tag pages.
+	* core/components/init.php
+	* functions.php
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/class-et-builder-value.php
+	* includes/builder/core.php
+	* includes/builder/feature/dynamic-content.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/functions.php
+	* includes/builder/main-structure-elements.php
+	* includes/builder/module/TeamMember.php
+	* includes/builder/plugin-compat/megamenu.php
+	* includes/builder/plugin-compat/sitepress-multilingual-cms.php
+	* includes/builder/plugin-compat/the-events-calendar.php
+	* includes/builder/plugin-compat/wpml-sticky-links.php
+	* includes/builder/scripts/frontend/scripts.js
+
+version 4.4.4 ( updated 04-23-2020 )
+- Added input field to enter the meta_key in the Dynamic Content field option list.
+- Improved accessibility for Image and Fullwidth Image Modules by automatically including Alt and Title attributes from the image's WP Media Library metadata when not defined in Divi Builder settings.
+- Fixed issue where border-radius doesn't apply when parallax section overflow is set to visible.
+- Added minor extra spacing between the final option group and the help button in the page settings modal.
+- Updated drop-zone styles to reduce vertical bouncing while dragging in Layers panel.
+- Fixed error when builder is activated for the first time on Event Calendar post without title.
+- Removed default css important rule to allow specified font-wight on slider title.
+- Fixed font icon not rendered properly in the frontend.
+- Added Search to the filter dropdown in Layers panel.
+- Added toggle button to parent layers in Layers panel, whether it has children or not.
+- Updated SVG icon for DnD helper in Layers panel.
+- Updated Drag and Drop in Layers View to allow dropping row/column/module to respective parent-layer only when the parent-layer is expanded.
+- Fixed issue with Margin and Padding options.
+- Layers panel now remembers modal position, height and width when moved/resized.
+- Fixed Menu module center layout style.
+- Fixed default line-height and font-size style value in the Person Module.
+- Fixed layout export progress bar going above 100% in certain cases.
+	* core/admin/js/portability.js
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/class-et-builder-value.php
+	* includes/builder/core.php
+	* includes/builder/feature/dynamic-content.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/frontend-builder/helpers.php
+	* includes/builder/frontend-builder/theme-builder/dynamic-content.php
+	* includes/builder/frontend-builder/theme-builder/theme-builder.php
+	* includes/builder/functions.php
+	* includes/builder/main-structure-elements.php
+	* includes/builder/module/FullwidthImage.php
+	* includes/builder/module/Image.php
+	* includes/builder/module/TeamMember.php
+	* includes/builder/module/field/MarginPadding.php
+	* includes/builder/plugin-compat/the-events-calendar.php
+
+version 4.4.3 ( updated 04-09-2020 )
+- Fixed Specialty Section's Gutter Width was overriding Inner Rows Gutter Width.
+- Added image sizing options for the post title featured image.
+- Fixed split testing module disappear when cache plugin is active.
+- Fixed border width range input to not pass the min limit 0.
+- Fixed issue with 'Number' field on circle counter module so it can receive a decimal value.
+- Fixed JS error when adding a new Row in Specialty Section from Layers panel.
+- Fixed CSS Parallax and Motion Effect doesn't work on layout block in upcoming WordPress 5.4 due to markup change on Gutenberg.
+- Fixed missing status and visibility options in Gutenberg UI.
+- Fixed an error with caches when gzdeflate or gzinflate function was being disabled.
+- Fixed iframe video not resizing correctly when Lazy Load option was enabled on Smush version 3.6.1.
+- Updated fallback font size to match slider builder default font size.
+- Fixed hover margin adding padding instead of margin on the element.
+- Fixed vertically placed gallery module space between last two images.
+- Fixed embed support for both full url and embed url of youtube.
+- Fixed a bug which were setting invalid CSS for max-height when no max-height value were set for Logo in Menu module.
+- Fixed an issue that caused the single post top/bottom code in integration to still be printed on the frontend even if the options were disabled.
+	* core/components/Updates.php
+	* core/functions.php
+	* epanel/custom_functions.php
+	* functions.php
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/core.php
+	* includes/builder/feature/woocommerce-modules.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/functions.php
+	* includes/builder/module/CircleCounter.php
+	* includes/builder/module/FullwidthPostTitle.php
+	* includes/builder/module/PostTitle.php
+	* includes/builder/module/Text.php
+	* includes/builder/module/field/Border.php
+	* includes/builder/module/field/MarginPadding.php
+	* includes/builder/module/helpers/WooCommerceModules.php
+	* includes/builder/module/woocommerce/Tabs.php
+	* includes/builder/plugin-compat/seo-by-rank-math.php
+	* includes/builder/scripts/frontend/global-functions.js
+	* includes/builder/scripts/frontend/motion-effects.js
+	* includes/builder/scripts/frontend/scripts.js
+
 version 4.4.2 ( updated 03-27-2020 )
 - Fixed incorrect Layout Block preview dimension on editor item inserter menu selector at WordPress 5.4.
 - Fixed possible error when gutenberg is loaded if the menu's collapse-button isn't ready when the script is loaded.

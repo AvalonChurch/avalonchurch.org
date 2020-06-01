@@ -6564,13 +6564,22 @@ function et_divi_customize_preview_class( $classes ) {
 add_filter( 'body_class', 'et_divi_customize_preview_class' );
 
 function et_modify_shop_page_columns_num( $columns_num ) {
-	$default_sidebar_class = is_rtl() ? 'et_left_sidebar' : 'et_right_sidebar';
-
-	if ( class_exists( 'woocommerce' ) && is_shop() ) {
-		$columns_num = 'et_full_width_page' !== et_get_option( 'divi_shop_page_sidebar', $default_sidebar_class )
-			? 3
-			: 4;
+	if ( ! et_is_woocommerce_plugin_active() ) {
+		return $columns_num;
 	}
+
+	// WooCommerce plugin active check ensures that archive function can be used.
+	$is_archive_page = is_shop() || is_product_category() || is_product_tag();
+
+	if ( ! $is_archive_page ) {
+		return $columns_num;
+	}
+
+	$default_sidebar_class  = is_rtl() ? 'et_left_sidebar' : 'et_right_sidebar';
+	$divi_shop_page_sidebar = et_get_option( 'divi_shop_page_sidebar', $default_sidebar_class );
+
+	// Assignment is intentional for readability.
+	$columns_num = 'et_full_width_page' === $divi_shop_page_sidebar ? 4 : 3;
 
 	return $columns_num;
 }
@@ -6902,7 +6911,7 @@ add_action( 'admin_init', 'et_divi_register_customizer_portability' );
 function et_register_updates_component() {
 	et_core_enable_automatic_updates( get_template_directory_uri(), ET_CORE_VERSION );
 }
-add_action( 'admin_init', 'et_register_updates_component' );
+add_action( 'admin_init', 'et_register_updates_component', 9 );
 
 /**
  * Register theme and modules Customizer portability link.
@@ -7235,8 +7244,3 @@ function et_divi_disable_theme_builder_header_footer_on_blank_template( $layouts
 	return $layouts;
 }
 add_filter( 'et_theme_builder_template_layouts', 'et_divi_disable_theme_builder_header_footer_on_blank_template' );
-
-add_action( 'et_after_main_content', function() {
-   echo do_shortcode('[smbtoolbar]');
-} );
-

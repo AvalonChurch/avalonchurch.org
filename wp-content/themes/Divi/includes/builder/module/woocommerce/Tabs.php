@@ -63,7 +63,7 @@ class ET_Builder_Module_Woocommerce_Tabs extends ET_Builder_Module_Tabs {
 	 * Get product all possible tabs data
 	 *
 	 * @since 3.29
-	 * @since ??   Fix to include Custom tabs.
+	 * @since 4.4.2   Fix to include Custom tabs.
 	 *
 	 * @global WP_Post    $post    WordPress Post.
 	 * @global WC_Product $product WooCommerce Product.

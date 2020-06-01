@@ -202,12 +202,13 @@ function et_fb_get_dynamic_backend_helpers() {
 		$post = get_post( $et_post_id );
 	}
 
-	$post_type          = isset( $post->post_type ) ? $post->post_type : false;
-	$post_id            = isset( $post->ID ) ? $post->ID : false;
-	$post_status        = isset( $post->post_status ) ? $post->post_status : false;
-	$post_title         = isset( $post->post_title ) ? esc_attr( $post->post_title ) : false;
-	$post_thumbnail_alt = get_post_thumbnail_id() ? get_post_meta( get_post_thumbnail_id(), '_wp_attachment_image_alt', true ) : false;
-	$current_user       = wp_get_current_user();
+	$post_type            = isset( $post->post_type ) ? $post->post_type : false;
+	$post_id              = isset( $post->ID ) ? $post->ID : false;
+	$post_status          = isset( $post->post_status ) ? $post->post_status : false;
+	$post_title           = isset( $post->post_title ) ? esc_attr( $post->post_title ) : false;
+	$post_thumbnail_alt   = has_post_thumbnail() ? get_post_meta( get_post_thumbnail_id(), '_wp_attachment_image_alt', true ) : false;
+	$post_thumbnail_title = has_post_thumbnail() ? get_post( get_post_thumbnail_id() )->post_title : false;
+	$current_user         = wp_get_current_user();
 
 	if ( 'et_pb_layout' === $post_type ) {
 		$layout_type      = et_fb_get_layout_type( $post_id );
@@ -255,6 +256,7 @@ function et_fb_get_dynamic_backend_helpers() {
 		'postType'                        => $post_type,
 		'postMeta'                        => $post,
 		'postThumbnailAlt'                => $post_thumbnail_alt,
+		'postThumbnailTitle'              => $post_thumbnail_title,
 		'isCustomPostType'                => et_builder_is_post_type_custom( $post_type ) ? 'yes' : 'no',
 		'layoutType'                      => $layout_type,
 		'layoutScope'                     => $layout_scope,
@@ -2178,6 +2180,7 @@ function et_fb_get_static_backend_helpers($post_type) {
 
 		'dynamicContent' => array(
 			'invalidField' => esc_html__( 'Invalid field or insufficient permissions.', 'et_builder' ),
+			'manualCustomField' => esc_html__( 'Manual Custom Field Name', 'et_builder' ),
 			'tooltips' => array(
 				'enable' => esc_html__( 'Use Dynamic Content', 'et_builder' ),
 				'disable' => esc_html__( 'Remove Dynamic Content', 'et_builder' ),

@@ -1109,7 +1109,7 @@ function et_builder_set_product_content_status( $post_id ) {
 /**
  * Gets Woocommerce Tabs for the given Product ID.
  *
- * @since ??
+ * @since 4.4.2
  */
 function et_builder_get_woocommerce_tabs() {
 	// Nonce verification.
