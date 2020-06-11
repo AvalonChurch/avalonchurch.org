@@ -545,6 +545,11 @@ var isBuilder = 'object' === _typeof(window.ET_Builder);
 
 
         main_header_fixed_height = $mainHeaderClone.height();
+      }
+
+      if (et_hide_nav) {
+        var topNavHeightDiff = parseInt($et_top_navigation.data('height')) - parseInt($et_top_navigation.data('fixed-height'));
+        main_header_fixed_height = parseInt($main_header.data('height-onload')) - topNavHeightDiff;
       } // Saved fixed main header height calculation
 
 
@@ -1226,6 +1231,10 @@ var isBuilder = 'object' === _typeof(window.ET_Builder);
           return false;
         }
       }
+    }); // Marking elements which has attached event already
+
+    $('a[href*="#"]:not([href="#"])').each(function (index, element) {
+      $(element).attr('data-et-has-event-already', 'true');
     });
 
     var et_pb_window_side_nav_get_sections = function et_pb_window_side_nav_get_sections() {

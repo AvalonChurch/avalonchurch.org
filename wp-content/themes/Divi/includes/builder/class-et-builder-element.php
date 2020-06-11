@@ -932,6 +932,12 @@ class ET_Builder_Element {
 		if ( 0 === $post_id && et_core_page_resource_is_singular() ) {
 			// It doesn't matter if post id is 0 because we're going to force inline styles.
 			$post_id = et_core_page_resource_get_the_ID();
+		} else {
+			$queried_object = get_queried_object();
+			if ( is_object( $queried_object ) && property_exists( $queried_object , 'term_id' ) ) {
+				$term_id = $queried_object->term_id;
+				$post_id = ! empty( $term_id ) ? $term_id : $post_id;
+			}
 		}
 
 		$is_preview       = is_preview() || is_et_pb_preview();
@@ -941,7 +947,8 @@ class ET_Builder_Element {
 
 		$resource_owner = $unified_styles ? 'core' : 'builder';
 		$resource_slug  = $unified_styles ? 'unified' : 'module-design';
-		$resource_slug .= $unified_styles && et_builder_post_is_of_custom_post_type( $post_id ) ? '-cpt' : '';
+		$resource_slug .= ! empty( $term_id ) ? '-term' : '';
+		$resource_slug .= empty( $term_id ) && $unified_styles && et_builder_post_is_of_custom_post_type( $post_id ) ? '-cpt' : '';
 		$resource_slug  = et_theme_builder_decorate_page_resource_slug( $post_id, $resource_slug );
 
 		// If the post is password protected and a password has not been provided yet,
@@ -15737,7 +15744,7 @@ class ET_Builder_Element {
 
 	/**
 	 * Intended to be used for unit testing
-	 * 
+	 *
 	 * @intendedForTesting
 	 */
 	static function reset_styles() {
@@ -16437,6 +16444,9 @@ class ET_Builder_Element {
 					esc_attr( implode( ' ', $parallax_classname ) ),
 					esc_url( $background_image )
 				);
+
+				// set `.et_parallax_bg_wrap` border-radius.
+				et_set_parallax_bg_wrap_border_radius( $this->props, $this->slug, $this->main_css_element );
 			}
 
 			// C.3. Hover parallax class.

@@ -6160,3 +6160,38 @@ function et_builder_filter_main_query_paged_for_blog_module( $query ) {
 	}
 }
 add_filter( 'pre_get_posts', 'et_builder_filter_main_query_paged_for_blog_module' );
+
+/**
+ * Register custom sidebars.
+ *
+ * @since ?? Moved from builder/functions.php, so it can be loaded on wp_ajax_save_widget()
+ */
+function et_builder_widgets_init() {
+	$et_pb_widgets = get_theme_mod( 'et_pb_widgets' );
+	$widget_areas  = et_()->array_get( $et_pb_widgets, 'areas', array() );
+	if ( ! empty( $widget_areas ) ) {
+		foreach ( $widget_areas as $id => $name ) {
+			register_sidebar( array(
+				'name'          => sanitize_text_field( $name ),
+				'id'            => sanitize_text_field( $id ),
+				'before_widget' => '<div id="%1$s" class="et_pb_widget %2$s">',
+				'after_widget'  => '</div> <!-- end .et_pb_widget -->',
+				'before_title'  => '<h4 class="widgettitle">',
+				'after_title'   => '</h4>',
+			) );
+		}
+	}
+
+	// Disable built-in's recent comments widget link styling because ET Themes don't need it.
+	if ( ! et_is_builder_plugin_active() ) {
+		add_filter( 'show_recent_comments_widget_style', '__return_false' );
+	}
+}
+
+// Call the widgets init at 'init' hook if Divi Builder plugin active because plugin
+// loads the Divi builder at 'init' hook and 'widgets_init' is too early.
+if ( et_is_builder_plugin_active() ) {
+	add_action( 'init', 'et_builder_widgets_init', 20 );
+} else {
+	add_action( 'widgets_init', 'et_builder_widgets_init' );
+}

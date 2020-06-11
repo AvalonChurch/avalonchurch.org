@@ -1,3 +1,39 @@
+version 4.4.8 ( updated 06-04-2020 )
+- Fixed a bug which caused Add New button in Layers panel to not work in some cases In Wireframe mode.
+- Updated Layers panel to allow adding Row/Module from empty Section/Column.
+- Fix vertical offset to showing with position absolute or relative on mobile.
+- Hid Insert Shortcode button from text module which added by Shortcodes Ultimate plugin in visual builder.
+- Fixed a bug which were causing Open/Close All button in Layers panel to not collapse all Layers in some cases.
+- Fixed a bug that were allowed to modify a locked Layer in some cases in Layers panel.
+- Fixed an issue with range values being invalid CSS values with some locales.
+- Fixed border-radius doesn't apply when parallax section overflow is set to visible.
+- Fixed RankMath content analyzer issue on BFB.
+- Fixed Language Switcher not being able to be loaded on a custom sidebar.
+- Fixed color of Gallery Slider's arrows. Now they are inheriting their value from the Dark\Light Text Color which may be set in Page Settings.
+- Fixed slug in the names of the CSS static cache files which are used on category pages.
+- Fixed issue with the Woo Reviews module which showed unapproved reviews on the frontend.
+- Fixed a bug which was causing Builder to show hover buttons while resizing the Layers panel.
+- Added span wrapper to the comma between Job and Company into the Testimonial Module on the frontend.
+- Fixed incorrect Label in Right click menu for Column Layer in Layers panel.
+- Fixed a bug that caused default location and size calculation for Layers panel to not work properly.
+- Fixed issue with Custom CSS editor not showing CSS errors properly.
+- Fixed an issue where the Menu module dropdown line style was overwritten by the Theme Customizer color scheme.
+- Added smooth scrolling effect triggered by anchor links and such on the front-end pages while using responsive content or "Minify And Combine Javascript Files" option is disabled.
+- Fixed issue with scroll down button which did not work properly with hide navigation until scroll was enabled.
+	* core/components/SupportCenter.php
+	* core/components/data/Utils.php
+	* core/functions.php
+	* epanel/core_functions.php
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/core.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/functions.php
+	* includes/builder/main-structure-elements.php
+	* includes/builder/module/Testimonial.php
+	* includes/builder/module/woocommerce/Reviews.php
+	* includes/builder/scripts/frontend/scripts.js
+	* js/src/custom.js
+
 version 4.4.7 ( updated 05-15-2020 )
 - Fixed the incorrect letter spacing in a title of Number Counter Divi Module in Safari browser (7.1+).
 - Fixed admin bar missing when global header enabled with Divi Builder plugin.
