@@ -12,3 +12,5 @@
 /* =Theme customization starts here
 ------------------------------------------------------- */
 
+.usp-input-remember, .usp-label-remember { display: none !important; }
+
