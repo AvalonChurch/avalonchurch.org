@@ -1,0 +1,158 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: USP Helper\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-04-07 22:46+0000\n"
+"POT-Revision-Date: Fri Aug 26 2016 11:40:54 GMT-0700 (PDT)\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
+"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
+"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
+"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
+"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2"
+
+#: usp-helper.php:63
+msgid "requires WordPress "
+msgstr ""
+
+#: usp-helper.php:64
+msgid " or higher, and has been deactivated! Please return to the"
+msgstr ""
+
+#: usp-helper.php:65
+msgid "WP Admin Area"
+msgstr ""
+
+#: usp-helper.php:66
+msgid "to upgrade WordPress and try again."
+msgstr ""
+
+#: usp-helper.php:108
+msgid "Settings"
+msgstr ""
+
+#: usp-helper.php:121
+msgid "USP Free"
+msgstr ""
+
+#: usp-helper.php:122
+msgid "USP Pro"
+msgstr ""
+
+#: usp-helper.php:325
+msgid ""
+"The USP Helper plugin makes it easy to display Custom Fields on the front-"
+"end of your site."
+msgstr ""
+
+#: usp-helper.php:328
+msgid "For usage instructions,"
+msgstr ""
+
+#: usp-helper.php:329
+msgid "visit the plugin homepage"
+msgstr ""
+
+#: usp-helper.php:336
+msgid "Custom Fields"
+msgstr ""
+
+#: usp-helper.php:357 usp-helper.php:490
+msgid "Before Custom Field"
+msgstr ""
+
+#: usp-helper.php:363 usp-helper.php:489
+msgid "Custom Field Name"
+msgstr ""
+
+#: usp-helper.php:369 usp-helper.php:491
+msgid "After Custom Field"
+msgstr ""
+
+#: usp-helper.php:374 usp-helper.php:375 usp-helper.php:496 usp-helper.php:497
+msgid "Drag/drop row order"
+msgstr ""
+
+#: usp-helper.php:379 usp-helper.php:493
+msgid "Remove Custom Field"
+msgstr ""
+
+#: usp-helper.php:379 usp-helper.php:494
+msgid "Remove"
+msgstr ""
+
+#: usp-helper.php:390
+msgid "Add another row"
+msgstr ""
+
+#: usp-helper.php:394
+msgid "General Settings"
+msgstr ""
+
+#: usp-helper.php:403
+msgid "Display Custom Fields on frontend"
+msgstr ""
+
+#: usp-helper.php:411
+msgid "Display Custom Fields on backend"
+msgstr ""
+
+#: usp-helper.php:419
+msgid "Display Custom Fields after post content"
+msgstr ""
+
+#: usp-helper.php:427
+msgid "Limit display of Custom Fields to single Posts and Pages"
+msgstr ""
+
+#: usp-helper.php:435
+msgid "Limit display of Custom Fields to submitted Posts and Pages"
+msgstr ""
+
+#: usp-helper.php:443
+msgid "Load Video Scripts &amp; Styles"
+msgstr ""
+
+#: usp-helper.php:452
+msgid "HTML to display before all Custom Fields"
+msgstr ""
+
+#: usp-helper.php:457
+msgid "HTML to display after all Custom Fields"
+msgstr ""
+
+#: usp-helper.php:466
+msgid "Save Changes"
+msgstr ""
+
+#. Name of the plugin
+msgid "USP Helper"
+msgstr ""
+
+#. Description of the plugin
+msgid "Displays USP Custom Fields on the front-end of your site."
+msgstr ""
+
+#. URI of the plugin
+msgid "https://plugin-planet.com/usp-pro-custom-field-helper-plugin/"
+msgstr ""
+
+#. Author of the plugin
+msgid "Jeff Starr"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://plugin-planet.com/"
+msgstr ""
