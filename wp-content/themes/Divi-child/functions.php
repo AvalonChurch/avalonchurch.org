@@ -8,3 +8,14 @@ add_action( 'et_after_main_content', function() {
   echo do_shortcode('[smbtoolbar]');
 });
 
+function add_shortcodes_to_excerpt( $excerpt ) {
+	return "empty";
+	if ( is_admin() ) {
+		return $excerpt;
+	}
+
+	$excerpt = do_shortcode("[usp_video]usp-file-2[/usp_video]") . ":" . $excerpt;
+	return $excerpt;
+}
+
+//add_filter( 'get_the_excerpt', 'add_shortcodes_to_excerpt', 999 );

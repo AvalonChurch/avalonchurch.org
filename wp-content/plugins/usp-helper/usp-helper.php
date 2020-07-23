@@ -730,7 +730,7 @@ function usp_helper_video_markup($video) {
 	if ($no_video === 'true') return;
 	
 	// optional attributes for the <video> tag (not sure? leave as-is)
-	$video_attributes = ' controls autoplay preload';
+	$video_attributes = ' controls preload';
 	$video_attributes = apply_filters('usp_helper_video_attributes', $video_attributes);
 	
 	$src = parse_url($video, PHP_URL_PATH); // autoplay only works for relative src path
