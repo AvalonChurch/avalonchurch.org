@@ -333,12 +333,12 @@ if (!class_exists('USP_Pro_Forms')) {
 			
 			if ($post) {
 				
-				$classes   = 'usp-pro usp-form-'. $post->ID;
-				$args      = array('classes' => $classes, 'id' => $post->ID);
-				$success   = isset($_GET['usp_success']) ? true : false;
-				$form_wrap = usp_form_wrap($args, $success);
-				
 				if (get_post_type() == strtolower(self::POST_TYPE)) {
+					
+					$classes   = 'usp-pro usp-form-'. $post->ID;
+					$args      = array('classes' => $classes, 'id' => $post->ID, 'current_form' => $post->ID);
+					$success   = isset($_GET['usp_success']) ? true : false;
+					$form_wrap = usp_form_wrap($args, $success);
 					
 					if ($success && $usp_advanced['success_form'] == '0') $content = $form_wrap['form_before'] . $form_wrap['form_after'];
 					else $content = $form_wrap['form_before'] . $content . $form_wrap['form_after'];
@@ -406,7 +406,7 @@ if (!class_exists('USP_Pro_Forms')) {
 */
 if (!function_exists('usp_enqueue_resources')) : 
 function usp_enqueue_resources() {
-	global $usp_style;
+	global $usp_style, $usp_advanced;
 	$usp_version = USP_PRO_VERSION;
 	
 	$include_urls = '';
@@ -437,14 +437,20 @@ function usp_enqueue_resources() {
 		}
 	}
 	if (isset($usp_style['include_js']) && $usp_style['include_js']) {
+		$submit_button = (isset($usp_advanced['submit_button']) && $usp_advanced['submit_button'] == 1) ? 1 : 0;
+		$success_form  = (isset($usp_advanced['success_form'])  && $usp_advanced['success_form']  == 1) ? 1 : 0;
+		$script  = 'usp_pro_submit_button = '. json_encode($submit_button) .'; ';
+		$script .= 'usp_pro_success_form = ' . json_encode($success_form)  .'; ';
 		if (!empty($include_urls)) {
 			foreach ($include_urls as $url) {
 				if (strpos($current_url, $url) !== false) {
 					wp_enqueue_script('usp', $plugin_url .'/js/usp-pro.js', array('jquery'), $usp_version);
+					wp_add_inline_script('usp', $script, 'before');
 				}
 			}
 		} else {
 			wp_enqueue_script('usp', $plugin_url .'/js/usp-pro.js', array('jquery'), $usp_version);
+			wp_add_inline_script('usp', $script, 'before');
 		}
 	}
 	if (isset($usp_style['include_parsley']) && $usp_style['include_parsley']) {
@@ -574,8 +580,9 @@ function usp_form_wrap($args, $success) {
 	$current_user = wp_get_current_user();
 	
 	if ($args) {
-		$form_id = $args['id'];
-		$classes = $args['classes'];
+		$form_id      = isset($args['id'])           ? $args['id']            : null;
+		$current_form = isset($args['current_form']) ? $args['current_form']  : null;
+		$classes      = isset($args['classes'])      ? $args['classes']       : null;
 		
 		if (!empty($usp_advanced['custom_before'])) $custom_before = $usp_advanced['custom_before'];
 		else $custom_before = '';
@@ -639,8 +646,8 @@ function usp_form_wrap($args, $success) {
 		$custom_output = apply_filters('usp_form_custom_output', '', $form_id);
 		$custom_output = empty($custom_output) ? '' : $custom_output . "\n";
 		
-		$error_message = usp_display_errors();
-		$success_message = usp_display_success();
+		$error_message = usp_display_errors($form_id);
+		$success_message = usp_display_success($form_id);
 		
 		$session_verify = '<input type="hidden" name="PHPSESSID" value="'. session_id() .'" />'. "\n";
 		$user_verify = '<input type="text" name="usp-verify" id="verify" value="" style="display:none;" class="exclude" />'. "\n";
@@ -666,9 +673,9 @@ function usp_form_wrap($args, $success) {
 				'form_before' => $form_style . $form_css . $custom_before . $form_info . $form_wrap_before . $error_message . $success_message . $form_before,
 				'form_after'  => $submit_button . $custom_output . $form_hidden_before . $hidden_inputs . $form_hidden_after . $form_after . $form_wrap_after . $custom_after . $form_script . $form_js,
 			);
-		if ($success && $usp_advanced['success_form'] == '0') {
+		if ($success && $usp_advanced['success_form'] == '0' && ($current_form == $form_id)) { // (string == int)
 			$form_wrap = array(
-				'form_before' => $custom_before . $success_message, 
+				'form_before' => $form_style . $form_css . $custom_before . $success_message, 
 				'form_after'  => $custom_after,
 			);
 		}
@@ -684,10 +691,10 @@ endif;
 /*
 	Function: Display errors
 		Returns any errors for display
-		Syntax: usp_display_errors();
+		Syntax: usp_display_errors($form_id);
 */
 if (!function_exists('usp_display_errors')) : 
-function usp_display_errors() {
+function usp_display_errors($form_id) {
 	global $usp_advanced, $usp_general, $usp_more;
 	
 	$errors = array();
@@ -706,7 +713,9 @@ function usp_display_errors() {
 	
 	if (isset($_SERVER['QUERY_STRING'])) wp_parse_str(wp_strip_all_tags($_SERVER['QUERY_STRING']), $params);
 	
-	if ($params) {
+	$current_form = isset($params['form_id']) ? $params['form_id'] : null;
+	
+	if ($params && ($current_form == $form_id)) { // (string == int)
 		
 		if (isset($params['usp_form'])) unset($params['usp_form']);
 		
@@ -759,6 +768,9 @@ function usp_display_errors() {
 			}
 			if ($key == 'usp_content_filter') {
 				$errors[] = $usp_more['content_filter'];
+			}
+			if ($key == 'usp_excerpt_filter') {
+				$errors[] = $usp_more['excerpt_filter'];
 			}
 			if (strpos($key, 'usppro_') !== false) {
 				$errors[] = apply_filters('usp_display_errors_custom', '', $key);
@@ -818,13 +830,14 @@ endif;
 /*
 	Function: Display success message
 		Returns appropriate success message
-		Syntax: usp_display_success();
+		Syntax: usp_display_success($form_id);
 */
 if (!function_exists('usp_display_success')) : 
-function usp_display_success() {
+function usp_display_success($form_id) {
 	global $usp_advanced;
 	if (isset($_SERVER['QUERY_STRING'])) wp_parse_str(wp_strip_all_tags($_SERVER['QUERY_STRING']), $params);
-	if ($params) {
+	$current_form = isset($params['form_id']) ? $params['form_id'] : null;
+	if ($params && ($current_form == $form_id)) { // (string == int)
 		$message = '';
 		$success_message = '';
 		foreach ($params as $key => $value) {

@@ -5,26 +5,34 @@ if (!defined('ABSPATH')) die();
 define('USP_ITEM_NAME', 'USP Pro Personal');
 
 if (!class_exists('EDD_SL_Plugin_Updater')) {
+	
 	include(dirname(__FILE__) . '/usp-updater.php');
+	
 }
 
-if (!function_exists('usp_pro_plugin_updater')) : 
-	function usp_pro_plugin_updater() {
-		$license_key = trim(get_option('usp_license_key'));
-		$edd_updater = new EDD_SL_Plugin_Updater(
-			USP_PRO_URL, USP_PRO_FILE, 
-			array(
-				'license'   => $license_key,
-				'item_name' => USP_ITEM_NAME,
-				'author'    => USP_PRO_AUTHOR,
-				'version'   => USP_PRO_VERSION,
-				'url'       => USP_PRO_URL,
-				// 'item_id'   => ,
-			)
-		);
-	}
-	add_action('admin_init', 'usp_pro_plugin_updater', 0);
-endif;
+function usp_pro_plugin_updater() {
+	
+	$doing_cron = defined('DOING_CRON') && DOING_CRON;
+	
+	if (!current_user_can('manage_options') && !$doing_cron) return;
+	
+	$license_key = trim(get_option('usp_license_key'));
+	
+	$edd_updater = new EDD_SL_Plugin_Updater(
+		
+		USP_PRO_URL, USP_PRO_FILE, 
+		array(
+			'license'   => $license_key,
+			'item_name' => USP_ITEM_NAME,
+			'author'    => USP_PRO_AUTHOR,
+			'version'   => USP_PRO_VERSION,
+			'url'       => USP_PRO_URL,
+			// 'item_id'   => ,
+		)
+	);
+	
+}
+add_action('admin_init', 'usp_pro_plugin_updater', 0);
 
 // settings menu
 if (!function_exists('usp_license_menu')) :

@@ -1,10 +1,15 @@
 <?php
-
 /**
  * Represent a simple value or a dynamic one.
  * Used for module attributes and content.
  *
+ * @package Divi
+ * @subpackage Builder
  * @since 3.17.2
+ */
+
+/**
+ * Class ET_Builder_Value.
  */
 class ET_Builder_Value {
 	/**
@@ -39,13 +44,13 @@ class ET_Builder_Value {
 	 *
 	 * @since 3.17.2
 	 *
-	 * @param boolean $dynamic
-	 * @param string $content
-	 * @param array $settings
+	 * @param boolean $dynamic Whether content is dynamic.
+	 * @param string  $content Value content.
+	 * @param array   $settings Dynamic content settings.
 	 */
 	public function __construct( $dynamic, $content, $settings = array() ) {
-		$this->dynamic = $dynamic;
-		$this->content = $content;
+		$this->dynamic  = $dynamic;
+		$this->content  = $content;
 		$this->settings = $settings;
 	}
 
@@ -76,7 +81,7 @@ class ET_Builder_Value {
 	 *
 	 * @since 3.17.2
 	 *
-	 * @param integer $post_id
+	 * @param integer $post_id Post id.
 	 *
 	 * @return string
 	 */

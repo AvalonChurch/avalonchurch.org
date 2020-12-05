@@ -6,9 +6,24 @@
 */
 
 jQuery(document).ready(function($) {
-
+	
 	// "Agree to Terms" toggle
 	$('.usp-agree-toggle').click(function(){ $('.usp-agree-terms').slideToggle(100); });
+	
+	// Multiple forms on same page
+	var urlParams = new URLSearchParams(window.location.search);
+	var form_id = urlParams.get('form_id');
+	var success = urlParams.get('usp_success');
+	$('.usp-error-field').each(function() {
+		if ($(this).closest('.usp-form-'+ form_id).length == 0) {
+			$(this).removeClass('usp-error-field');
+		}
+	});
+	$('.usp-pro').each(function() {
+		if (success && !usp_pro_success_form && $(this).hasClass('usp-form-'+ form_id)) {
+			$(this).find('.usp-submit').hide();
+		}
+	});
 	
 	// Google reCaptcha
 	if (typeof usp_recaptcha_key != 'undefined') {
@@ -207,7 +222,8 @@ jQuery(document).ready(function($) {
 	
 	// selectize (disable via: var usp_disable_selectize = true; in USP Custom JavaScript setting)
 	var disable_selectize = (typeof window.usp_disable_selectize !== 'undefined') ? window.usp_disable_selectize : false;
-	if (!disable_selectize) { $('.usp-input-category.usp-select').selectize(); $('.usp-input-tags.usp-select').selectize(); }
+	if (!disable_selectize) { $('.usp-select').selectize(); }
+	
 });
 
 /*! selectize.js - v0.12.6 | https://github.com/selectize/selectize.js | Apache License (v2) */

@@ -6,6 +6,12 @@ function usp_pro_dashboard_widget_draft_posts() {
 	
 	global $post, $usp_advanced;
 	
+	$display = (apply_filters('usp_widget_drafts_display', true) && usp_pro_display_all_posts()) ? true : false;
+	
+	$message_none = '<p>'. apply_filters('usp_widget_drafts_message_none', esc_html__('No posts in queue.', 'usp-pro')) .'</p>';
+	
+	$message_some = '<p>'. apply_filters('usp_widget_drafts_message_some', esc_html__('Submitted posts in queue:', 'usp-pro')) .'</p>';
+	
 	$userid = apply_filters('usp_widget_drafts_user', get_current_user_id());
 	
 	$posts_per_page = apply_filters('usp_widget_drafts_number', -1);
@@ -27,17 +33,15 @@ function usp_pro_dashboard_widget_draft_posts() {
 		'meta_value'     => '1'
 	);
 	
+	if ($display || empty($userid)) unset($args['author']);
+	
 	$submitted_posts = get_posts($args);
 	$post_count = count($submitted_posts);
 	
-	echo '<style>';
-	echo '.metabox-prefs .usp-pro-dashboard-widget { display: none; } ';
-	echo '.postbox .usp-pro-dashboard-widget { padding-left: 5px; color: #ccc; font-size: 90%; font-weight: lighter; }';
-	echo '</style>';
-	
 	if (isset($post_count) && (int) $post_count > 0) {
 		
-		echo '<p>'. esc_html__('Submitted posts waiting to be published:', 'usp-pro') .'</p>';
+		echo $message_some;
+		
 		echo '<ul>';
 		
 		foreach ($submitted_posts as $post) {
@@ -80,7 +84,7 @@ function usp_pro_dashboard_widget_draft_posts() {
 		
 	} else {
 		
-		echo '<p>'. esc_html__('No submitted posts waiting to be published.', 'usp-pro') .'</p>';
+		echo $message_none;
 		
 	}
 	
@@ -88,13 +92,47 @@ function usp_pro_dashboard_widget_draft_posts() {
 
 
 
+function usp_pro_get_current_user_roles() {
+	
+	if (is_user_logged_in()) {
+		
+		$user = wp_get_current_user();
+		
+		$roles = (array) $user->roles;
+		
+		return $roles;
+	
+	} else {
+		
+		return array();
+		
+	}
+	
+}
+
+
+
+function usp_pro_display_all_posts() {
+	
+	$roles = usp_pro_get_current_user_roles();
+	
+	$allowed = apply_filters('usp_widget_display_all_posts', array('administrator', 'editor'));
+	
+	foreach ($allowed as $allow) {
+		
+		if (in_array($allow, $roles)) return true;
+		
+	}
+	
+	return false;
+	
+}
+
+
+
 function usp_pro_dashboard_widgets() {
 	
-	wp_add_dashboard_widget(
-		'usp_pro_dashboard_widget_draft_posts', 
-		esc_html__('Submitted Post Queue', 'usp-pro') .' <span class="usp-pro-dashboard-widget">USP Pro</span>', 
-		'usp_pro_dashboard_widget_draft_posts'
-	);
+	wp_add_dashboard_widget('usp_pro_dashboard_widget_draft_posts', esc_html__('Submitted Post Queue', 'usp-pro'), 'usp_pro_dashboard_widget_draft_posts');
 	
 }
 add_action('wp_dashboard_setup', 'usp_pro_dashboard_widgets');

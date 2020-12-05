@@ -20,7 +20,7 @@ if (!class_exists('USP_Pro_Posts')) {
 		public static function create_post_type() {
 			global $usp_advanced;
 			if (isset($usp_advanced['post_type_slug']) && !empty($usp_advanced['post_type_slug'])) $post_slug = $usp_advanced['post_type_slug'];
-			if ($usp_advanced['post_type'] == 'usp_post') {
+			if (isset($usp_advanced['post_type']) && $usp_advanced['post_type'] == 'usp_post') {
 				$capabilities = array(
 					'edit_post'              => 'edit_usp_post',
 					'read_post'              => 'read_usp_post',

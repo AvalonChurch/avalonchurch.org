@@ -74,10 +74,10 @@ class ET_Builder_Module_Woocommerce_Images extends ET_Builder_Module {
 			'text_shadow'    => array(),
 			'text'           => false,
 			'fonts'          => array(
-				'sale_badge'    => array(
+				'sale_badge' => array(
 					'label'           => esc_html__( 'Sale Badge', 'et_builder' ),
 					'css'             => array(
-						'main'      => "%%order_class%% .et_pb_module_inner span.onsale",
+						'main'      => '%%order_class%% .et_pb_module_inner span.onsale',
 						'important' => 'all',
 					),
 					'hide_text_align' => true,
@@ -178,6 +178,7 @@ class ET_Builder_Module_Woocommerce_Images extends ET_Builder_Module {
 				'tab_slug'       => 'advanced',
 				'toggle_slug'    => 'sale_badge',
 				'hover'          => 'tabs',
+				'sticky'         => true,
 				'mobile_options' => true,
 			),
 			'__images'             => array(
@@ -262,27 +263,26 @@ class ET_Builder_Module_Woocommerce_Images extends ET_Builder_Module {
 		$force_fullwidth         = et_()->array_get( $this->props, 'force_fullwidth', 'off' );
 
 		// Sale Badge Color.
-		et_pb_responsive_options()->generate_responsive_css( $sale_badge_color_values, '%%order_class%% span.onsale', 'background-color', $render_slug, ' !important;', 'color' );
-
-		if ( et_builder_is_hover_enabled( 'sale_badge_color', $this->props ) ) {
-			ET_Builder_Element::set_style(
-				$render_slug,
-				array(
-					'selector'    => '%%order_class%%:hover span.onsale',
-					'declaration' => sprintf(
-						'background-color: %1$s !important;',
-						esc_html( $sale_badge_color_hover )
-					),
-				)
-			);
-		}
+		$this->generate_styles(
+			array(
+				'base_attr_name' => 'sale_badge_color',
+				'selector'       => '%%order_class%% span.onsale',
+				'css_property'   => 'background-color',
+				'important'      => true,
+				'render_slug'    => $render_slug,
+				'type'           => 'color',
+			)
+		);
 
 		// Image force fullwidth.
 		if ( 'on' === $force_fullwidth ) {
-			ET_Builder_Element::set_style( $render_slug, array(
-				'selector'    => '%%order_class%% .woocommerce-product-gallery__image img',
-				'declaration' => 'width: 100%;',
-			) );
+			ET_Builder_Element::set_style(
+				$render_slug,
+				array(
+					'selector'    => '%%order_class%% .woocommerce-product-gallery__image img',
+					'declaration' => 'width: 100%;',
+				)
+			);
 		}
 
 		$output = self::get_images( $this->props );

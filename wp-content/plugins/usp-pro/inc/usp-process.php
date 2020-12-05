@@ -183,7 +183,8 @@ if (!class_exists('USP_Pro_Process')) {
 				}
 				do_action('usp_insert_post_after', $errors_display, $redirect_type, $usp_redirect, $post_id);
 				$errors_args = array('errors_display' => $errors_display, 'redirect_type' => $redirect_type);
-				$this->submission_redirect($usp_redirect, $errors_args, $post_id);
+				$usp_form_id = isset($fields['usp_form_id']) ? $fields['usp_form_id'] : null;
+				$this->submission_redirect($usp_redirect, $errors_args, $post_id, $usp_form_id);
 			}
 			
 			session_write_close();
@@ -244,19 +245,17 @@ if (!class_exists('USP_Pro_Process')) {
 			
 			do_action('usp_submit_post_before', $fields, $user_id, $logged_cats, $default_tags, $default_cats, $custom_type);
 			
-			if ($usp_general['titles_unique']) {
-				$check_title = get_page_by_title($fields['usp_title'], OBJECT, $usp_advanced['post_type']);
-				if ($check_title && $check_title->ID) return 'duplicate';
-			}
-			
-			if ($usp_general['content_unique']) {
-				$check_content = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ". $wpdb->prefix ."posts WHERE post_content = %s AND post_type = %s", $fields['usp_content'], $usp_advanced['post_type']));
-				if (!empty($check_content)) return 'duplicate';
-			}
-			
 			if (!empty($custom_type)) $post_type = $custom_type;
 			else $post_type = $this->post_type();
-
+			
+			if ($usp_general['titles_unique']) {
+				$check_title = get_page_by_title($fields['usp_title'], OBJECT, $post_type);
+				if ($check_title && $check_title->ID) return 'duplicate';
+			}
+			if ($usp_general['content_unique']) {
+				$check_content = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ". $wpdb->prefix ."posts WHERE post_content = %s AND post_type = %s", $fields['usp_content'], $post_type));
+				if (!empty($check_content)) return 'duplicate';
+			}
 			$post_tags = $this->post_tags($fields, $default_tags);
 			$post_status = $this->post_status($fields);
 			$post_id = $this->post_content($fields, $user_id, $post_tags, $post_status, $post_type);
@@ -264,7 +263,7 @@ if (!class_exists('USP_Pro_Process')) {
 				$post_meta = $this->post_meta($fields, $user_id, $post_id);
 				$post_files = $this->insert_attachments($fields, $user_id, $post_id);
 				$post_categories = $this->post_categories($fields['usp_category'], $logged_cats, $default_cats, $post_id, $post_type);
-				$post_taxonomies = $this->post_taxonomies($fields['usp_taxonomy'], $post_id);
+				$post_taxonomies = $this->post_taxonomies($fields, $post_id);
 				//
 				$submit_email = $fields['usp_email'];
 				$meta_email   = get_post_meta($post_id, 'usp-email', true);
@@ -281,45 +280,29 @@ if (!class_exists('USP_Pro_Process')) {
 			}
 			return apply_filters('usp_submit_post', $post_id, $user_id, $fields);
 		}
-		public function post_taxonomies($taxonomy, $post_id) {
-			if (!empty($taxonomy)) {
-				$terms = array(); $term_ids = array();
-				foreach ($taxonomy as $key => $value) {
-					if (is_array($value)) {
-						foreach ($value as $val) {
-							if (is_numeric($val)) {
-								$terms[] = (int) $val;
-							} else {
-								$tax_term = get_term_by('name', trim($val), $key, ARRAY_A);
-								$new = wp_insert_term(trim($val), $key);
-								if (is_array($new)) $terms[] = $new['term_id'];
-								else $terms[] = intval($tax_term['term_id']);
-							}
-						}
+		public function post_taxonomies($fields, $post_id) {
+			$taxonomy    = isset($fields['usp_taxonomy']) ? $fields['usp_taxonomy'] : '';
+			$tax_numeric = isset($fields['tax_numeric'])  ? $fields['tax_numeric']  : '';
+			if (empty($taxonomy)) return;
+			$terms = array();
+			foreach ($taxonomy as $tax => $term_ids) {
+				$allow_numeric_names = ($tax === $tax_numeric) ? true : false;
+				$term_ids = is_array($term_ids) ? $term_ids : array_map('trim', explode(',', $term_ids));
+				foreach ($term_ids as $term_id) {
+					$field = (is_numeric($term_id) && !$allow_numeric_names) ? 'id' : 'name';
+					$term = get_term_by($field, $term_id, $tax, ARRAY_A);
+					if (isset($term['term_id'])) {
+						$terms[] = $term['term_id'];
 					} else {
-						if (is_numeric($value)) {
-							$terms[] = (int) $value;
-						} else {
-							if (strstr($value, ',') !== false) {
-								$taxes = explode(',', $value);
-								foreach ($taxes as $tax) {
-									$tax_term = get_term_by('name', trim($tax), $key, ARRAY_A);
-									$new = wp_insert_term(trim($tax), $key);
-									if (is_array($new)) $terms[] = $new['term_id'];
-									else $terms[] = intval($tax_term['term_id']);
-								}
-							} else {
-								$tax_term = get_term_by('name', trim($value), $key, ARRAY_A);
-								$new = wp_insert_term(trim($value), $key);
-								if (is_array($new)) $terms[] = $new['term_id'];
-								else $terms[] = intval($tax_term['term_id']);
-							}
+						if (!is_numeric($term_id) || (is_numeric($term_id) && $allow_numeric_names)) {
+							$new = wp_insert_term($term_id, $tax);
+							if (!is_wp_error($new) && isset($new['term_id'])) $terms[] = $new['term_id'];
 						}
 					}
-					$term_ids = wp_set_object_terms($post_id, $terms, $key);
 				}
-				if (!is_wp_error($term_ids)) return apply_filters('usp_post_taxonomies', $term_ids);
+				$term_ids = wp_set_object_terms($post_id, $terms, $tax);
 			}
+			if (!is_wp_error($term_ids)) return apply_filters('usp_post_taxonomies', $term_ids);
 		}
 		public function post_type() {
 			global $usp_advanced;
@@ -422,10 +405,15 @@ if (!class_exists('USP_Pro_Process')) {
 			}
 			return array('post_date' => $post_date, 'post_date_gmt' => $post_date_gmt);
 		}
+		public function post_comments($fields, $post_type) {
+			$default = get_default_comment_status($post_type);
+			return (isset($fields['post_comments']) && !empty($fields['post_comments'])) ? 'closed' : $default;
+		}
 		public function post_content($fields, $user_id, $post_tags, $post_status, $post_type) {
 			global $usp_advanced, $usp_more;
 			
 			$args = $this->post_password($post_status, $fields);
+			$post_comments = $this->post_comments($fields, $post_type);
 			$post_content = $this->sanitize_content($fields['usp_content']);
 			$post_excerpt = $this->sanitize_content($fields['usp_excerpt']);
 			$post_parent = (int) sanitize_text_field($fields['post_parent']);
@@ -446,17 +434,18 @@ if (!class_exists('USP_Pro_Process')) {
 			$post_date_gmt = isset($date['post_date_gmt']) ? $date['post_date_gmt'] : '';
 			
 			$usp_post = array(
-				'post_author'   => $user_id,
-				'post_content'  => $post_content,
-				'post_excerpt'  => $post_excerpt,
-				'post_type'     => $post_type,
-				'tags_input'    => $post_tags,
-				'post_title'    => $post_title,
-				'post_status'   => $post_status,
-				'post_password' => $password,
-				'post_date'     => $post_date,
-				'post_date_gmt' => $post_date_gmt,
-				'post_parent'   => $post_parent,
+				'post_author'    => $user_id,
+				'post_content'   => $post_content,
+				'post_excerpt'   => $post_excerpt,
+				'post_type'      => $post_type,
+				'tags_input'     => $post_tags,
+				'post_title'     => $post_title,
+				'post_status'    => $post_status,
+				'post_password'  => $password,
+				'post_date'      => $post_date,
+				'post_date_gmt'  => $post_date_gmt,
+				'post_parent'    => $post_parent,
+				'comment_status' => $post_comments,
 			);
 			
 			$usp_post = apply_filters('usp_post_array', $usp_post);
@@ -1528,7 +1517,7 @@ if (!class_exists('USP_Pro_Process')) {
 			else $return = ($input == $response);
 			return apply_filters('usp_challenge_question', $return);
 		}
-		public function submission_redirect($usp_redirect, $args, $post_id) {
+		public function submission_redirect($usp_redirect, $args, $post_id, $usp_form_id) {
 			
 			global $usp_general, $usp_advanced;
 			
@@ -1611,6 +1600,7 @@ if (!class_exists('USP_Pro_Process')) {
 				}
 				$this->clear_session_vars();
 			}
+			$add_query_arg['form_id'] = $usp_form_id;
 			$return_args = array('usp_success', 'usp_error_register', 'usp_error_post', 'usp_error_mail');
 			$remove_query_arg = array_merge($errors_cleared, $return_args);
 			$redirect = remove_query_arg($remove_query_arg, $redirect);
@@ -2343,6 +2333,7 @@ if (!class_exists('USP_Pro_Process')) {
 				// POST EXCERPT
 				$error_19 = '';
 				$excerpt_filter = '';
+				$blocked_terms = $usp_advanced['blacklist_terms'];
 				if (isset($_POST['usp-excerpt']) && !blank_or_zero($_POST['usp-excerpt'])) {
 					$usp_excerpt = $this->sanitize_content($_POST['usp-excerpt']);
 					if (!empty($blocked_terms)) {
@@ -2770,6 +2761,12 @@ if (!class_exists('USP_Pro_Process')) {
 				if (isset($_POST['usp-limit-posts'])) $post_limit = sanitize_text_field($_POST['usp-limit-posts']);
 				else $post_limit = '';
 				
+				if (isset($_POST['usp-tax-numeric'])) $tax_numeric = sanitize_text_field($_POST['usp-tax-numeric']);
+				else $tax_numeric = '';
+				
+				if (isset($_POST['usp-comments'])) $post_comments = sanitize_text_field($_POST['usp-comments']);
+				else $post_comments = '';
+				
 				// PROCESS
 				$fields = array(
 					'usp_author'   => $usp_author, 
@@ -2804,19 +2801,21 @@ if (!class_exists('USP_Pro_Process')) {
 					'usp_description' => $usp_description,
 					'usp_password'    => $usp_password,
 					
-					'usp_form_id'     => $form_id,
-					'email_alerts'    => $email_alerts,
-					'post_parent'     => $post_parent,
-					'disable_alerts'  => $disable_alerts,
-					'post_expires'    => $post_expires,
-					'post_limit'      => $post_limit,
+					'usp_form_id'    => $form_id,
+					'email_alerts'   => $email_alerts,
+					'post_parent'    => $post_parent,
+					'disable_alerts' => $disable_alerts,
+					'post_expires'   => $post_expires,
+					'post_limit'     => $post_limit,
+					'tax_numeric'    => $tax_numeric,
+					'post_comments'  => $post_comments,
 				);
 				
 				$errors = array(
 					$error_1, $error_2, $error_3, $error_4, $error_5, $error_6, $error_7, $error_8, $error_9, $error_10, 
 					$error_11, $error_12, $error_13, $error_14, $error_15, $error_16, $error_17, $error_18, $error_19, 
 					$error_a, $error_b, $error_c, $error_d, $error_e, $error_f, $error_g,
-					$usp_error_custom, $usp_ccf_error, $form_error, $content_filter
+					$usp_error_custom, $usp_ccf_error, $form_error, $content_filter, $excerpt_filter
 				);
 				
 				$args = array(

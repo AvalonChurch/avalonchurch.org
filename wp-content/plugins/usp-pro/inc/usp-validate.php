@@ -406,6 +406,7 @@ function validate_more($input) {
 	if (isset($input['subject_restrict']))    $input['subject_restrict']    = wp_kses($input['subject_restrict'],    $allowed_tags);
 	if (isset($input['form_allowed']))        $input['form_allowed']        = wp_kses($input['form_allowed'],        $allowed_tags);
 	if (isset($input['content_filter']))      $input['content_filter']      = wp_kses($input['content_filter'],      $allowed_tags);
+	if (isset($input['excerpt_filter']))      $input['excerpt_filter']      = wp_kses($input['excerpt_filter'],      $allowed_tags);
 	
 	// file submission errors
 	if (isset($input['files_required']))      $input['files_required']      = wp_kses($input['files_required'],      $allowed_tags);

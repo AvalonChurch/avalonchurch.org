@@ -172,6 +172,7 @@ function usp_callback_textarea_label($id) {
 	elseif ($id == 'subject_restrict')        $label = esc_html__('Illegal characters in the Email Subject field', 'usp-pro');
 	elseif ($id == 'form_allowed')            $label = esc_html__('Incorrect form type (when &ldquo;Extra Form Security&rdquo; is enabled in General settings)', 'usp-pro');
 	elseif ($id == 'content_filter')          $label = esc_html__('Forbidden words in Post Content (when &ldquo;Content Filter&rdquo; is enabled in Advanced settings)', 'usp-pro');
+	elseif ($id == 'excerpt_filter')          $label = esc_html__('Forbidden words in Post Excerpt (when &ldquo;Content Filter&rdquo; is enabled in Advanced settings)', 'usp-pro');
 	
 	elseif ($id == 'files_required')          $label = esc_html__('Files required (for multiple-select files)', 'usp-pro');
 	elseif ($id == 'file_required')           $label = esc_html__('File required (for single-select files)', 'usp-pro');
@@ -275,7 +276,7 @@ function usp_callback_dropdown_label($id) {
 	
 	if     ($id == 'assign_author')   $label = esc_html__('Default author for user-submitted posts', 'usp-pro');
 	elseif ($id == 'assign_role')     $label = esc_html__('Role for users registering via USP Form (default: subscriber)', 'usp-pro');
-	elseif ($id == 'number_approved') $label = esc_html__('Note: this setting', 'usp-pro') .' <a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/usp-pro-custom-post-status/">'. esc_html__('can be overridden per form', 'usp-pro') .'</a>';
+	elseif ($id == 'number_approved') $label = esc_html__('Note: this setting can be', 'usp-pro') .' <a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/usp-pro-custom-post-status/">'. esc_html__('overridden per form', 'usp-pro') .'</a>';
 	
 	return $label;
 }

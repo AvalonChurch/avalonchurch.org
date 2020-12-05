@@ -197,6 +197,7 @@ function usp_default_options_more() {
 		'email_restrict'      => '<div class="usp-error">' . esc_html__('Please enter a valid email address.', 'usp-pro') . '</div>',
 		'subject_restrict'    => '<div class="usp-error">' . esc_html__('Restricted characters found in Subject field. Please try again.', 'usp-pro') . '</div>',
 		'content_filter'      => '<div class="usp-error">' . esc_html__('Restricted terms found in Content field. Please try again.', 'usp-pro') . '</div>',
+		'excerpt_filter'      => '<div class="usp-error">' . esc_html__('Restricted terms found in Excerpt field. Please try again.', 'usp-pro') . '</div>',
 		
 		'files_required'      => '<div class="usp-error">' . esc_html__('File(s) required. Please check any required file(s) and try again.', 'usp-pro') . '</div>',
 		'file_type_not'       => '<div class="usp-error">' . esc_html__('File type not allowed. Please check the allowed file types and try again.', 'usp-pro') . '</div>',
@@ -330,10 +331,11 @@ function usp_default_options_style() {
 .usp-pro .usp-error { color: #cc6666; }
 .usp-pro .usp-error-field { border-color: #cc6666; background-color: #fef9f9; }
 .usp-pro .usp-error-file { border: 1px solid #cc6666; }
-.usp-hidden { display: none; }
+.usp-hidden, .logged-in .usp-hide-if-logged-in { display: none; }
 .wp-editor-wrap { width: 99%; }
 .wp-editor-container { border: 1px solid #e5e5e5; }
-.wp-editor-area.usp-error-field { border: 1px solid #cc6666; }',
+.wp-editor-area.usp-error-field { border: 1px solid #cc6666; }
+.widget .usp-pro .usp-form-errors { margin: 0; }',
 		
 		'style_min'     => '.usp-pro .usp-form { padding: 5px; }
 .usp-pro .usp-fieldset, .usp-pro fieldset { border: 0; margin: 10px 0; padding: 0; }
@@ -354,10 +356,11 @@ function usp_default_options_style() {
 .usp-pro .usp-error-file { border: 1px solid #cc6666; }
 .usp-pro, .usp-pro ul, .usp-pro p, .usp-pro code { font-size: 14px; }
 .usp-pro .usp-contact-cc { font-size: 13px; }
-.usp-hidden { display: none; }
+.usp-hidden, .logged-in .usp-hide-if-logged-in { display: none; }
 .wp-editor-wrap { width: 99%; }
 .wp-editor-container { border: 1px solid #e5e5e5; }
-.wp-editor-area.usp-error-field { border: 1px solid #cc6666; }',
+.wp-editor-area.usp-error-field { border: 1px solid #cc6666; }
+.widget .usp-pro .usp-form-errors { margin: 0; }',
 		
 		'style_small'   => '.usp-pro .usp-form { padding: 5px; }
 .usp-pro .usp-fieldset, .usp-pro fieldset { border: 0; margin: 5px 0; padding: 0; }
@@ -378,10 +381,11 @@ function usp_default_options_style() {
 .usp-pro .usp-error-file { border: 1px solid #cc6666; }
 .usp-pro, .usp-pro ul, .usp-pro p, .usp-pro code { font-size: 12px; }
 .usp-pro .usp-contact-cc { font-size: 11px; }
-.usp-hidden { display: none; }
+.usp-hidden, .logged-in .usp-hide-if-logged-in { display: none; }
 .wp-editor-wrap { width: 99%; }
 .wp-editor-container { border: 1px solid #e5e5e5; }
-.wp-editor-area.usp-error-field { border: 1px solid #cc6666; }',
+.wp-editor-area.usp-error-field { border: 1px solid #cc6666; }
+.widget .usp-pro .usp-form-errors { margin: 0; }',
 		
 		'style_large'   => '.usp-pro .usp-form { padding: 5px; }
 .usp-pro .usp-fieldset, .usp-pro fieldset { border: 0; margin: 20px 0; padding: 0; }
@@ -402,10 +406,11 @@ function usp_default_options_style() {
 .usp-pro .usp-error-file { border: 1px solid #cc6666; }
 .usp-pro, .usp-pro ul, .usp-pro p, .usp-pro code { font-size: 16px; }
 .usp-pro .usp-contact-cc { font-size: 14px; }
-.usp-hidden { display: none; }
+.usp-hidden, .logged-in .usp-hide-if-logged-in { display: none; }
 .wp-editor-wrap { width: 99%; }
 .wp-editor-container { border: 1px solid #e5e5e5; }
-.wp-editor-area.usp-error-field { border: 1px solid #cc6666; }',
+.wp-editor-area.usp-error-field { border: 1px solid #cc6666; }
+.widget .usp-pro .usp-form-errors { margin: 0; }',
 	
 	);
 	

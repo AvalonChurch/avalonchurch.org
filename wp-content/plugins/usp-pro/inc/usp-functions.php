@@ -1619,17 +1619,19 @@ function usp_pro_display_posts($attr, $content = null) {
 	
 	extract(shortcode_atts(array(
 		
-		'userid'    => 'all',
-		'numposts'  =>  apply_filters('usp_display_posts_default', 10),
-		'display'   => 'title',
-		'loggedin'  => 'false',
-		'status'    => 'publish',
-		'modlinks'  => 'false',
-		'formid'    => '',
-		'cat'       => '',
-		'order'     => '',
-		'orderby'   => '',
-		'post_type' => 'any',
+		'userid'     => 'all',
+		'numposts'   =>  apply_filters('usp_display_posts_default', 10),
+		'display'    => 'title',
+		'loggedin'   => 'false',
+		'status'     => 'publish',
+		'modlinks'   => 'false',
+		'formid'     => '',
+		'cat'        => '',
+		'order'      => '',
+		'orderby'    => '',
+		'post_type'  => 'any',
+		'link_title' => 'true',
+		'post_link'  => 'permalink',
 		
 	), $attr));
 	
@@ -1748,64 +1750,76 @@ function usp_pro_display_posts($attr, $content = null) {
 		
 		setup_postdata($post);
 		
-		$postid    = get_the_ID();
-		$permalink = get_the_permalink();
-		$posttitle = get_the_title();
-		$excerpt   = get_the_excerpt();
-		$content   = strip_shortcodes(get_the_content());
+		$postid     = get_the_ID();
+		$user_url   = get_post_meta($postid, 'usp-url', true);
+		$permalink  = ($user_url && $post_link === 'user_url') ? $user_url : get_the_permalink();
 		
-		$title     = apply_filters('usp_shortcode_display_posts_title', esc_attr__('View full post', 'usp-pro'));
-		$thumb     = get_the_post_thumbnail(get_the_id(), apply_filters('usp_shortcode_display_posts_size', 'thumbnail'));
+		$posttitle  = get_the_title();
+		$excerpt    = get_the_excerpt();
+		$content    = strip_shortcodes(get_the_content());
 		
-		$editurl   = get_edit_post_link($postid);
-		$edittitle = apply_filters('usp_shortcode_display_posts_edit_title', esc_attr__('Edit this post', 'usp-pro'));
-		$edittext  = apply_filters('usp_shortcode_display_posts_edit_text', esc_attr__('Edit', 'usp-pro'));
+		$title      = apply_filters('usp_shortcode_display_posts_title', esc_attr__('View full post', 'usp-pro'));
+		$thumb      = get_the_post_thumbnail(get_the_id(), apply_filters('usp_shortcode_display_posts_size', 'thumbnail'));
 		
-		$delurl    = get_delete_post_link($postid);
-		$deltitle  = apply_filters('usp_shortcode_display_posts_delete_title', esc_attr__('Delete this post', 'usp-pro'));
-		$deltext   = apply_filters('usp_shortcode_display_posts_delete_text', esc_attr__('Delete', 'usp-pro'));
+		$editurl    = get_edit_post_link($postid);
+		$edittitle  = apply_filters('usp_shortcode_display_posts_edit_title', esc_attr__('Edit this post', 'usp-pro'));
+		$edittext   = apply_filters('usp_shortcode_display_posts_edit_text', esc_attr__('Edit', 'usp-pro'));
 		
-		$modsep1   = apply_filters('usp_shortcode_display_posts_modlink_sep1', esc_attr__(' - ', 'usp-pro'));
-		$modsep2   = apply_filters('usp_shortcode_display_posts_modlink_sep2', esc_attr__(' ', 'usp-pro'));
+		$delurl     = get_delete_post_link($postid);
+		$deltitle   = apply_filters('usp_shortcode_display_posts_delete_title', esc_attr__('Delete this post', 'usp-pro'));
+		$deltext    = apply_filters('usp_shortcode_display_posts_delete_text', esc_attr__('Delete', 'usp-pro'));
 		
-		$editlink  = '<a target="_blank" rel="noopener noreferrer" href="'. $editurl .'" title="'. $edittitle .'">'. $edittext .'</a>';
-		$dellink   = '<a target="_blank" rel="noopener noreferrer" href="'. $delurl  .'" title="'. $deltitle  .'">'. $deltext .'</a>';
+		$modsep1    = apply_filters('usp_shortcode_display_posts_modlink_sep1', esc_attr__(' - ', 'usp-pro'));
+		$modsep2    = apply_filters('usp_shortcode_display_posts_modlink_sep2', esc_attr__(' ', 'usp-pro'));
 		
-		$mod_links = ($modlinks === 'true') ? '<span class="usp-pro-display-posts-modlinks">'. $modsep1 . $editlink . $modsep2 . $dellink .'</span>' : '';
+		$editlink   = '<a target="_blank" rel="noopener noreferrer" href="'. $editurl .'" title="'. $edittitle .'">'. $edittext .'</a>';
+		$dellink    = '<a target="_blank" rel="noopener noreferrer" href="'. $delurl  .'" title="'. $deltitle  .'">'. $deltext .'</a>';
+		
+		$mod_links  = ($modlinks === 'true') ? '<span class="usp-pro-display-posts-modlinks">'. $modsep1 . $editlink . $modsep2 . $dellink .'</span>' : '';
 		
 		$display_posts .= apply_filters('usp_shortcode_display_posts_before', '<div class="usp-pro-display-posts-wrap">', $permalink, $posttitle, $excerpt, $content, $title, $thumb);
 		
+		$link_title_before = '';
+		$link_title_after  = '';
+		
+		if ($link_title === 'true') {
+			
+			$link_title_before = '<a href="'. $permalink .'" title="'. $title .'">';
+			$link_title_after  = '</a>';
+			
+		}
+		
 		if ($display === 'content') {
 			
-			$display_posts .= '<div class="usp-pro-display-posts-title"><strong><a href="'. $permalink .'" title="'. $title .'">'. $posttitle .'</a></strong>'. $mod_links .'</div>';
+			$display_posts .= '<div class="usp-pro-display-posts-title"><strong>'. $link_title_before . $posttitle . $link_title_after .'</strong>'. $mod_links .'</div>';
 			$display_posts .= '<div class="usp-pro-display-posts-content">'. $content .'</div>';
 			
 		} elseif ($display === 'excerpt') {
 			
-			$display_posts .= '<div class="usp-pro-display-posts-title"><strong><a href="'. $permalink .'" title="'. $title .'">'. $posttitle .'</a></strong>'. $mod_links .'</div>';
+			$display_posts .= '<div class="usp-pro-display-posts-title"><strong>'. $link_title_before . $posttitle . $link_title_after .'</strong>'. $mod_links .'</div>';
 			$display_posts .= '<div class="usp-pro-display-posts-content">'. $excerpt .'</div>';
 		
 		} elseif ($display === 'thumb') {
 			
-			$display_posts .= $thumb . $mod_links;
+			$display_posts .= $link_title_before . $thumb . $link_title_after . $mod_links;
 			
 		} elseif ($display === 'content+thumb') {
 			
-			$display_posts .= '<div class="usp-pro-display-posts-title"><strong><a href="'. $permalink .'" title="'. $title .'">'. $posttitle .'</a></strong>'. $mod_links .'</div>';
+			$display_posts .= '<div class="usp-pro-display-posts-title"><strong>'. $link_title_before . $posttitle . $link_title_after .'</strong>'. $mod_links .'</div>';
 			$display_posts .= '<div class="usp-pro-display-posts-content">'. $thumb .' '. $content .'</div>';
 			
 		} elseif ($display === 'excerpt+thumb') {
 			
-			$display_posts .= '<div class="usp-pro-display-posts-title"><strong><a href="'. $permalink .'" title="'. $title .'">'. $posttitle .'</a></strong>'. $mod_links .'</div>';
+			$display_posts .= '<div class="usp-pro-display-posts-title"><strong>'. $link_title_before . $posttitle . $link_title_after .'</strong>'. $mod_links .'</div>';
 			$display_posts .= '<div class="usp-pro-display-posts-content">'. $thumb .' '. $excerpt .'</div>';
 			
 		} elseif ($display === 'title+thumb') {
 			
-			$display_posts .= '<li>'. $thumb .' <a href="'. $permalink .'" title="'. $title .'">'. $posttitle .'</a>'. $mod_links .'</li>';
+			$display_posts .= '<li>'. $thumb .' '. $link_title_before . $posttitle . $link_title_after . $mod_links .'</li>';
 			
 		} else {
 			
-			$display_posts .= '<li><a href="'. $permalink .'" title="'. $title .'">'. $posttitle .'</a>'. $mod_links .'</li>';
+			$display_posts .= '<li>'. $link_title_before . $posttitle . $link_title_after . $mod_links .'</li>';
 		}
 		
 		$display_posts .= apply_filters('usp_shortcode_display_posts_after', '</div>', $permalink, $posttitle, $excerpt, $content, $title, $thumb);

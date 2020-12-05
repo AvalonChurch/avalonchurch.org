@@ -3,15 +3,15 @@
 	Plugin Name: USP Pro
 	Plugin URI: https://plugin-planet.com/usp-pro/
 	Description: Create unlimited forms and let visitors submit content, register, and more from the front-end.
-	Tags: submit, submitted, publish, published, generated, front-end, frontend, content, posts, upload, uploader
+	Tags: frontend, front-end, user-generated, user-submitted, posts, submit, content, publish, published, upload, uploader
 	Author: Jeff Starr
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
 	Requires at least: 4.1
-	Tested up to: 5.4
-	Stable tag: 3.6
-	Version: 3.6
+	Tested up to: 5.6
+	Stable tag: 3.8
+	Version: 3.8
 	Requires PHP: 5.6.20
 	Text Domain: usp-pro
 	Domain Path: /languages
@@ -19,6 +19,7 @@
 	License: The USP Pro license is comprised of two parts:
 	
 	* Part 1: Its PHP code is licensed under the GPL (v2 or later), like WordPress. More info @ https://www.gnu.org/licenses/
+	
 	* Part 2: Everything else (e.g., CSS, HTML, JavaScript, images, design) is licensed according to the purchased license. More info @ https://plugin-planet.com/usp-pro/
 	
 	Without prior written consent from Monzilla Media, you must NOT directly or indirectly: license, sub-license, sell, resell, or provide for free any aspect or component of Part 2.
@@ -34,8 +35,8 @@ if (!defined('ABSPATH')) die();
 
 define('USP_PRO_NAME', 'USP Pro');
 define('USP_PRO_REQUIRES', '4.1');
-define('USP_PRO_TESTED',   '5.4');
-define('USP_PRO_VERSION',  '3.6');
+define('USP_PRO_TESTED',   '5.6');
+define('USP_PRO_VERSION',  '3.8');
 define('USP_PRO_AUTHOR', 'Jeff Starr');
 define('USP_PRO_URL', 'https://plugin-planet.com');
 define('USP_PRO_PATH', WP_PLUGIN_DIR . '/usp-pro');
@@ -717,6 +718,7 @@ if (!class_exists('USP_Pro')) {
 			add_settings_field('subject_restrict', esc_html__('Subject Restriction', 'usp-pro'),   array(&$this, 'callback_textarea'), $this->settings_more, 'section_more_3', array('id' => 'subject_restrict', 'type' => 'more'));
 			add_settings_field('form_allowed',     esc_html__('Incorrect Form Type', 'usp-pro'),   array(&$this, 'callback_textarea'), $this->settings_more, 'section_more_3', array('id' => 'form_allowed',     'type' => 'more'));
 			add_settings_field('content_filter',   esc_html__('Content Filter', 'usp-pro'),        array(&$this, 'callback_textarea'), $this->settings_more, 'section_more_3', array('id' => 'content_filter',   'type' => 'more'));
+			add_settings_field('excerpt_filter',   esc_html__('Excerpt Filter', 'usp-pro'),        array(&$this, 'callback_textarea'), $this->settings_more, 'section_more_3', array('id' => 'excerpt_filter',   'type' => 'more'));
 			// 4
 			add_settings_section('section_more_4', esc_html__('File Submission Errors', 'usp-pro'), 'section_more_4_desc', $this->settings_more);
 			add_settings_field('files_required',  esc_html__('Files Required', 'usp-pro'),        array(&$this, 'callback_textarea'), $this->settings_more, 'section_more_4', array('id' => 'files_required',  'type' => 'more'));
@@ -837,6 +839,7 @@ if (!class_exists('USP_Pro')) {
 			$break     = '<br />';
 			$form_type = 'text';
 			$form_min  = '';
+			$class     = ' class="regular-text"';
 			
 			if ($id == 'use_cat_id' || $id == 'custom_status') {
 				
@@ -849,10 +852,11 @@ if (!class_exists('USP_Pro')) {
 				$break     = ' ';
 				$form_type = 'number';
 				$form_min  = ' min="-1"';
+				$class     = ' class="small-text"';
 				
 			}
 			
-			echo '<input name="usp_'. $type .'['. $id .']" id="usp_'. $type .'['. $id .']" type="'. $form_type .'" value="'. $value .'" style="'. $width .'"'. $form_min .' />';
+			echo '<input name="usp_'. $type .'['. $id .']"'. $class .' id="usp_'. $type .'['. $id .']" type="'. $form_type .'" value="'. $value .'" style="'. $width .'"'. $form_min .' />';
 			echo $break .'<label for="usp_'. $type .'['. $id .']">'. $label .'</label>';
 		}
 		
@@ -1093,7 +1097,7 @@ if (!class_exists('USP_Pro')) {
 			
 			$value = $this->advanced_settings[$id];
 			
-			echo '<input name="usp_'. $type .'['. $id .']" id="usp_'. $type .'['. $id .']" type="number" step="1" min="0" max="999" maxlength="3" value="'. $value .'" /> <label for="usp_'. $type .'['. $id .']">'. $label .'</label>';
+			echo '<input name="usp_'. $type .'['. $id .']" id="usp_'. $type .'['. $id .']" class="small-text" type="number" step="1" min="0" max="999" maxlength="3" value="'. $value .'" /> <label for="usp_'. $type .'['. $id .']">'. $label .'</label>';
 		}
 		
 		function callback_dropdown($args) {
@@ -1214,7 +1218,7 @@ if (!class_exists('USP_Pro')) {
 				}
 				echo '<li><input type="radio" name="usp_' . $type .'['. $id .']" id="usp_' . $type .'['. $id .']" value="'. esc_attr($radio_option['value']) .'"'. $checked .' /> '. $radio_option['label'] .'</li>';
 			}
-			echo '<ul>';
+			echo '</ul>';
 		}
 		
 		
@@ -1257,25 +1261,30 @@ if (!class_exists('USP_Pro')) {
 		}
 		
 		function add_admin_styles() {
-			global $usp_advanced, $pagenow, $current_screen, $post_type;
+			global $usp_advanced;
 			
 			if (!is_admin()) return;
 			
-			$other_cpt = isset($usp_advanced['other_type']) ? $usp_advanced['other_type'] : false;
+			$other_cpt = isset($usp_advanced['other_type']) ? $usp_advanced['other_type'] : '';
+			
+			$screen = get_current_screen();
+			if (!is_object($screen)) $screen = new stdClass();
+			
+			$screen_id = property_exists($screen, 'id')        ? $screen->id        : false;
+			$post_type = property_exists($screen, 'post_type') ? $screen->post_type : false;
 			
 			if (
-				($current_screen->post_type === 'post') || 
-				($current_screen->post_type === 'page') || 
-				($current_screen->post_type === 'usp_post') || 
-				($current_screen->post_type === $other_cpt) || 
-				(isset($_GET['page']) && $_GET['page'] === 'usp-pro-license') || 
-				(isset($_GET['page']) && $_GET['page'] === 'usp_options')
-				
+				($post_type === 'post') || 
+				($post_type === 'page') || 
+				($post_type === 'usp_post') || 
+				($screen_id === 'plugins_page_usp-pro-license') || 
+				($screen_id === 'settings_page_usp_options') || 
+				(!empty($post_type) && !empty($other_cpt) && ($post_type === $other_cpt))
 			) {
 				wp_enqueue_style('usp_style_admin', plugins_url(basename(dirname(__FILE__))) .'/css/usp-admin.css', array(), USP_PRO_VERSION, 'all');
 			}
 			
-			if ('usp_form' === $post_type) {
+			if ($post_type === 'usp_form') {
 				wp_enqueue_style('usp_quicktags', plugins_url(basename(dirname(__FILE__))) .'/css/usp-quicktags.css', array(), USP_PRO_VERSION, 'all');
 			}
 		}

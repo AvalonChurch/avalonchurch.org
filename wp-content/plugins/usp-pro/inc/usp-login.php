@@ -14,7 +14,7 @@ function display_usp_login() {
 	
 	if (isset($current_user)) {
 		$user = $current_user->user_login;
-		$id =  $current_user->ID;
+		$id   = $current_user->ID;
 	}
 	
 	$reset = false;
@@ -30,6 +30,9 @@ function display_usp_login() {
 	?>
 	
 	<style>
+		
+		<?php if (!get_option('users_can_register')) : ?>#usp-login li:nth-child(2) { display: none; }<?php endif; ?>
+		
 		.usp-login #tab2_login, .usp-login #tab3_login { display: none; }
 		
 		.usp-login { width: 370px; overflow: hidden; margin: 25px auto; padding: 10px; color: #333; font-size: 12px; line-height: 16px; text-shadow: 0 0 1px #fff; }

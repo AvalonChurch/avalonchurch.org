@@ -1030,6 +1030,10 @@ function usp_form($args) {
 	
 	global $usp_advanced;
 	
+	if (isset($_SERVER['QUERY_STRING'])) wp_parse_str(wp_strip_all_tags($_SERVER['QUERY_STRING']), $params);
+	$current_form = isset($params['form_id']) ? $params['form_id'] : null;
+	$args['current_form'] = $current_form;
+	
 	if (isset($args['id']) && !empty($args['id'])) {
 		$id = usp_get_form_id($args['id']);
 	} else {
@@ -1058,18 +1062,15 @@ function usp_form($args) {
 	$form_wrap = usp_form_wrap($args, $success);
 	
 	if (get_post_type() !== 'usp_form') {
-		
-		if ($success && !$usp_advanced['success_form']) {
+		if ($success && !$usp_advanced['success_form'] && ($current_form == $id)) { // (string == int)
 			return $widget_before . $title . $form_wrap['form_before'] . $form_wrap['form_after'] . $widget_after;
 		} else {
 			return $widget_before . $title . $form_wrap['form_before'] . do_shortcode($content['post_content']) . $form_wrap['form_after'] . $widget_after;
 		}
-		
-	} else {
-		
-		return;
-		
 	}
+	
+	return;
+	
 }
 add_shortcode('usp_form', 'usp_form');
 endif;

@@ -8,6 +8,7 @@ function et_core_init() {
 	ET_Core_API_Spam_Providers::instance();
 	ET_Core_Cache_Directory::instance();
 	ET_Core_PageResource::startup();
+	ET_Core_CompatibilityWarning::instance();
 
 	if ( defined( 'ET_CORE_UPDATED' ) ) {
 		global $wp_rewrite;
@@ -182,12 +183,48 @@ function et_core_clear_wp_cache( $post_id = '' ) {
 			wp_doing_ajax() ? ET_Core_LIB_BluehostCache::get_instance()->clear( $post_id ) : do_action( 'epc_purge' );
 		}
 
+			// Pressable.
+			if ( isset( $GLOBALS['batcache'] ) && is_object( $GLOBALS['batcache'] ) ) {
+				wp_cache_flush();
+			}
+
+			// Cloudways - Breeze.
+			if ( class_exists( 'Breeze_Admin' ) ) {
+				$breeze_admin = new Breeze_Admin();
+				$breeze_admin->breeze_clear_all_cache();
+			}
+
+			// Kinsta.
+			if ( class_exists( '\Kinsta\Cache' ) && isset( $GLOBALS['kinsta_cache'] ) && is_object( $GLOBALS['kinsta_cache'] ) ) {
+				global $kinsta_cache;
+
+				if ( isset( $kinsta_cache->kinsta_cache_purge ) && method_exists( $kinsta_cache->kinsta_cache_purge, 'purge_complete_caches' ) ) {
+					$kinsta_cache->kinsta_cache_purge->purge_complete_caches();
+				}
+			}
+
+			// GoDaddy.
+			if ( class_exists( '\WPaaS\Cache' ) ) {
+				if ( ! \WPaaS\Cache::has_ban() ) {
+					remove_action( 'shutdown', array( '\WPaaS\Cache', 'purge' ), PHP_INT_MAX );
+					add_action( 'shutdown', array( '\WPaaS\Cache', 'ban' ), PHP_INT_MAX );
+				}
+			}
+
 		// Complimentary Performance Plugins
 		// Autoptimize
 		if ( is_callable( 'autoptimizeCache::clearall' ) ) {
 			autoptimizeCache::clearall();
 		}
 
+			// WP Optimize.
+			if ( class_exists( 'WP_Optimize' ) && defined( 'WPO_PLUGIN_MAIN_PATH' ) ) {
+				if ( '' !== $post_id && is_callable( 'WPO_Page_Cache::delete_single_post_cache' ) ) {
+					WPO_Page_Cache::delete_single_post_cache( $post_id );
+				} elseif ( is_callable( array( 'WP_Optimize', 'get_page_cache' ) ) && is_callable( array( WP_Optimize()->get_page_cache(), 'purge' ) ) ) {
+					WP_Optimize()->get_page_cache()->purge();
+				}
+			}
 	} catch( Exception $err ) {
 		ET_Core_Logger::error( 'An exception occurred while attempting to clear site cache.' );
 	}

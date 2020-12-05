@@ -35,10 +35,13 @@ class ET_Builder_Plugin_Compat_WP_Offload_S3 extends ET_Builder_Plugin_Compat_Ba
 		}
 
 		// Up to: latest theme version
-		add_action( 'et_fb_ajax_save_verification_result', array( $this, 'override_fb_ajax_save_verification' )  );
+		add_action( 'et_fb_ajax_save_verification_result', array( $this, 'override_fb_ajax_save_verification' ) );
 
 		// Filter attachment IDs for images with an external/CDN URL.
 		add_filter( 'et_get_attachment_id_by_url_pre', array( $this, 'et_get_attachment_id_by_url_pre' ), 10, 2 );
+
+		// Filter image urls in the raw post content.
+		add_filter( 'et_fb_load_raw_post_content', array( $this, 'filter_urls_on_raw_post_content' ), 10, 2 );
 	}
 
 	/**
@@ -55,8 +58,8 @@ class ET_Builder_Plugin_Compat_WP_Offload_S3 extends ET_Builder_Plugin_Compat_Ba
 	 *
 	 * @since 4.2.1
 	 *
-	 * @param bool|int   $attachment_id_pre Default value. Default is false.
-	 * @param string $url               URL of the image need to query.
+	 * @param bool|int $attachment_id_pre Default value. Default is false.
+	 * @param string   $url               URL of the image need to query.
 	 *
 	 * @return bool|int
 	 */
@@ -72,6 +75,26 @@ class ET_Builder_Plugin_Compat_WP_Offload_S3 extends ET_Builder_Plugin_Compat_Ba
 		}
 
 		return $attachment_id_pre;
+	}
+
+	/**
+	 * Filter the raw post content to be used to generate the builder data.
+	 * The `et_fb_get_builder_shortcode_object()` directly access the raw post_content, so the image URL not properly transformed
+	 *
+	 * @since 4.7.0
+	 *
+	 * @param string $post_content The post content.
+	 * @param string $post_id      The post ID.
+	 * @return string
+	 */
+	public function filter_urls_on_raw_post_content( $post_content, $post_id ) {
+		global $as3cf;
+
+		if ( property_exists( $as3cf, 'filter_local' ) && method_exists( $as3cf->filter_local, 'filter_post' ) ) {
+			$post_content = $as3cf->filter_local->filter_post( $post_content );
+		}
+
+		return $post_content;
 	}
 }
 

@@ -40,7 +40,8 @@ if (!class_exists('USP_Custom_Fields')) {
 			foreach ($custom_fields as $key => $value) {
 				
 				$key = trim($key);
-				if ('_' == $key{0}) continue;
+				if ('_' == $key[0]) continue;
+				
 				if ($key !== '[usp_custom_field form="'. $args['form'] .'" id="'. $id .'"]') continue;
 				
 				if (preg_match("/usp_custom_field/i", $key)) {

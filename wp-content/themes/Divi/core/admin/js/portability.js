@@ -95,7 +95,7 @@
 			$( '.et-core-portability-import-placeholder' ).text( file.name );
 		},
 
-		import: function() {
+		import: function(noBackup) {
 			var $this = this;
 			var file = $this.instance('input[type="file"]').get(0).files[0];
 
@@ -211,10 +211,13 @@
 					content = content.replace( /([^\]]*)$/, '' );
 				}
 
+				var applyGlobalPresets = $this.instance( '[name="et-core-portability-apply-presets"]' ).is( ':checked' );
+
 				$this.ajaxAction( {
 					action: 'et_core_portability_export',
 					content: content,
 					selection: $.isEmptyObject( posts ) ? false : JSON.stringify( posts ),
+					apply_global_presets: applyGlobalPresets,
 					nonce: $this.nonces.export
 				}, function( response ) {
 					var time = ' ' + new Date().toJSON().replace( 'T', ' ' ).replace( ':', 'h' ).substring( 0, 16 ),
@@ -429,9 +432,15 @@
 				return;
 			}
 
-			$.each( requestData, function( name, value ) {
-				formData.append( name, value);
-			} );
+			$.each(requestData, function(name, value) {
+				if ('file' === name) {
+				  // Explicitly set the file name. 
+				  // Otherwise it'll be set to 'Blob' in case of Blob type, but we need actual filename here.
+				  formData.append('file', value, value.name);
+				} else {
+				  formData.append(name, value);
+				}
+			});
 
 			var importFBAjax = function( importData ) {
 				$.ajax( {
