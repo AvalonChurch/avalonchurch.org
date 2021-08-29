@@ -438,7 +438,16 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 		return $fields;
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		$multi_view = et_pb_multi_view_options( $this );
 		// Allowing full html for backwards compatibility.
 		$author       = $this->_esc_attr( 'author', 'full' );
@@ -680,11 +689,11 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 				%8$s
 				%7$s
 				<div class="et_pb_testimonial_description">
-					<div class="et_pb_testimonial_description_inner">%1$s</div> <!-- .et_pb_testimonial_description_inner -->
+					<div class="et_pb_testimonial_description_inner">%1$s</div>
 					%2$s
 					<p class="et_pb_testimonial_meta">%5$s</p>
-				</div> <!-- .et_pb_testimonial_description -->
-			</div> <!-- .et_pb_testimonial -->',
+				</div>
+			</div>',
 			$multi_view_testimonial_content,
 			et_core_esc_previously( $author ),
 			$this->module_id(),
@@ -764,4 +773,6 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Testimonial();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Testimonial();
+}

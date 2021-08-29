@@ -173,7 +173,7 @@ class ET_Builder_Module_Pricing_Tables_Item extends ET_Builder_Module {
 				'button' => array(
 					'label'         => et_builder_i18n( 'Button' ),
 					'css'           => array(
-						'main'         => ".et_pb_pricing {$this->main_css_element} .et_pb_button",
+						'main'         => ".et_pb_pricing {$this->main_css_element} .et_pb_pricing_table_button.et_pb_button",
 						'limited_main' => ".et_pb_pricing {$this->main_css_element} .et_pb_pricing_table_button.et_pb_button",
 						'alignment'    => ".et_pb_pricing {$this->main_css_element} .et_pb_button_wrapper",
 					),
@@ -435,7 +435,7 @@ class ET_Builder_Module_Pricing_Tables_Item extends ET_Builder_Module {
 	 *
 	 * @return string The module's HTML output.
 	 */
-	public function render( $attrs, $content = null, $render_slug ) {
+	public function render( $attrs, $content, $render_slug ) {
 		global $et_pb_pricing_tables_num,
 			$et_pb_pricing_tables_icon,
 			$et_pb_pricing_tables_icon_tablet,
@@ -649,13 +649,13 @@ class ET_Builder_Module_Pricing_Tables_Item extends ET_Builder_Module {
 				<div class="et_pb_pricing_heading">
 					%2$s
 					%3$s
-				</div> <!-- .et_pb_pricing_heading -->
+				</div>
 				<div class="et_pb_pricing_content_top">
 					<span class="et_pb_et_price">%6$s%7$s%8$s</span>
-				</div> <!-- .et_pb_pricing_content_top -->
+				</div>
 				<div class="et_pb_pricing_content">
 					%4$s
-				</div> <!-- .et_pb_pricing_content -->
+				</div>
 				%5$s
 			</div>',
 			$this->module_classname( $render_slug ),
@@ -720,4 +720,6 @@ class ET_Builder_Module_Pricing_Tables_Item extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Pricing_Tables_Item();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Pricing_Tables_Item();
+}

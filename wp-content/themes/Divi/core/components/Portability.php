@@ -131,6 +131,10 @@ class ET_Core_Portability {
 			$import['data'] = $this->replace_images_urls( $images, $import['data'] );
 		}
 
+		if ( ! empty( $import['global_colors'] ) ) {
+			$import['data'] = $this->_maybe_inject_gcid( $import['data'] );
+		}
+
 		$data = $import['data'];
 		$success = array( 'timestamp' => $timestamp );
 
@@ -238,6 +242,10 @@ class ET_Core_Portability {
 			}
 		}
 
+		if ( ! empty( $import['global_colors'] ) ) {
+			$this->import_global_colors( $import['global_colors'] );
+			$success['globalColors'] = et_builder_get_all_global_colors();
+		}
 
 		return $success;
 	}
@@ -261,12 +269,14 @@ class ET_Core_Portability {
 		$temp_file            = $this->has_temp_file( $temp_file_id, 'et_core_export' );
 		$apply_global_presets = isset( $_POST['apply_global_presets'] ) ? wp_validate_boolean( $_POST['apply_global_presets'] ) : false;
 		$global_presets       = '';
+		$global_colors        = '';
 		$thumbnails           = '';
 
 		if ( $temp_file ) {
 			$file_data      = json_decode( $filesystem->get_contents( $temp_file ) );
 			$data           = (array) $file_data->data;
 			$global_presets = $file_data->presets;
+			$global_colors  = $file_data->global_colors;
 		} else {
 			$temp_file = $this->temp_file( $temp_file_id, 'et_core_export' );
 
@@ -299,7 +309,15 @@ class ET_Core_Portability {
 				$data = array( $post_data['ID'] => $post_data['post_content'] );
 
 				if ( isset( $_POST['global_presets'] ) ) {
-					$global_presets = json_decode( stripslashes( $_POST['global_presets'] ) );
+					// phpcs:ignore ET.Sniffs.ValidatedSanitizedInput.InputNotSanitized -- filter_post_data() function does sanitation.
+					$post_global_presets = $this->_filter_post_data( $_POST['global_presets'] );
+					$global_presets      = json_decode( stripslashes( $post_global_presets ) );
+				}
+
+				if ( isset( $_POST['global_colors'] ) ) {
+					// phpcs:ignore ET.Sniffs.ValidatedSanitizedInput.InputNotSanitized -- filter_post_data() function does sanitation.
+					$post_global_colors = $this->_filter_post_data( $_POST['global_colors'] );
+					$global_colors      = json_decode( stripslashes( $post_global_colors ) );
 				}
 			}
 
@@ -337,8 +355,9 @@ class ET_Core_Portability {
 			// if images get paginated, this content will be brought back out
 			// of a temp file in paginated request
 			$file_data = array(
-				'data'     => $data,
-				'presets' => $global_presets,
+				'data'          => $data,
+				'presets'       => $global_presets,
+				'global_colors' => $global_colors,
 			);
 			$filesystem->put_contents( $temp_file, wp_json_encode( $file_data ) );
 		}
@@ -347,11 +366,12 @@ class ET_Core_Portability {
 
 		$images = $this->get_data_images( $data );
 		$data = array(
-			'context'    => $this->instance->context,
-			'data'       => $data,
-			'presets'    => $global_presets,
-			'images'     => $this->maybe_paginate_images( $images, 'encode_images', $timestamp ),
-			'thumbnails' => $thumbnails,
+			'context'       => $this->instance->context,
+			'data'          => $data,
+			'presets'       => $global_presets,
+			'global_colors' => $global_colors,
+			'images'        => $this->maybe_paginate_images( $images, 'encode_images', $timestamp ),
+			'thumbnails'    => $thumbnails,
 		);
 
 		// Return exported content instead of printing it
@@ -1057,6 +1077,9 @@ class ET_Core_Portability {
 
 					$global_presets->$module_type->presets->$preset_id->settings->$setting_name_sanitized = $value_sanitized;
 				}
+
+				// Inject Global colors into imported presets.
+				$global_presets->$module_type->presets->$preset_id->settings = ET_Builder_Global_Presets_Settings::maybe_set_global_colors( $global_presets->$module_type->presets->$preset_id->settings );
 			}
 		}
 
@@ -1066,6 +1089,32 @@ class ET_Core_Portability {
 		$global_presets_history->add_global_history_record( $global_presets );
 
 		return true;
+	}
+
+	/**
+	 * Import global colors.
+	 *
+	 * @since 4.9.0
+	 *
+	 * @param array $incoming_global_colors Global Colors Array.
+	 *
+	 * @return void
+	 */
+	public function import_global_colors( $incoming_global_colors ) {
+		$global_colors = array();
+
+		foreach ( $incoming_global_colors as $incoming_gcolor ) {
+			$key                   = et_()->sanitize_text_fields( $incoming_gcolor[0] );
+			$global_colors[ $key ] = et_()->sanitize_text_fields( $incoming_gcolor[1] );
+		}
+
+		$stored_global_colors = et_builder_get_all_global_colors();
+
+		if ( ! empty( $stored_global_colors ) ) {
+			$global_colors = array_merge( $global_colors, $stored_global_colors );
+		}
+
+		et_update_option( 'et_global_colors', $global_colors );
 	}
 
 	/**
@@ -1299,8 +1348,69 @@ class ET_Core_Portability {
 				}
 			}
 
-			if ( is_array( $module['content'] ) ) {
+			if ( isset( $module['content'] ) && is_array( $module['content'] ) ) {
 				$this->rewrite_module_preset_ids( $module['content'], $global_presets, $preset_rewrite_map );
+			}
+		}
+	}
+
+	/**
+	 * Injects global color ids into the imported layout
+	 *
+	 * @since 4.10.0
+	 *
+	 * @param array $data - The multidimensional array representing a import object structure.
+	 */
+	protected function _maybe_inject_gcid( &$data ) {
+		foreach ( $data as $post_id => &$post_data ) {
+			if ( is_array( $post_data ) ) {
+				foreach ( $post_data as $post_param => &$param_value ) {
+					if ( ! is_array( $param_value ) ) {
+						$shortcode_object = et_fb_process_shortcode( $param_value );
+						$this->_inject_gcid( $shortcode_object );
+						$data[ $post_id ][ $post_param ] = et_fb_process_to_shortcode( $shortcode_object, array(), '', false );
+					}
+				}
+				unset( $param_value );
+			} else {
+				$shortcode_object = et_fb_process_shortcode( $post_data );
+				$this->_inject_gcid( $shortcode_object );
+				$data[ $post_id ] = et_fb_process_to_shortcode( $shortcode_object, array(), '', false );
+			}
+		}
+		unset( $post_data );
+
+		return $data;
+	}
+
+	/**
+	 * Process and inject global color ids into the shortcode
+	 *
+	 * @since 4.10.0
+	 *
+	 * @param array $shortcode_object - The multidimensional array representing a page/module structure.
+	 */
+	protected function _inject_gcid( &$shortcode_object ) {
+		foreach ( $shortcode_object as &$module ) {
+			// No global colors set for this module.
+			if ( ! empty( $module['attrs']['global_colors_info'] ) ) {
+				$colors_array = json_decode( $module['attrs']['global_colors_info'], true );
+
+				if ( ! empty( $colors_array ) ) {
+					foreach ( $colors_array as $color_id => $attrs_array ) {
+						if ( ! empty( $attrs_array ) ) {
+							foreach ( $attrs_array as $attr_name ) {
+								if ( isset( $module['attrs'][ $attr_name ] ) && '' !== $module['attrs'][ $attr_name ] ) {
+									$module['attrs'][ $attr_name ] = $color_id;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if ( isset( $module['content'] ) && is_array( $module['content'] ) ) {
+				$this->_inject_gcid( $module['content'] );
 			}
 		}
 	}
@@ -1337,7 +1447,7 @@ class ET_Core_Portability {
 				}
 			}
 
-			if ( is_array( $module['content'] ) ) {
+			if ( isset( $module['content'] ) && is_array( $module['content'] ) ) {
 				$this->apply_global_presets( $module['content'], $global_presets );
 			}
 		}
@@ -1521,28 +1631,27 @@ class ET_Core_Portability {
 		foreach ( $data as $value ) {
 			if ( is_array( $value ) || is_object( $value ) ) {
 				$images = array_merge( $images, $this->get_data_images( (array) $value ) );
-				continue;
 			}
 
-			// Extract images from html or shortcodes.
+			// Extract images from HTML or shortcodes.
 			if ( preg_match_all( '/(' . implode( '|', $images_src ) . ')="(?P<src>\w+[^"]*)"/i', $value, $matches ) ) {
 				foreach ( array_unique( $matches['src'] ) as $key => $src ) {
 					$images = array_merge( $images, $this->get_data_images( array( $key => $src ) ) );
 				}
-				continue;
 			}
 
 			// Extract images from shortcodes gallery.
 			if ( preg_match_all( '/gallery_ids="(?P<ids>\w+[^"]*)"/i', $value, $matches ) ) {
-				$explode = explode( ',', str_replace( ' ', '', $matches['ids'][0] ) );
+				foreach ( array_unique( $matches['ids'] ) as $galleries ) {
+					$explode = explode( ',', str_replace( ' ', '', $galleries ) );
 
-				foreach ( $explode as $image_id ) {
-					$images = array_merge( $images, $this->get_data_images( array( (int) $image_id ), true ) );
+					foreach ( $explode as $image_id ) {
+						$images = array_merge( $images, $this->get_data_images( array( (int) $image_id ), true ) );
+					}
 				}
-				continue;
 			}
 
-			if ( preg_match( '/^.+?\.(jpg|jpeg|jpe|png|gif)/', $value, $match ) || $force ) {
+			if ( preg_match( '/^.+?\.(jpg|jpeg|jpe|png|gif|webp)/', $value, $match ) || $force ) {
 				$basename = basename( $value );
 
 				// Avoid duplicates.
@@ -1888,6 +1997,17 @@ class ET_Core_Portability {
 	}
 
 	/**
+	 * Filters a variable with string filter
+	 *
+	 * @param mixed $data - Value to filter.
+	 *
+	 * @return mixed
+	 */
+	protected function _filter_post_data( $data ) {
+		return filter_var( $data, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES );
+	}
+
+	/**
 	 * Prevent import and export timeout or memory failure.
 	 *
 	 * @since 2.7.0
@@ -2073,7 +2193,7 @@ class ET_Core_Portability {
 	public function get_timestamp() {
 		et_core_nonce_verified_previously();
 
-		return isset( $_POST['timestamp'] ) && ! empty( $_POST['timestamp'] ) ? sanitize_text_field( $_POST['timestamp'] ) : current_time( 'timestamp' );
+		return isset( $_POST['timestamp'] ) && ! empty( $_POST['timestamp'] ) ? sanitize_text_field( $_POST['timestamp'] ) : (string) current_time( 'timestamp' ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- This is used to generate the temporary file ID so we don't need the accuracy.
 	}
 
 	/**
@@ -2115,7 +2235,7 @@ class ET_Core_Portability {
 				}
 			}
 
-			if ( is_array( $module['content'] ) ) {
+			if ( isset( $module['content'] ) && is_array( $module['content'] ) ) {
 				$used_global_presets = array_merge( $used_global_presets, $this->get_used_global_presets( $module['content'], $used_global_presets ) );
 			}
 		}
@@ -2126,6 +2246,7 @@ class ET_Core_Portability {
 	/**
 	 * Enqueue assets.
 	 *
+	 * @since ?.? Script `et-core-portability` now loads in footer along with `et-core-admin`.
 	 * @since 2.7.0
 	 */
 	public function assets() {
@@ -2134,12 +2255,20 @@ class ET_Core_Portability {
 		wp_enqueue_style( 'et-core-portability', ET_CORE_URL . 'admin/css/portability.css', array(
 			'et-core-admin',
 		), ET_CORE_VERSION );
-		wp_enqueue_script( 'et-core-portability', ET_CORE_URL . 'admin/js/portability.js', array(
-			'jquery',
-			'jquery-ui-tabs',
-			'jquery-form',
-			'et-core-admin',
-		), ET_CORE_VERSION );
+
+		wp_enqueue_script(
+			'et-core-portability',
+			ET_CORE_URL . 'admin/js/portability.js',
+			array(
+				'jquery',
+				'jquery-ui-tabs',
+				'jquery-form',
+				'et-core-admin',
+			),
+			ET_CORE_VERSION,
+			true
+		);
+
 		wp_localize_script( 'et-core-portability', 'etCorePortability', array(
 			'nonces'        => array(
 				'import' => wp_create_nonce( 'et_core_portability_import' ),

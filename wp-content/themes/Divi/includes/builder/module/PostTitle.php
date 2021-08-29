@@ -449,7 +449,16 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 		return $fields;
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		$multi_view         = et_pb_multi_view_options( $this );
 		$featured_placement = $this->props['featured_placement'];
 		$text_color         = $this->props['text_color'];
@@ -463,7 +472,6 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 			$post_id = 0;
 		}
 
-		$this->process_additional_options( $render_slug );
 
 		$output                    = '';
 		$featured_image_output     = '';
@@ -777,4 +785,6 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Post_Title();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Post_Title();
+}

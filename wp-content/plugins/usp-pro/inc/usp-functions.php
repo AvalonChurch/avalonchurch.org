@@ -1393,6 +1393,44 @@ endif;
 
 
 /* 
+	Function: user shortcode to display submitted URL as a link
+	Enables the user to specify where in the post content the linked URL should be displayed
+	Enable this option in the plugin settings, then tell your visitors about the following user shortcode:
+		
+		[url_link] = displays a link using the URL specified in the URL field
+		
+	Available attributes:
+	
+		title: specifies the link's title attribute (default: none)
+		text:  specifies the link's anchor text (default: URL field)
+		atts:  specifies any custom attributes that should be included in the link markup (important: use single quotes for any attribute quotes) (default: none)
+		
+*/
+if (!function_exists('usp_user_shortcode_url_link') && !shortcode_exists('url_link')) : 
+function usp_user_shortcode_url_link($attr, $content = null) {
+	global $post, $wpdb, $usp_uploads;
+	extract(shortcode_atts(array(
+		'title' => '',
+		'text'  => '',
+		'atts'  => '',
+	), $attr));
+	if (isset($usp_uploads['user_shortcodes']) && $usp_uploads['user_shortcodes']) {
+		$url = (usp_is_submitted($post->ID)) ? get_post_meta($post->ID, 'usp-url', true) : '';
+		if (empty($url)) return;
+		$atts  = empty($atts) ? '' : ' '. $atts;
+		$atts  = str_replace("'", '"', $atts);
+		$text  = empty($text) ? esc_url($url) : esc_html($text);
+		$title = empty($title) ? '' : ' title="'. esc_attr($title) .'"';
+		$output = '<a href="'. esc_url($url) .'"'. $title . $atts .'>'. $text .'</a>';
+		return apply_filters('usp_shortcode_url_link', $output);
+	}
+}
+add_shortcode('url_link', 'usp_user_shortcode_url_link');
+endif;
+
+
+
+/* 
 	Function: user shortcode to display submitted URL and Title as a link
 	Enables the user to specify where in the post content a link to their post should be displayed
 	Enable this option in the plugin settings, then tell your visitors about the following user shortcode:

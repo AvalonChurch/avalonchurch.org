@@ -3,15 +3,15 @@
 	Plugin Name: USP Pro
 	Plugin URI: https://plugin-planet.com/usp-pro/
 	Description: Create unlimited forms and let visitors submit content, register, and more from the front-end.
-	Tags: frontend, front-end, user-generated, user-submitted, posts, submit, content, publish, published, upload, uploader
+	Tags: guest post, user post, anonymous post, frontend post, public post, share post, submit post, visitor post, user submitted post, upload
 	Author: Jeff Starr
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
 	Requires at least: 4.1
-	Tested up to: 5.6
-	Stable tag: 3.8
-	Version: 3.8
+	Tested up to: 5.8
+	Stable tag: 4.0
+	Version: 4.0
 	Requires PHP: 5.6.20
 	Text Domain: usp-pro
 	Domain Path: /languages
@@ -28,15 +28,15 @@
 	
 	Upgrades: Your purchase of USP Pro includes free lifetime upgrades, which include new features, bug fixes, and other improvements. 
 	
-	Copyright 2020 Monzilla Media. All rights reserved.
+	Copyright 2021 Monzilla Media. All rights reserved.
 */
 
 if (!defined('ABSPATH')) die();
 
 define('USP_PRO_NAME', 'USP Pro');
 define('USP_PRO_REQUIRES', '4.1');
-define('USP_PRO_TESTED',   '5.6');
-define('USP_PRO_VERSION',  '3.8');
+define('USP_PRO_TESTED',   '5.8');
+define('USP_PRO_VERSION',  '4.0');
 define('USP_PRO_AUTHOR', 'Jeff Starr');
 define('USP_PRO_URL', 'https://plugin-planet.com');
 define('USP_PRO_PATH', WP_PLUGIN_DIR . '/usp-pro');
@@ -1347,31 +1347,31 @@ if (!class_exists('USP_Pro')) {
 					
 					<?php if ($tab === 'usp_general') : ?>
 					
-					$('.usp-toggle-cats').click(function(e){ e.preventDefault(); $('.usp-cats').slideToggle(300); });
-					$('.usp-toggle-tags').click(function(e){ e.preventDefault(); $('.usp-tags').slideToggle(300); });
+					$('.usp-toggle-cats').on('click', function(e){ e.preventDefault(); $('.usp-cats').slideToggle(300); });
+					$('.usp-toggle-tags').on('click', function(e){ e.preventDefault(); $('.usp-tags').slideToggle(300); });
 					
 					<?php elseif ($tab === 'usp_tools' || $tab === 'usp_about') : ?>
 					
-					$('.usp-toggle-s1').click(function(e){ e.preventDefault(); $('.usp-s1').slideToggle(300); });
-					$('.usp-toggle-s2').click(function(e){ e.preventDefault(); $('.usp-s2').slideToggle(300); });
-					$('.usp-toggle-s3').click(function(e){ e.preventDefault(); $('.usp-s3').slideToggle(300); });
-					$('.usp-toggle-s4').click(function(e){ e.preventDefault(); $('.usp-s4').slideToggle(300); });
-					$('.usp-toggle-s5').click(function(e){ e.preventDefault(); $('.usp-s5').slideToggle(300); });
-					$('.usp-toggle-s6').click(function(e){ e.preventDefault(); $('.usp-s6').slideToggle(300); });
+					$('.usp-toggle-s1').on('click', function(e){ e.preventDefault(); $('.usp-s1').slideToggle(300); });
+					$('.usp-toggle-s2').on('click', function(e){ e.preventDefault(); $('.usp-s2').slideToggle(300); });
+					$('.usp-toggle-s3').on('click', function(e){ e.preventDefault(); $('.usp-s3').slideToggle(300); });
+					$('.usp-toggle-s4').on('click', function(e){ e.preventDefault(); $('.usp-s4').slideToggle(300); });
+					$('.usp-toggle-s5').on('click', function(e){ e.preventDefault(); $('.usp-s5').slideToggle(300); });
+					$('.usp-toggle-s6').on('click', function(e){ e.preventDefault(); $('.usp-s6').slideToggle(300); });
 					
 					<?php elseif ($tab === 'usp_admin') : ?>
 					
-					$('.usp-toggle-regex-1').click(function(e){ e.preventDefault(); $('.usp-regex-1').slideToggle(300); });
-					$('.usp-toggle-regex-2').click(function(e){ e.preventDefault(); $('.usp-regex-2').slideToggle(300); });
-					$('.usp-toggle-regex-3').click(function(e){ e.preventDefault(); $('.usp-regex-3').slideToggle(300); });
+					$('.usp-toggle-regex-1').on('click', function(e){ e.preventDefault(); $('.usp-regex-1').slideToggle(300); });
+					$('.usp-toggle-regex-2').on('click', function(e){ e.preventDefault(); $('.usp-regex-2').slideToggle(300); });
+					$('.usp-toggle-regex-3').on('click', function(e){ e.preventDefault(); $('.usp-regex-3').slideToggle(300); });
 					
 					<?php elseif ($tab === 'usp_advanced') : ?>
 					
-					$('.usp-toggle-a1').click(function(e){ e.preventDefault(); $('.usp-a1').slideToggle(300); });
-					$('.usp-toggle-a2').click(function(e){ e.preventDefault(); $('.usp-a2').slideToggle(300); });
-					$('.usp-toggle-a3').click(function(e){ e.preventDefault(); $('.usp-a3').slideToggle(300); });
-					$('.usp-toggle-a4').click(function(e){ e.preventDefault(); $('.usp-a4').slideToggle(300); });
-					$('.usp-toggle-a5').click(function(e){ e.preventDefault(); $('.usp-a5').slideToggle(300); });
+					$('.usp-toggle-a1').on('click', function(e){ e.preventDefault(); $('.usp-a1').slideToggle(300); });
+					$('.usp-toggle-a2').on('click', function(e){ e.preventDefault(); $('.usp-a2').slideToggle(300); });
+					$('.usp-toggle-a3').on('click', function(e){ e.preventDefault(); $('.usp-a3').slideToggle(300); });
+					$('.usp-toggle-a4').on('click', function(e){ e.preventDefault(); $('.usp-a4').slideToggle(300); });
+					$('.usp-toggle-a5').on('click', function(e){ e.preventDefault(); $('.usp-a5').slideToggle(300); });
 					
 					<?php endif; ?>
 					

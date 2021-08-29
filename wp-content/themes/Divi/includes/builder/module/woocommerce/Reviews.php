@@ -9,6 +9,9 @@
  *
  * @since   3.29
  */
+if ( ! class_exists( 'ET_Builder_Module_Gallery' ) ) {
+	require_once ET_BUILDER_DIR_RESOLVED_PATH . '/module/Comments.php';
+}
 
 /**
  * Class representing WooCommerce Reviews component.
@@ -445,7 +448,7 @@ class ET_Builder_Module_Woocommerce_Reviews extends ET_Builder_Module_Comments {
 	/**
 	 * {@inheritdoc}
 	 */
-	function render( $attrs, $content = null, $render_slug ) {
+	public function render( $attrs, $content, $render_slug ) {
 		// Image - CSS Filters.
 		if ( et_()->array_get( $this->advanced_fields, 'image.css', false ) ) {
 			$classes = $this->generate_css_filters( $this->slug, 'child_', et_()->array_get( $this->advanced_fields['image']['css'], 'main', '%%order_class%%' ) );

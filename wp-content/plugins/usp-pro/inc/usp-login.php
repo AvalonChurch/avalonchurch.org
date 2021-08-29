@@ -72,7 +72,7 @@ function display_usp_login() {
 			$('.tab_content').hide();
 			$('.tabs_login li:first').addClass('active_tab').show();
 			$('.tab_content:first').show();
-			$('ul.tabs_login li').click(function() {
+			$('ul.tabs_login li').on('click', function() {
 				$('ul.tabs_login li').removeClass('active_tab');
 				$(this).addClass('active_tab');
 				$('.tab_content').hide();
@@ -84,12 +84,12 @@ function display_usp_login() {
 	</script>
 	<div id="usp-login" class="usp-login">
 		<ul class="tabs_login">
-			<li class="active_tab"><a href="#tab1_login"><?php esc_html_e('Login', 'usp-pro'); ?></a></li>
-			<li><a href="#tab2_login"><?php esc_html_e('Register', 'usp-pro'); ?></a></li>
-			<li><a href="#tab3_login"><?php esc_html_e('Forgot?', 'usp-pro'); ?></a></li>
+			<li class="tabs_login_1 active_tab"><a href="#tab1_login"><?php esc_html_e('Login', 'usp-pro'); ?></a></li>
+			<li class="tabs_login_2"><a href="#tab2_login"><?php esc_html_e('Register', 'usp-pro'); ?></a></li>
+			<li class="tabs_login_3"><a href="#tab3_login"><?php esc_html_e('Forgot?', 'usp-pro'); ?></a></li>
 		</ul>
 		<div class="tab_container">
-			<div id="tab1_login" class="tab_content">
+			<div id="tab1_login" class="tab1_login tab_content">
 				
 				<?php if ($register) : ?>
 				
@@ -130,7 +130,7 @@ function display_usp_login() {
 					</div>
 				</form>
 			</div>
-			<div id="tab2_login" class="tab_content">
+			<div id="tab2_login" class="tab2_login tab_content">
 				<h3><?php esc_html_e('Register for this site!', 'usp-pro'); ?></h3>
 				<p><?php esc_html_e('Sign up now for the good stuff.', 'usp-pro'); ?></p>
 				<form method="post" action="<?php echo wp_registration_url(); ?>">
@@ -150,7 +150,7 @@ function display_usp_login() {
 					</div>
 				</form>
 			</div>
-			<div id="tab3_login" class="tab_content">
+			<div id="tab3_login" class="tab3_login tab_content">
 				<h3><?php esc_html_e('Lose something?', 'usp-pro'); ?></h3>
 				<p><?php esc_html_e('Enter your username or email to reset your password.', 'usp-pro'); ?></p>
 				<form method="post" action="<?php echo wp_lostpassword_url(); ?>">

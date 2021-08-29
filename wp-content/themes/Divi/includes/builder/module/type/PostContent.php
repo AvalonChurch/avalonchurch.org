@@ -23,7 +23,7 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 					'label'       => et_builder_i18n( 'Link' ),
 					'css'         => array(
 						'main'  => "{$this->main_css_element} a",
-						'color' => "{$this->main_css_element}.et_pb_post_content a",
+						'color' => "{$this->main_css_element}.{$this->slug} a",
 					),
 					'line_height' => array(
 						'default' => '1em',
@@ -38,7 +38,7 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 					'label'       => esc_html__( 'Unordered List', 'et_builder' ),
 					'css'         => array(
 						'main'        => "{$this->main_css_element} ul li",
-						'color'       => "{$this->main_css_element}.et_pb_post_content ul li",
+						'color'       => "{$this->main_css_element}.{$this->slug} ul li",
 						'line_height' => "{$this->main_css_element} ul li",
 						'item_indent' => "{$this->main_css_element} ul",
 					),
@@ -55,7 +55,7 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 					'label'       => esc_html__( 'Ordered List', 'et_builder' ),
 					'css'         => array(
 						'main'        => "{$this->main_css_element} ol",
-						'color'       => "{$this->main_css_element}.et_pb_post_content ol",
+						'color'       => "{$this->main_css_element}.{$this->slug} ol",
 						'line_height' => "{$this->main_css_element} ol li",
 						'item_indent' => "{$this->main_css_element} ol",
 					),
@@ -72,7 +72,7 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 					'label'       => esc_html__( 'Blockquote', 'et_builder' ),
 					'css'         => array(
 						'main'  => "{$this->main_css_element} blockquote",
-						'color' => "{$this->main_css_element}.et_pb_post_content blockquote",
+						'color' => "{$this->main_css_element}.{$this->slug} blockquote",
 					),
 					'line_height' => array(
 						'default' => '1em',
@@ -446,7 +446,16 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 		);
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		$background_layout_hover_enabled = et_pb_hover_options()->is_enabled( 'background_layout', $this->props );
 
 		$video_background                 = $this->video_background();
@@ -485,7 +494,7 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 				%5$s
 				%4$s
 				%1$s
-			</div> <!-- .et_pb_post_content -->',
+			</div>',
 			et_theme_builder_frontend_render_post_content(),
 			$this->module_classname( $render_slug ),
 			$this->module_id(),

@@ -12,7 +12,7 @@ Further license information is available in the plugin directory, /license/, and
 
 Upgrades: Your purchase of USP Pro includes free lifetime upgrades, which include new features, bug fixes, and other improvements. 
 
-Copyright: 2020 Monzilla Media
+Copyright: 2021 Monzilla Media
 
 ========================================================================
 

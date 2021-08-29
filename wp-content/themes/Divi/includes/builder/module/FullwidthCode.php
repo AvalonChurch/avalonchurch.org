@@ -38,10 +38,6 @@ class ET_Builder_Module_Fullwidth_Code extends ET_Builder_Module {
 				'name' => esc_html__( 'An introduction to the Fullwidth Code module', 'et_builder' ),
 			),
 		);
-
-		// wptexturize is often incorrectly parsed single and double quotes
-		// This disables wptexturize on this module
-		add_filter( 'no_texturize_shortcodes', array( $this, 'disable_wptexturize' ) );
 	}
 
 	function get_fields() {
@@ -62,7 +58,16 @@ class ET_Builder_Module_Fullwidth_Code extends ET_Builder_Module {
 		return $fields;
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		$multi_view                = et_pb_multi_view_options( $this );
 		$video_background          = $this->video_background();
 		$parallax_image_background = $this->get_parallax_image_background();
@@ -84,7 +89,7 @@ class ET_Builder_Module_Fullwidth_Code extends ET_Builder_Module {
 				%5$s
 				%4$s
 				%1$s
-			</div> <!-- .et_pb_fullwidth_code -->',
+			</div>',
 			$raw_content,
 			$this->module_id(),
 			$this->module_classname( $render_slug ),
@@ -131,4 +136,6 @@ class ET_Builder_Module_Fullwidth_Code extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Fullwidth_Code();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Fullwidth_Code();
+}

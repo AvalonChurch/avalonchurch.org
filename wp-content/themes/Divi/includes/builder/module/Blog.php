@@ -878,7 +878,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 		// Manually set the max_num_pages to make the `next_posts_link` work
 		if ( '' !== $args['offset_number'] && ! empty( $args['offset_number'] ) ) {
 			$wp_query->found_posts   = max( 0, $wp_query->found_posts - intval( $args['offset_number'] ) );
-			$wp_query->max_num_pages = ceil( $wp_query->found_posts / intval( $args['posts_number'] ) );
+			$posts_number            = intval( $args['posts_number'] );
+			$wp_query->max_num_pages = $posts_number > 1 ? ceil( $wp_query->found_posts / $posts_number ) : 1;
 		}
 
 		ob_start();
@@ -958,7 +959,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 										</a>
 									<?php
 									if ( 'on' !== $args['fullwidth'] ) {
-										echo '</div> <!-- .et_pb_image_container -->';
+										echo '</div>';
 									}
 								endif;
 						}
@@ -1088,7 +1089,6 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 			}
 
 			if ( 'on' === $args['show_pagination'] ) {
-				// echo '</div> <!-- .et_pb_posts -->'; // @todo this causes closing tag issue
 
 				$container_is_closed = true;
 
@@ -1172,7 +1172,16 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 		return add_query_arg( 'et_blog', '', $result );
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		global $post, $paged, $wp_query, $wp_the_query, $wp_filter, $__et_blog_module_paged;
 
 		if ( self::$rendering ) {
@@ -1246,12 +1255,6 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 		// some themes do not include these styles/scripts so we need to enqueue them in this module to support audio post format
 		wp_enqueue_style( 'wp-mediaelement' );
 		wp_enqueue_script( 'wp-mediaelement' );
-
-		// include easyPieChart which is required for loading Blog module content via ajax correctly
-		wp_enqueue_script( 'easypiechart' );
-
-		// include ET Shortcode scripts
-		wp_enqueue_script( 'et-shortcodes-js' );
 
 		// remove all filters from WP audio shortcode to make sure current theme doesn't add any elements into audio module
 		remove_all_filters( 'wp_audio_shortcode_library' );
@@ -1449,7 +1452,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 		if ( '' !== $offset_number && ! empty( $offset_number ) ) {
 			global $wp_query;
 			$wp_query->found_posts   = max( 0, $wp_query->found_posts - intval( $offset_number ) );
-			$wp_query->max_num_pages = ceil( $wp_query->found_posts / intval( $posts_number ) );
+			$posts_number            = intval( $posts_number );
+			$wp_query->max_num_pages = $posts_number > 1 ? ceil( $wp_query->found_posts / $posts_number ) : 1;
 		}
 
 		$blog_order                 = self::_get_index( array( self::INDEX_MODULE_ORDER, $render_slug ) );
@@ -1550,7 +1554,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 						}
 
 						if ( 'on' !== $fullwidth ) {
-							echo '</div> <!-- .et_pb_image_container -->';
+							echo '</div>';
 						}
 					endif;
 				}
@@ -1562,17 +1566,19 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				<?php } ?>
 
 					<?php
-					$multi_view->render_element(
-						array(
-							'tag'            => 'p',
-							'content'        => '{{post_meta_removes}}',
-							'attrs'          => array(
-								'class' => 'post-meta',
+					if ( 'on' === $show_author || 'on' === $show_date || 'on' === $show_categories || 'on' === $show_comments ) {
+						$multi_view->render_element(
+							array(
+								'tag'            => 'p',
+								'content'        => '{{post_meta_removes}}',
+								'attrs'          => array(
+									'class' => 'post-meta',
+								),
+								'hover_selector' => '%%order_class%% .et_pb_post',
 							),
-							'hover_selector' => '%%order_class%% .et_pb_post',
-						),
-						true
-					);
+							true
+						);
+					}
 
 					echo '<div class="post-content">';
 
@@ -1622,14 +1628,14 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 					?>
 			<?php } // 'off' === $fullwidth || ! in_array( $post_format, array( 'link', 'audio', 'quote', 'gallery' ?>
 
-			</article> <!-- .et_pb_post -->
+			</article>
 				<?php
 				ET_Post_Stack::pop();
 			} // endwhile
 			ET_Post_Stack::reset();
 
 			if ( 'off' === $fullwidth ) {
-				echo '</div><!-- .et_pb_salvattore_content -->';
+				echo '</div>';
 			}
 
 			if ( $multi_view->has_value( 'show_pagination', 'on' ) ) {
@@ -1645,7 +1651,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 					true
 				);
 
-				echo '</div> <!-- .et_pb_posts -->';
+				echo '</div>';
 
 				$container_is_closed = true;
 			}
@@ -1692,6 +1698,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 			$this->add_classname(
 				array(
 					'et_pb_blog_grid_wrapper',
+					"et_pb_bg_layout_{$background_layout}",
 				)
 			);
 
@@ -1737,7 +1744,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				</div>',
 				esc_attr( implode( ' ', $inner_wrap_classname ) ),
 				$posts,
-				( ! $container_is_closed ? '</div> <!-- .et_pb_posts -->' : '' ),
+				( ! $container_is_closed ? '</div>' : '' ),
 				$this->module_id(),
 				$this->module_classname( $render_slug ), // #5
 				$video_background,
@@ -1773,7 +1780,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				%3$s %7$s',
 				$this->module_classname( $render_slug ),
 				$posts,
-				( ! $container_is_closed ? '</div> <!-- .et_pb_posts -->' : '' ),
+				( ! $container_is_closed ? '</div>' : '' ),
 				$this->module_id(),
 				$video_background, // #5
 				$parallax_image_background,
@@ -1944,4 +1951,6 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 	}
 }
 
-new ET_Builder_Module_Blog();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Blog();
+}

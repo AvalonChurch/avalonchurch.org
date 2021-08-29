@@ -328,7 +328,16 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 		return $fields;
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		$multi_view         = et_pb_multi_view_options( $this );
 		$name               = $multi_view->render_element(
 			array(
@@ -529,8 +538,8 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 					%6$s
 					%1$s
 					%7$s
-				</div> <!-- .et_pb_team_member_description -->
-			</div> <!-- .et_pb_team_member -->',
+				</div>
+			</div>',
 			$content,
 			et_core_esc_previously( $image ),
 			$this->module_id(),
@@ -607,4 +616,6 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Team_Member();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Team_Member();
+}

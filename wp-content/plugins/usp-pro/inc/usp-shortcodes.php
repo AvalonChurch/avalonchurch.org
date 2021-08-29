@@ -238,6 +238,8 @@ function usp_input_captcha($args) {
 		$captcha_params = apply_filters('usp_captcha_params', '');
 		$captcha_atts   = apply_filters('usp_captcha_atts',   '');
 		
+		$query = apply_filters('usp_recaptcha_querystring', '');
+		
 		if ($recaptcha_version === 'v1') {
 			
 			$id = 'recaptcha_response_field';
@@ -250,15 +252,19 @@ function usp_input_captcha($args) {
 			
 		} elseif ($recaptcha_version === 'v2') {
 			
+			$query = !empty($query) ? '?hl='. $query : '';
+			
 			$id = 'g-recaptcha-response';
-			$captcha  = '<script src="https://www.google.com/recaptcha/api.js'. $captcha_params .'" async defer></script>'. "\n";
+			$captcha  = '<script src="https://www.google.com/recaptcha/api.js'. $captcha_params . $query .'" async defer></script>'. "\n";
 			$captcha .= '<div class="g-recaptcha" '. $captcha_atts .' data-sitekey="'. $recaptcha_public .'"></div>'. "\n";
 			
 		} elseif ($recaptcha_version === 'v3') {
 			
+			$query = !empty($query) ? '&hl='. $query : '';
+			
 			$id = null;
 			$captcha  = '<script>var usp_recaptcha_key = "'. $recaptcha_public .'";</script>'. "\n";
-			$captcha .= '<script src="https://www.google.com/recaptcha/api.js?render='. $recaptcha_public . $captcha_params .'" async defer></script>'. "\n";
+			$captcha .= '<script src="https://www.google.com/recaptcha/api.js?render='. $recaptcha_public . $captcha_params . $query .'" async defer></script>'. "\n";
 		}
 	} else {
 		$id = 'usp-captcha';
@@ -916,7 +922,7 @@ function usp_agree($args) {
 	$script = isset($args['script']) ? sanitize_text_field($args['script']) : '';
 	$alert  = isset($args['alert'])  ? sanitize_text_field($args['alert'])  : '';
 	
-	$alert_script = (!empty($alert)) ? '$(".usp-submit").click(function(){ if (!$(".usp-input-agree").prop("checked")) { alert("'. $alert .'"); return false; } });' : '';
+	$alert_script = (!empty($alert)) ? '$(".usp-submit").on("click" function(){ if (!$(".usp-input-agree").prop("checked")) { alert("'. $alert .'"); return false; } });' : '';
 	
 	$class = isset($args['class']) ? 'usp-agree,'. sanitize_text_field($args['class']) : 'usp-agree';
 	$classes = usp_classes($class, $field);
@@ -1031,14 +1037,24 @@ function usp_form($args) {
 	global $usp_advanced;
 	
 	if (isset($_SERVER['QUERY_STRING'])) wp_parse_str(wp_strip_all_tags($_SERVER['QUERY_STRING']), $params);
+	
 	$current_form = isset($params['form_id']) ? $params['form_id'] : null;
+	
 	$args['current_form'] = $current_form;
 	
-	if (isset($args['id']) && !empty($args['id'])) {
+	if (!isset($args['id'])) return;
+	
+	if (!empty($args['id'])) {
+		
 		$id = usp_get_form_id($args['id']);
+		
 	} else {
+		
 		return esc_html__('error:usp_form:1:', 'usp-pro') . $args['id'];
+		
 	}
+	
+	if (empty($id)) return;
 	
 	$title = '';
 	$widget_before = '';
@@ -1046,27 +1062,45 @@ function usp_form($args) {
 	
 	if (isset($args['widget']) && $args['widget']) {
 		
-		if (isset($args['title'])) $title = '<h2 class="widget-title">'. sanitize_text_field($args['title']) .'</h2>';
+		if (isset($args['title'])) $title = '<h2 class="widget-title">'. esc_html($args['title']) .'</h2>';
 		
-		$widget_before = '<section id="usp-pro-widget-'. $id .'" class="widget widget_usp_pro">';
+		$widget_before = '<section id="usp-pro-widget-'. esc_attr($id) .'" class="widget widget_usp_pro">';
 		$widget_after  = '</section>';
 		
 	}
 	
-	$class = (isset($args['class']) && !empty($args['class'])) ? 'usp-pro,usp-form-'. $id .','. $args['class'] : 'usp-pro,usp-form-'. $id;
+	$class = 'usp-pro,usp-form-'. esc_attr($id);
+	
+	if (isset($args['class']) && !empty($args['class'])) {
+		
+		$class .= ','. esc_attr($args['class']); // via widget
+		
+	}
+	
 	$classes = usp_classes($class, 'form');
 	
-	$content   = get_post($id, ARRAY_A);
-	$args      = array('classes' => $classes, 'id' => $id);
-	$success   = isset($_GET['usp_success']) ? true : false;
-	$form_wrap = usp_form_wrap($args, $success);
+	$success      = (isset($_GET['usp_success'])) ? true : false;
+	$success_form = (isset($usp_advanced['success_form']) && $usp_advanced['success_form']) ? true : false;
+	
+	$form_wrap   = usp_form_wrap(array('classes' => $classes, 'id' => $id), $success);
+	$form_before = isset($form_wrap['form_before']) ? $form_wrap['form_before'] : '';
+	$form_after  = isset($form_wrap['form_after'])  ? $form_wrap['form_after']  : '';
 	
 	if (get_post_type() !== 'usp_form') {
-		if ($success && !$usp_advanced['success_form'] && ($current_form == $id)) { // (string == int)
-			return $widget_before . $title . $form_wrap['form_before'] . $form_wrap['form_after'] . $widget_after;
+		
+		if ($success && !$success_form && ($current_form == $id)) {
+			
+			return $widget_before . $title . $form_before . $form_after . $widget_after;
+			
 		} else {
-			return $widget_before . $title . $form_wrap['form_before'] . do_shortcode($content['post_content']) . $form_wrap['form_after'] . $widget_after;
+			
+			$post = get_post($id, ARRAY_A);
+			$content = isset($post['post_content']) ? $post['post_content'] : '';
+			
+			return $widget_before . $title . $form_before . do_shortcode($content) . $form_after . $widget_after;
+			
 		}
+		
 	}
 	
 	return;

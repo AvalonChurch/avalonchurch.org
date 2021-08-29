@@ -555,7 +555,8 @@ if (!class_exists('USP_Custom_Fields')) {
 						$option = $field_atts['option_default'];
 						$option_value = '';
 					}
-					$options .= '<option value="'. $option_value .'"'. $option_selected .'>'. $option .'</option>' . "\n";
+					$disabled = (empty($option_value)) ? ' disabled' : '';
+					$options .= '<option value="'. $option_value .'"'. $option_selected . $disabled .'>'. $option .'</option>' . "\n";
 				}
 				$options = "\n" . $options;
 			}

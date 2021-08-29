@@ -157,7 +157,16 @@ class ET_Builder_Module_Tabs_Item extends ET_Builder_Module {
 		}
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		global $et_pb_tab_titles;
 		global $et_pb_tab_classes;
 
@@ -207,7 +216,7 @@ class ET_Builder_Module_Tabs_Item extends ET_Builder_Module {
 				%4$s
 				%3$s
 				%1$s
-			</div> <!-- .et_pb_tab -->',
+			</div>',
 			$content,
 			$this->module_classname( $render_slug ),
 			$video_background,
@@ -218,4 +227,6 @@ class ET_Builder_Module_Tabs_Item extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Tabs_Item();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Tabs_Item();
+}

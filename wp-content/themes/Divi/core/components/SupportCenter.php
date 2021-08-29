@@ -209,9 +209,6 @@ class ET_Core_SupportCenter {
 		// Get `et_support_options` settings & set $this->support_user_options
 		$this->support_user_get_options();
 
-		// Set the Site ID data via Elegant Themes API & token
-		$this->maybe_set_site_id();
-
 		// Set the plugins allowlist for Safe Mode
 		$this->set_safe_mode_plugins_allowlist();
 	}
@@ -237,6 +234,9 @@ class ET_Core_SupportCenter {
 		if ( et_core_is_safe_mode_active() ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
 		}
+
+		// Get Site ID with Elegant Themes API & token (needed in advance for Remote Access).
+		add_action( 'admin_init', array( $this, 'maybe_set_site_id' ) );
 
 		// Add extra User Role capabilities needed for Remote Access to work with 3rd party software
 		add_filter( 'add_et_support_standard_capabilities', array( $this, 'support_user_extra_caps_standard' ), 10, 1 );
@@ -516,14 +516,26 @@ class ET_Core_SupportCenter {
 	/**
 	 * Update the Site ID data via Elegant Themes API
 	 *
+	 * @since ?.?  Early exit if no Site ID, but also no API credentials to use for a request.
 	 * @since 3.20
 	 *
 	 * @return void
 	 */
 	public function maybe_set_site_id() {
+		// Early exit if the user doesn't have Support Center access.
+		if ( ! $this->current_user_can( 'et_support_center' ) ) {
+			return;
+		}
+
 		$site_id = get_option( 'et_support_site_id' );
 
+		// If we already have a saved Site ID for support, then we don't need to request a new ID.
 		if ( ! empty( $site_id ) ) {
+			return;
+		}
+
+		// If there are no saved API credentials, then we can't use the API to request a Site ID for support.
+		if ( ! $this->get_et_license() ) {
 			return;
 		}
 
@@ -654,7 +666,7 @@ class ET_Core_SupportCenter {
 		wp_enqueue_style( 'et-core-admin' );
 		wp_enqueue_script( 'et-core-admin' );
 
-		// Load only on `_et_support_center` pages
+		// Load only on `_et_support_center` pages.
 		if ( strpos( $hook, '_et_support_center' ) ) {
 			// Core Admin CSS
 			wp_enqueue_style( 'et-core',
@@ -1338,6 +1350,26 @@ class ET_Core_SupportCenter {
 	 */
 	protected function system_diagnostics_generate_report( $formatted = true, $format = 'plain' ) {
 		/** @var array Collection of system settings to run diagnostic checks on. */
+
+		global $shortname;
+
+		$divi_builder_plugin_active = et_is_builder_plugin_active();
+
+		if ( $divi_builder_plugin_active ) {
+			$options = get_option( 'et_pb_builder_options', array() );
+		}
+
+		if ( 'divi' === $shortname ) {
+			$performance_options_url = get_admin_url() . 'admin.php?page=et_divi_options#general-2';
+			$builder_options_url     = get_admin_url() . 'admin.php?page=et_divi_options#builder-2';
+		} elseif ( 'extra' === $shortname ) {
+			$performance_options_url = get_admin_url() . 'admin.php?page=et_extra_options#general-2';
+			$builder_options_url     = get_admin_url() . 'admin.php?page=et_extra_options#builder-2';
+		} else {
+			$performance_options_url = get_admin_url() . 'admin.php?page=et_divi_options#tab_et_dashboard_tab_content_performance_main';
+			$builder_options_url     = get_admin_url() . 'admin.php?page=et_divi_options#tab_et_dashboard_tab_content_advanced_main';
+		}
+
 		$system_diagnostics_settings = array(
 			array(
 				'name'           => esc_attr__( 'Writable wp-content Directory', 'et-core' ),
@@ -1352,7 +1384,7 @@ class ET_Core_SupportCenter {
 				'learn_more'     => 'https://wordpress.org/support/article/changing-file-permissions/',
 			),
 			array(
-				'name'           => esc_attr__( 'PHP Version', 'et-core' ),
+				'name'           => esc_attr__( 'PHP: Version', 'et-core' ),
 				'environment'    => 'server',
 				'type'           => 'version',
 				'pass_minus_one' => false,
@@ -1364,7 +1396,7 @@ class ET_Core_SupportCenter {
 				'learn_more'     => 'http://php.net/releases/',
 			),
 			array(
-				'name'           => esc_attr__( 'memory_limit', 'et-core' ),
+				'name'           => esc_attr__( 'PHP: memory_limit', 'et-core' ),
 				'environment'    => 'server',
 				'type'           => 'size',
 				'pass_minus_one' => true,
@@ -1376,7 +1408,7 @@ class ET_Core_SupportCenter {
 				'learn_more'     => 'http://php.net/manual/en/ini.core.php#ini.memory-limit',
 			),
 			array(
-				'name'           => esc_attr__( 'post_max_size', 'et-core' ),
+				'name'           => esc_attr__( 'PHP: post_max_size', 'et-core' ),
 				'environment'    => 'server',
 				'type'           => 'size',
 				'pass_minus_one' => false,
@@ -1388,7 +1420,7 @@ class ET_Core_SupportCenter {
 				'learn_more'     => 'http://php.net/manual/en/ini.core.php#ini.post-max-size',
 			),
 			array(
-				'name'           => esc_attr__( 'max_execution_time', 'et-core' ),
+				'name'           => esc_attr__( 'PHP: max_execution_time', 'et-core' ),
 				'environment'    => 'server',
 				'type'           => 'seconds',
 				'pass_minus_one' => false,
@@ -1400,7 +1432,7 @@ class ET_Core_SupportCenter {
 				'learn_more'     => 'http://php.net/manual/en/info.configuration.php#ini.max-execution-time',
 			),
 			array(
-				'name'           => esc_attr__( 'upload_max_filesize', 'et-core' ),
+				'name'           => esc_attr__( 'PHP: upload_max_filesize', 'et-core' ),
 				'environment'    => 'server',
 				'type'           => 'size',
 				'pass_minus_one' => false,
@@ -1412,7 +1444,7 @@ class ET_Core_SupportCenter {
 				'learn_more'     => 'http://php.net/manual/en/ini.core.php#ini.upload-max-filesize',
 			),
 			array(
-				'name'           => esc_attr__( 'max_input_time', 'et-core' ),
+				'name'           => esc_attr__( 'PHP: max_input_time', 'et-core' ),
 				'environment'    => 'server',
 				'type'           => 'seconds',
 				'pass_minus_one' => true,
@@ -1424,7 +1456,7 @@ class ET_Core_SupportCenter {
 				'learn_more'     => 'http://php.net/manual/en/info.configuration.php#ini.max-input-time',
 			),
 			array(
-				'name'           => esc_attr__( 'max_input_vars', 'et-core' ),
+				'name'           => esc_attr__( 'PHP: max_input_vars', 'et-core' ),
 				'environment'    => 'server',
 				'type'           => 'size',
 				'pass_minus_one' => false,
@@ -1436,7 +1468,7 @@ class ET_Core_SupportCenter {
 				'learn_more'     => 'http://php.net/manual/en/info.configuration.php#ini.max-input-vars',
 			),
 			array(
-				'name'           => esc_attr__( 'display_errors', 'et-core' ),
+				'name'           => esc_attr__( 'PHP: display_errors', 'et-core' ),
 				'environment'    => 'server',
 				'type'           => 'truthy_falsy',
 				'pass_minus_one' => null,
@@ -1447,6 +1479,71 @@ class ET_Core_SupportCenter {
 				'actual'         => ! ini_get( 'display_errors' ) ? '0' : ini_get( 'display_errors' ),
 				'help_text'      => et_get_safe_localization( sprintf( __( 'This setting determines whether or not errors should be printed as part of the page output. This is a feature to support your site\'s development and should never be used on production sites. You can edit this setting within your <a href="%1$s" target="_blank">php.ini file</a>, or by contacting your host for assistance.', 'et-core' ), 'http://php.net/manual/en/errorfunc.configuration.php#ini.display-errors' ) ),
 				'learn_more'     => 'http://php.net/manual/en/errorfunc.configuration.php#ini.display-errors',
+			),
+			array(
+				'name'           => esc_attr__( 'Dynamic CSS', 'et-core' ),
+				'environment'    => 'performance',
+				'type'           => 'truthy_falsy',
+				'pass_minus_one' => null,
+				'pass_zero'      => null,
+				'pass_exact'     => null,
+				'minimum'        => null,
+				'recommended'    => 'on',
+				'actual'         => $divi_builder_plugin_active ? ( isset( $options['performance_main_dynamic_css'] ) ? $options['performance_main_dynamic_css'] : 'on' ) : et_get_option( $shortname . '_dynamic_css', 'on' ),
+				'help_text'      => et_get_safe_localization( sprintf( __( 'This is a very important performance setting that should be turned on. Dynamic CSS greatly reduces your website\'s CSS size, speeds up page load times and improves Google PageSpeed scores. You can turn this setting on in the <a href="%1$s" target="_blank">Theme Options</a>.', 'et-core' ), $performance_options_url ) ),
+				'learn_more'     => $performance_options_url,
+			),
+			array(
+				'name'           => esc_attr__( 'Dynamic Framework', 'et-core' ),
+				'environment'    => 'performance',
+				'type'           => 'truthy_falsy',
+				'pass_minus_one' => null,
+				'pass_zero'      => null,
+				'pass_exact'     => null,
+				'minimum'        => null,
+				'recommended'    => 'on',
+				'actual'         => $divi_builder_plugin_active ? ( isset( $options['performance_main_dynamic_module_framework'] ) ? $options['performance_main_dynamic_module_framework'] : 'on' ) : et_get_option( $shortname . '_dynamic_module_framework', 'on' ),
+				'help_text'      => et_get_safe_localization( sprintf( __( 'This is a very important performance setting that should be turned on. The Dynamic Framework removes bloat from the back-end. This greatly reduces CPU and Memory usage and improves website speed. You can turn this setting on in the <a href="%1$s" target="_blank">Theme Options</a>.', 'et-core' ), $performance_options_url ) ),
+				'learn_more'     => $performance_options_url,
+			),
+			array(
+				'name'           => esc_attr__( 'Dynamic JavaScript', 'et-core' ),
+				'environment'    => 'performance',
+				'type'           => 'truthy_falsy',
+				'pass_minus_one' => null,
+				'pass_zero'      => null,
+				'pass_exact'     => null,
+				'minimum'        => null,
+				'recommended'    => 'on',
+				'actual'         => $divi_builder_plugin_active ? ( isset( $options['performance_main_dynamic_css'] ) ? $options['performance_main_dynamic_css'] : 'on' ) : et_get_option( $shortname . '_dynamic_js_libraries', 'on' ),
+				'help_text'      => et_get_safe_localization( sprintf( __( 'This is a very important performance setting that should be turned on. Dynamic JavaScript removes unused scripts and improves website speed by loading JavaScript files only when they are needed. You can turn this setting on in the <a href="%1$s" target="_blank">Theme Options</a>.', 'et-core' ), $performance_options_url ) ),
+				'learn_more'     => $performance_options_url,
+			),
+			array(
+				'name'           => esc_attr__( 'Critical CSS', 'et-core' ),
+				'environment'    => 'performance',
+				'type'           => 'truthy_falsy',
+				'pass_minus_one' => null,
+				'pass_zero'      => null,
+				'pass_exact'     => null,
+				'minimum'        => null,
+				'recommended'    => 'on',
+				'actual'         => $divi_builder_plugin_active ? ( isset( $options['performance_main_critical_css'] ) ? $options['performance_main_dynamic_css'] : 'on' ) : et_get_option( $shortname . '_critical_css', 'on' ),
+				'help_text'      => et_get_safe_localization( sprintf( __( 'This is a very important performance setting that should be turned on. Critical CSS greatly improves website loading speeds by deferring "below the fold" styles and removing render blocking requests for critical styles. You can turn this setting on in the <a href="%1$s" target="_blank">Theme Options</a>.', 'et-core' ), $performance_options_url ) ),
+				'learn_more'     => $performance_options_url,
+			),
+			array(
+				'name'           => esc_attr__( 'Static CSS', 'et-core' ),
+				'environment'    => 'performance',
+				'type'           => 'truthy_falsy',
+				'pass_minus_one' => null,
+				'pass_zero'      => null,
+				'pass_exact'     => null,
+				'minimum'        => null,
+				'recommended'    => 'on',
+				'actual'         => et_get_option( 'et_pb_static_css_file', 'on' ),
+				'help_text'      => et_get_safe_localization( sprintf( __( 'This is a very important performance setting that should be turned on, even if you are using a caching plugin. Static CSS caches the builder CSS for each page so that it doesn\'t need to be processed on every page load. Even if you are using a caching plugin, this setting should still be turned on so that dynamic pages benefit. You can turn this setting on in the <a href="%1$s" target="_blank">Theme Options</a>.', 'et-core' ), $builder_options_url ) ),
+				'learn_more'     => $builder_options_url,
 			),
 		);
 
@@ -1511,7 +1608,7 @@ class ET_Core_SupportCenter {
 			if ( ! is_null( $scan['learn_more'] ) ) {
 				$learn_more_link = sprintf( ' <a href="%1$s" target="_blank">%2$s</a>',
 					esc_url( $scan['learn_more'] ),
-					esc_html__( 'Learn more.', 'et-core' )
+					esc_html__( 'server' === $scan['environment'] ? 'Learn More.' : 'Enable Option.', 'et-core' )
 				);
 			}
 
@@ -1520,7 +1617,7 @@ class ET_Core_SupportCenter {
 					$system_diagnostics_settings[ $i ]['description'] = sprintf(
 						'- %1$s %2$s',
 						sprintf(
-							esc_html__( 'Congratulations! This meets or exceeds our recommendation of %1$s.', 'et-core' ),
+							esc_html__( 'performance' === $scan['environment'] ? 'Perfect! We recommend enabling this option.' : 'Congratulations! This meets or exceeds our recommendation of %1$s.', 'et-core' ),
 							esc_html( is_bool( $scan['recommended'] ) ? $this->boolean_label[ $scan['recommended'] ] : $scan['recommended'] )
 						),
 						et_core_intentionally_unescaped( $learn_more_link, 'html' )
@@ -1532,7 +1629,7 @@ class ET_Core_SupportCenter {
 						'- %1$s%2$s %3$s',
 						esc_html( $message_minimum ),
 						sprintf(
-							esc_html__( 'We recommend %1$s for the best experience.', 'et-core' ),
+							esc_html__( 'performance' === $scan['environment'] ? 'Enable for optimial performance.' : 'We recommend %1$s for the best experience.', 'et-core' ),
 							esc_html( is_bool( $scan['recommended'] ) ? $this->boolean_label[ $scan['recommended'] ] : $scan['recommended'] )
 						),
 						et_core_intentionally_unescaped( $learn_more_link, 'html' )
@@ -2396,20 +2493,24 @@ class ET_Core_SupportCenter {
 
 		$user = get_userdata( $user_id );
 
-		// Gather this user's associated role(s)
+		if ( ! is_object( $user ) || ! property_exists( $user, 'roles' ) ) {
+			return false;
+		}
+
+		// Gather this user's associated role(s).
 		$user_roles      = (array) $user->roles;
 		$user_is_support = false;
 
-		// First, check the username
+		// First, check the username.
 		if ( ! $this->support_user_account_name === $user->user_login ) {
 			return $user_is_support;
 		}
 
-		// Determine whether this user has the ET Support User role
-		if ( in_array( 'et_support', $user_roles ) ) {
+		// Determine whether this user has the ET Support User role.
+		if ( in_array( 'et_support', $user_roles, true ) ) {
 			$user_is_support = true;
 		}
-		if ( in_array( 'et_support_elevated', $user_roles ) ) {
+		if ( in_array( 'et_support_elevated', $user_roles, true ) ) {
 			$user_is_support = true;
 		}
 

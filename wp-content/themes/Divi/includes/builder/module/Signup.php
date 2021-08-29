@@ -1011,7 +1011,16 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 		return self::$_providers;
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		parent::render( $attrs, $content, $render_slug );
 
 		global $et_pb_half_width_counter;
@@ -1187,7 +1196,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 			$this->add_classname( 'et_pb_newsletter_description_no_title' );
 		}
 
-		if ( ! $multi_view->has_value( 'content' ) ) {
+		if ( ! $multi_view->has_value( 'description' ) ) {
 			$this->add_classname( 'et_pb_newsletter_description_no_content' );
 		}
 
@@ -1299,4 +1308,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 		return $raw_value;
 	}
 }
-new ET_Builder_Module_Signup();
+
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Signup();
+}

@@ -65,7 +65,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_name_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Name field</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Name field</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="Your Name"></p>' + 
 					'<p class="inline-blocks"><label for="place">Placeholder</label><input type="text" value="" name="place" id="place" placeholder="Your Name"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>' + 
@@ -100,7 +100,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_url_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the URL field</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the URL field</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="Post URL"></p>' + 
 					'<p class="inline-blocks"><label for="place">Placeholder</label><input type="text" value="" name="place" id="place" placeholder="Post URL"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>' + 
@@ -135,7 +135,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_title_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Title field</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Title field</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="Post Title"></p>' + 
 					'<p class="inline-blocks"><label for="place">Placeholder</label><input type="text" value="" name="place" id="place" placeholder="Post Title"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>' + 
@@ -170,7 +170,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_tags_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Tags field</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Tags field</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="Post Tags"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="Post Tags"></p>' + 
 					'<p class="inline-blocks"><label for="include">Tag IDs to include <span>(comma-separated, or use "all" for all tags)</span></label><input type="text" value="" name="include" id="include" placeholder="<?php echo $usp_pro_tags; ?>"></p>' + 
@@ -216,7 +216,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_captcha_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Captcha field</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Captcha field</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="<?php echo $usp_pro_captcha; ?>"></p>' + 
 					'<p class="inline-blocks"><label for="place">Placeholder</label><input type="text" value="" name="place" id="place" placeholder="<?php echo $usp_pro_captcha; ?>"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>' + 
@@ -246,7 +246,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_category_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Category field</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Category field</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="Post Category"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="Post Category"></p>' + 
 					'<p class="inline-blocks"><label for="include">Category IDs to include <span>(comma-separated, or use "all" for all categories)</span></label><input type="text" value="" name="include" id="include" placeholder="<?php echo $usp_pro_cats; ?>"></p>' + 
@@ -294,7 +294,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_content_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Content field</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Content field</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="Post Content"></p>' + 
 					'<p class="inline-blocks"><label for="place">Placeholder</label><input type="text" value="" name="place" id="place" placeholder="Post Content"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>' + 
@@ -339,7 +339,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_excerpt_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Excerpt field</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Excerpt field</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="Post Excerpt"></p>' + 
 					'<p class="inline-blocks"><label for="place">Placeholder</label><input type="text" value="" name="place" id="place" placeholder="Post Excerpt"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>' + 
@@ -384,7 +384,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_files_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the File(s) field</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the File(s) field</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="File(s)"></p>' + 
 					'<p class="inline-blocks"><label for="place">Placeholder</label><input type="text" value="" name="place" id="place" placeholder="File(s)"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>' + 
@@ -434,10 +434,10 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_custom_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for Custom Field</h3>' + 
+			unsafeMessage:'<h3>Attributes for Custom Field</h3>' + 
 					'<p>This shortcode adds a <a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/usp-pro-custom-fields/">Custom Field</a> to the form. ' + 
 					'Enter the Custom Field ID <span>(e.g., 1)</span> from the Name field of the Custom Fields meta box. Then customize as desired by adding attributes to the Value field.' + 
-					'<div><img src="<?php echo plugins_url(); ?>/usp-pro/img/usp-custom-fields.jpg" alt=""></div>',
+					'<div class="inline-image"><img src="<?php echo plugins_url(); ?>/usp-pro/img/usp-custom-fields.png" width="410" alt=""></div>',
 			input:	'<p class="inline-blocks"><label for="id">Custom Field ID</label><input type="number" min="1" step="1" value="" name="id" id="id" placeholder="1"></p>',
 					//
 			callback: function(data) {
@@ -460,7 +460,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_email_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Email Address field</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Email Address field</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="Email Address"></p>' + 
 					'<p class="inline-blocks"><label for="place">Placeholder</label><input type="text" value="" name="place" id="place" placeholder="Email Address"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>' + 
@@ -495,7 +495,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_subject_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Email Subject field</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Email Subject field</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="Email Subject"></p>' + 
 					'<p class="inline-blocks"><label for="place">Placeholder</label><input type="text" value="" name="place" id="place" placeholder="Email Subject"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>' + 
@@ -530,7 +530,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function user_submit_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Submit button</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Submit button</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="value">Button text</label><input type="text" value="" name="value" id="value" placeholder="Submit Post"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>',
 					//
@@ -556,7 +556,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function user_reset_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Reset-form link</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Reset-form link</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="value">Link text</label><input type="text" value="" name="value" id="value" placeholder="Reset form"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>' + 
 					'<p class="inline-blocks"><label for="url">Form <abbr title="Uniform Resource Locator">URL</abbr> <span>(required)</span>. This is the page on which the USP Form is displayed. Can use full or relative URL.</label>' + 
@@ -585,7 +585,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function user_remember_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Remember checkbox</h3><p>All attributes optional, leave blank to use the default value. ' + 
+			unsafeMessage:'<h3>Attributes for the Remember checkbox</h3><p>All attributes optional, leave blank to use the default value. ' + 
 					'<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/usp-pro-add-remember-me-checkbox/">Learn more</a></p>',
 			input:	'<p class="inline-blocks"><label for="label">Label text</label><input type="text" value="" name="label" id="label" placeholder="Remember me"></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>',
@@ -612,7 +612,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function user_cc_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for <abbr title="Carbon Copy">CC</abbr> message</h3><p>All attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for <abbr title="Carbon Copy">CC</abbr> message</h3><p>All attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="text">CC message</label><input type="text" value="A copy of this message will be sent to the specified email address." name="text" id="text" placeholder="A copy of this message will be sent to the specified email address."></p>' + 
 					'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>',
 					//
@@ -638,7 +638,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function user_redirect_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for Redirect URL</h3><p>Redirect <abbr title="Uniform Resource Locator">URL</abbr> required. CSS attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for Redirect URL</h3><p>Redirect <abbr title="Uniform Resource Locator">URL</abbr> required. CSS attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="class">CSS classes <span>(comma-separated)</span></label><input type="text" value="" name="class" id="class" placeholder="example-class"></p>' + 
 					'<p class="inline-blocks"><label for="url">Redirect <abbr title="Uniform Resource Locator">URL</abbr> <span>(required)</span>. ' + 
 					'This is the page to which the user is redirected after submitting the form. Can be full or relative URL.</label>' + 
@@ -666,7 +666,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_taxonomy_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Taxonomy field</h3><p>Taxonomy and Terms fields are required. All other attributes optional, leave blank to use the default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Taxonomy field</h3><p>Taxonomy and Terms fields are required. All other attributes optional, leave blank to use the default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label</label><input type="text" value="" name="label" id="label" placeholder="E.g., People"></p>' + 
 					'<p class="inline-blocks"><label for="tax">Taxonomy <span>(required)</span></label><input type="text" value="" name="tax" id="tax" placeholder="people"></p>' + 
 					'<p class="inline-blocks"><label for="terms">Term IDs <span>(comma-separated term ids, or use all_include_empty)</span> <span>(required)</span></label><input type="text" value="all_include_empty" name="terms" id="terms" placeholder="all_include_empty"></p>' + 
@@ -711,7 +711,7 @@ $usp_pro_types = isset($usp_uploads['files_allow']) ? $usp_uploads['files_allow'
 	function usp_agree_prompt(e, c, ed) {
 		t = this;
 		vex.dialog.open({
-			message:'<h3>Attributes for the Agree to Terms box</h3><p>All attributes optional, leave any option blank to use its default value.</p>',
+			unsafeMessage:'<h3>Attributes for the Agree to Terms box</h3><p>All attributes optional, leave any option blank to use its default value.</p>',
 			input:	'<p class="inline-blocks"><label for="label">Label for the checkbox</label><input type="text" value="" name="label" id="label" placeholder="I agree to the terms"></p>' + 
 					'<p class="inline-blocks"><label for="toggle">Text for the toggle link</label><input type="text" value="" name="toggle" id="toggle" placeholder="Show/hide terms"></p>' + 
 					'<p class="inline-blocks"><label for="terms">Text for the toggling terms box</label><input type="text" value="" name="terms" id="terms" placeholder="Put terms here."></p>' + 

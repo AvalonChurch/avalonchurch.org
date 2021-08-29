@@ -3,15 +3,15 @@
 Plugin Name: USP Pro
 Plugin URI: https://plugin-planet.com/usp-pro/
 Description: Create unlimited forms and let visitors submit content, register, and more from the front-end.
-Tags: frontend, front-end, user-generated, user-submitted, posts, submit, content, publish, published, upload, uploader
+Tags: guest post, user post, anonymous post, frontend post, public post, share post, submit post, visitor post, user submitted post, upload
 Author: Jeff Starr
 Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Contributors: specialk
 Requires at least: 4.1
-Tested up to: 5.6
-Stable tag: 3.8
-Version: 3.8
+Tested up to: 5.8
+Stable tag: 4.0
+Version: 4.0
 Requires PHP: 5.6.20
 Text Domain: usp-pro
 Domain Path: /languages
@@ -26,17 +26,17 @@ Create unlimited forms and let visitors submit content, register, log in, and mu
 USP Pro is your complete front-end forms solution, enabling you to create unlimited forms and let visitors submit content, register, and much more.
 
 
-**Features**
+### Features ###
 
 Visit the [USP Pro Homepage](https://plugin-planet.com/usp-pro/) for features, screenshots, and details.
 
 
-**Getting Started**
+### Getting Started ###
 
 Check out the [Quick Start Guide](https://plugin-planet.com/usp-pro-quick-start/) for USP Pro.
 
 
-**Documentation**
+### Documentation ###
 
 Official USP Pro documentation:
 
@@ -45,17 +45,17 @@ Official USP Pro documentation:
 * [USP Pro Template Tags](https://plugin-planet.com/usp-pro-template-tags/)
 
 
-**Resources**
+### Resources ###
 
 Further resources and information:
 
-* [USP Pro Docs](https://plugin-planet.com/docs/usp/)
-* [USP Pro Forum](https://plugin-planet.com/forum/usp/)
+* [USP Pro Docs](https://plugin-planet.com/category/docs+usp-pro/)
+* [USP Pro Forum](https://plugin-planet.com/category/forum+usp-pro/)
 * [USP Pro Tutorials](https://plugin-planet.com/category/tuts+usp-pro/)
 * [USP Pro FAQs](https://plugin-planet.com/usp-pro-faqs/)
 
 
-**Stay Current**
+### Stay Current ###
 
 Stay current with USP Pro:
 
@@ -64,24 +64,24 @@ Stay current with USP Pro:
 * [Grab the Tutorials Feed](https://plugin-planet.com/category/tuts/feed/)
 
 
-**Getting Help**
+### Getting Help ###
 
 There are two channels for getting help:
 
-* Ask a question in the [USP Pro Forum](https://plugin-planet.com/forum/usp/) ([login required](https://plugin-planet.com/wp/wp-login.php))
-* Send an email via the [contact form](https://plugin-planet.com/usp-pro/#contact)
+* Ask a question in the [USP Pro Forum](https://plugin-planet.com/category/forum+usp-pro/) ([login required](https://plugin-planet.com/wp/wp-login.php))
+* Send an email via the [contact form](https://plugin-planet.com/support/#contact)
 
 The contact form is best for direct support, bug reports, and feedback.
 
 
-**Downloads**
+### Downloads ###
 
 * [Log in to your account](https://plugin-planet.com/wp/wp-login.php) for current downloads.
 
 To learn more about USP Pro, visit [Plugin-Planet.com](https://plugin-planet.com/usp-pro/).
 
 
-**Privacy**
+### Privacy ###
 
 __User Data:__ User Submitted Posts (USP) enables users to submit post content. It collects data _only_ from users who voluntarily submit content via the USP form. The only involuntary data that is collected is the IP address of the person submitting the form. The plugin provides an option to disable IP collection completely.
 
@@ -93,7 +93,7 @@ __Services:__ This plugin provides an option to enable Google reCaptcha, which i
 
 == Installation ==
 
-**Installation**
+### Installation ###
 
 1. Upload the plugin and activate via the WP Plugins screen
 2. Visit Plugins &gt; USP Pro License to enter your license
@@ -103,14 +103,21 @@ Done. USP Pro is now ready for use. Before going further, please read the [USP P
 Learn more about [installing plugins](https://wordpress.org/support/article/managing-plugins/#installing-plugins).
 
 
-**Usage**
+### Usage ###
 
 Usage information available in the [USP Pro Quick Start Guide](https://plugin-planet.com/usp-pro-quick-start/).
 
 Complete plugin documentation available at [Plugin-Planet.com](https://plugin-planet.com/usp-pro/). 
 
 
-**Supported languages**
+### Upgrades ###
+
+Your purchase of USP Pro includes free lifetime upgrades, which include new features, bug fixes, and other improvements. When an upgrade is available, WordPress will notify you in the Admin Area. When you see that there is an update available, just click "Update" and WordPress will perform the upgrade automatically. Note that you can [download the latest version of USP Pro at Plugin Planet](https://plugin-planet.com/download-purchased-plugin/) anytime at your convenience.
+
+__Pro Tip:__ Before upgrading, visit "Tools &gt; Backup &amp; Restore" to back up your current settings. That way if something should go wrong, you can always restore your original settings and start over.
+
+
+### Supported languages ###
 
 USP Pro includes translations for the following languages:
 
@@ -121,19 +128,19 @@ USP Pro includes translations for the following languages:
 [Contact us](https://plugin-planet.com/#contact) to request another language.
 
 
-**Shortcodes**
+### Shortcodes ###
 
 Visit the [USP Pro Shortcodes Reference](https://plugin-planet.com/usp-pro-shortcodes/).
 
 __Note:__ USP Forms must be published (not draft or pending) in order to display via their respective shortcodes.
 
 
-**Template Tags**
+### Template Tags ###
 
 Visit the [USP Pro Template Tags Reference](https://plugin-planet.com/usp-pro-template-tags/).
 
 
-**License Information**
+### License Information ###
 
 * [Download purchased plugin](https://plugin-planet.com/download-purchased-plugin/)
 * [Install purchased plugin](https://plugin-planet.com/install-plugin/)
@@ -146,17 +153,17 @@ Visit the [USP Pro Template Tags Reference](https://plugin-planet.com/usp-pro-te
 * [Troubleshooting license activation](https://plugin-planet.com/troubleshooting-license-activation/)
 
 
-**Restore Default Options**
+### Restore Default Options ###
 
 To restore default plugin options, either uninstall/reinstall the plugin, or visit the plugin's Tools settings &gt; "Restore Default Settings".
 
 
-**Uninstalling**
+### Uninstalling ###
 
 USP Pro cleans up after itself. All plugin options will be removed from the database when the plugin is uninstalled via the Plugins screen. All submitted posts will NOT be removed when deactivating or uninstalling the plugin. _All submitted posts must be removed manually_ (if you want/choose to remove them).
 
 
-**Like the plugin?**
+### Like the plugin? ###
 
 If you like USP Pro, please take a moment to [give a 5-star rating](https://wordpress.org/support/plugin/user-submitted-posts/reviews/?rate=5#new-post). It helps to keep development and support going strong. Thank you!
 
@@ -164,29 +171,21 @@ If you like USP Pro, please take a moment to [give a 5-star rating](https://word
 
 == Upgrade Notice ==
 
-__Upgrades:__ Your purchase of USP Pro includes free lifetime upgrades, which include new features, bug fixes, and other improvements. When an upgrade is available, WordPress will notify you in the Admin Area. When you see that there is an update available, just click "Update" and WordPress will perform the upgrade automatically. Note that you can [download the latest version of USP Pro at Plugin Planet](https://plugin-planet.com/download-purchased-plugin/) anytime at your convenience.
-
-__Important!__ Before upgrading, visit "Tools &gt; Backup &amp; Restore" to back up your current settings. That way if something should go wrong, you can always restore your original settings and start over.
-
-__Note:__ uninstalling the plugin from the WP Plugins screen results in the removal of all settings from the WP database. All submitted posts will NOT be removed when deactivating or uninstalling the plugin. All submitted posts must be removed manually.
+This plugin has been tested and is 100% current with the latest version of WordPress.
 
 
 
 == Frequently Asked Questions ==
 
-**FAQs**
-
-FAQs available online:
-
-* [USP Pro FAQs](https://plugin-planet.com/usp-pro-faqs/)
+Check out the [USP Pro FAQs](https://plugin-planet.com/usp-pro-faqs/) at Plugin Planet.
 
 
-**Questions? Feedback? Bugs?**
+### Questions? Feedback? Bugs? ###
 
 There are two channels for getting help:
 
-* [Ask a question in the USP Pro Forum](https://plugin-planet.com/forum/usp/) ([login required](https://plugin-planet.com/wp/wp-login.php))
-* [Send an email via the contact form](https://plugin-planet.com/usp-pro/#contact)
+* [Ask a question in the USP Pro Forum](https://plugin-planet.com/category/forum+usp-pro/) ([login required](https://plugin-planet.com/wp/wp-login.php))
+* [Send an email via the contact form](https://plugin-planet.com/support/#contact)
 
 The contact form is best for direct support, bug reports, and feedback.
 
@@ -212,7 +211,7 @@ Further license information is available in the plugin directory, `/license/`, a
 
 __Upgrades:__ Your purchase of USP Pro includes free lifetime upgrades, which include new features, bug fixes, and other improvements. 
 
-Copyright 2020 Monzilla Media. All rights reserved.
+Copyright 2021 Monzilla Media. All rights reserved.
 
 
 
@@ -223,7 +222,7 @@ Free WordPress plugins:
 * [Banhammer](https://wordpress.org/plugins/banhammer/)
 * [Host Header Injection Fix](https://wordpress.org/plugins/host-header-injection-fix/)
 * [Blackhole for Bad Bots](https://wordpress.org/plugins/blackhole-bad-bots/)
-* [BBQ: Block Bad Queries](https://wordpress.org/plugins/block-bad-queries/)
+* [BBQ Firewall](https://wordpress.org/plugins/block-bad-queries/)
 * [Contact Coldform](https://wordpress.org/plugins/contact-coldform/)
 * [Dashboard Widgets Suite](https://wordpress.org/plugins/dashboard-widgets-suite/)
 * [GA Google Analytics](https://wordpress.org/plugins/ga-google-analytics/)
@@ -254,6 +253,36 @@ More awesome plugins on the way :)
 == Changelog ==
 
 If you like USP, please take a moment to [give a 5-star rating](https://wordpress.org/support/plugin/user-submitted-posts/reviews/?rate=5#new-post). It helps to keep development and support going strong. Thank you!
+
+
+**4.0**
+
+* Improves logic of `usp_form()`
+* Adds `%%delete_link%%` for email alerts
+* Adds CSS classes to Login/Register form
+* Adds filter hook `usp_submission_redirect`
+* Adds `selected` to select field default option
+* Changes Description field to textarea for user registration demo
+* Fixes renaming/duplicate bug with demo forms
+* Fixes bug with email alert shortcut variables
+* Moves "Tips & Tricks" to post at Plugin Planet
+* Refines the plugin settings pages
+* Tests on WordPress 5.8
+
+
+**3.9**
+
+* Adds `[url_link]` user shortcode
+* Adds filter hook `usp_shortcode_url_link`
+* Adds support to change reCaptcha language
+* Adds filter hook `usp_recaptcha_querystring`
+* Updates Selectize.js frontend control script
+* Updates Parsley.js frontend validation script
+* Updates Vex.js library for modal dialog popups
+* Updates deprecated functions for newer jQuery
+* Updates inline graphics in plugin settings
+* Improves/updates readme.txt/docs
+* Tests on WordPress 5.7
 
 
 **3.8**

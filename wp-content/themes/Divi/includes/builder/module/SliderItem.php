@@ -709,7 +709,35 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 		}
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Get slider item normal or global background color.
+	 *
+	 * @since 4.9.0
+	 *
+	 * @return string
+	 */
+	public function get_slider_item_background_color() {
+		$background_color = $this->props['background_color'];
+
+		if ( strpos( $background_color, 'gcid-' ) === 0 ) {
+			$global_color_info = et_builder_get_global_color_info( $background_color );
+
+			return esc_attr( $global_color_info['color'] );
+		}
+
+		return $background_color;
+	}
+
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		$multi_view = et_pb_multi_view_options( $this );
 		$alignment  = $this->props['alignment'];
 		// Allowing full html for backwards compatibility.
@@ -727,7 +755,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 		$header_level              = $this->props['header_level'];
 		$video_background          = $this->video_background();
 		$parallax_image_background = $this->get_parallax_image_background();
-		$background_color          = $this->props['background_color'];
+		$background_color          = $this->get_slider_item_background_color();
 		$custom_icon_values        = et_pb_responsive_options()->get_property_values( $this->props, 'button_icon' );
 		$custom_icon               = isset( $custom_icon_values['desktop'] ) ? $custom_icon_values['desktop'] : '';
 		$custom_icon_tablet        = isset( $custom_icon_values['tablet'] ) ? $custom_icon_values['tablet'] : '';
@@ -868,8 +896,6 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 			$image_attrs = array(
 				'src'    => '{{image}}',
 				'alt'    => esc_attr( $image_alt ),
-				'height' => 'auto',
-				'width'  => 'auto',
 			);
 
 			$image_attachment_class = et_pb_media_options()->get_image_attachment_class( $this->props, 'image' );
@@ -1081,11 +1107,11 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 						<div class="et_pb_slide_description">
 							%1$s
 							%2$s
-						</div> <!-- .et_pb_slide_description -->
+						</div>
 					</div>
-				</div> <!-- .et_pb_container -->
+				</div>
 				%5$s
-			</div> <!-- .et_pb_slide -->
+			</div>
 			',
 			$slide_content,
 			$button,
@@ -1148,4 +1174,6 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Slider_Item();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Slider_Item();
+}

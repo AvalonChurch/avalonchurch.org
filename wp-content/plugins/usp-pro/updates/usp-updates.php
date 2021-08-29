@@ -148,7 +148,7 @@ function usp_license_page() {
 		<script type="text/javascript">
 			jQuery(document).ready(function($){
 				$('.default-hidden').hide();
-				$('.usp-toggle-steps').click(function(e){ e.preventDefault(); $('.usp-license-steps').slideToggle(300); });
+				$('.usp-toggle-steps').on('click', function(e){ e.preventDefault(); $('.usp-license-steps').slideToggle(300); });
 			});
 		</script>
 	<?php 

@@ -86,7 +86,16 @@ class ET_Builder_Module_Map_Item extends ET_Builder_Module {
 		return $fields;
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		global $et_pb_tab_titles;
 
 		$multi_view      = et_pb_multi_view_options( $this );
@@ -138,8 +147,8 @@ class ET_Builder_Module_Map_Item extends ET_Builder_Module {
 				%3$s
 				%4$s
 			</div>',
-			esc_attr( $pin_address_lat ),
-			esc_attr( $pin_address_lng ),
+			esc_attr( et_()->to_css_decimal( $pin_address_lat ) ),
+			esc_attr( et_()->to_css_decimal( $pin_address_lng ) ),
 			et_core_esc_previously( $title ),
 			et_core_esc_previously( $content ),
 			esc_attr( $multi_view->get_value( 'title' ) ),
@@ -186,4 +195,6 @@ class ET_Builder_Module_Map_Item extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Map_Item();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Map_Item();
+}

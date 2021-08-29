@@ -206,8 +206,16 @@ class ET_Builder_Module_Circle_Counter extends ET_Builder_Module {
 		return $fields;
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
-		wp_enqueue_script( 'easypiechart' );
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 
 		$sticky                = et_pb_sticky_options();
 		$multi_view            = et_pb_multi_view_options( $this );
@@ -347,7 +355,7 @@ class ET_Builder_Module_Circle_Counter extends ET_Builder_Module {
 					<div class="percent"%19$s><p><span class="percent-value"></span><span class="percent-sign">%5$s</span></p></div>
 					%6$s
 				</div>
-			</div><!-- .et_pb_circle_counter -->',
+			</div>',
 			$this->module_id(),
 			$this->module_classname( $render_slug ),
 			esc_attr( $number ),
@@ -421,4 +429,6 @@ class ET_Builder_Module_Circle_Counter extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Circle_Counter();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Circle_Counter();
+}

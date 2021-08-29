@@ -26,7 +26,7 @@ function section_general_6_desc() {
 	echo '<p>'. esc_html__('These settings determine how tags are handled with submitted content.', 'usp-pro') .'</p>'; 
 }
 function section_general_7_desc() { 
-	echo '<p>'. esc_html__('Optional security measure. After publishing each form, enter its', 'usp-pro') .' <a href="'. plugins_url('img/usp-settings-form-id.jpg', dirname(__FILE__)) .'">'. esc_html__('Form ID', 'usp-pro') .'</a> ';
+	echo '<p>'. esc_html__('Optional security measure. After publishing each form, enter its', 'usp-pro') .' <a target="_blank" rel="noopener noreferrer" href="'. plugins_url('img/usp-settings-form-id.png', dirname(__FILE__)) .'">'. esc_html__('Form ID', 'usp-pro') .'</a> ';
 	echo esc_html__('in the appropriate field(s) below. See', 'usp-pro') .' <a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/usp-pro-enable-extra-form-security/">'. esc_html__('this post', 'usp-pro') .'</a> '. esc_html__('for more information.', 'usp-pro') .'</p>'; 
 }
 
@@ -92,6 +92,7 @@ post submitted date   = %%post_submitted_date%%
 post scheduled date   = %%post_scheduled_date%%
 ip address            = %%ip_address%%
 post edit link        = %%edit_link%%
+post delete link      = %%delete_link%%
 attached file urls    = %%files%%</pre>';
 }
 function section_admin_4_desc() { 
@@ -119,6 +120,7 @@ post submitted date   = %%post_submitted_date%%
 post scheduled date   = %%post_scheduled_date%%
 ip address            = %%ip_address%%
 post edit link        = %%edit_link%%
+post delete link      = %%delete_link%%
 attached file urls    = %%files%%</pre>';
 }
 function section_admin_5_desc() { 
@@ -147,6 +149,7 @@ post submitted date   = %%post_submitted_date%%
 post scheduled date   = %%post_scheduled_date%%
 ip address            = %%ip_address%%
 post edit link        = %%edit_link%%
+post delete link      = %%delete_link%%
 attached file urls    = %%files%%</pre>';
 }
 function section_admin_6_desc() {

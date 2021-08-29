@@ -1388,6 +1388,7 @@ if (!class_exists('USP_Pro_Process')) {
 			$post_defined   = apply_filters('usp_alert_shortcut_defined_replacement', usp_get_meta($post_id, 'usp-custom-reject')); // ;)
 			$ip_address     = $args['ip_address'];
 			$edit_link      = get_edit_post_link($post_id, '');
+			$delete_link    = get_delete_post_link($post_id);
 			
 			if (is_numeric($post_id)) {
 				$post_object = get_post($post_id);
@@ -1468,6 +1469,7 @@ if (!class_exists('USP_Pro_Process')) {
 			$patterns[19] = "/%%edit_link%%/";
 			$patterns[20] = "/%%files%%/";
 			$patterns[21] = "/%%post_slug%%/";
+			$patterns[22] = "/%%delete_link%%/";
 			
 			$replacements = array();
 			$replacements[0]  = $blog_url;
@@ -1492,6 +1494,7 @@ if (!class_exists('USP_Pro_Process')) {
 			$replacements[19] = $edit_link;
 			$replacements[20] = $files;
 			$replacements[21] = $post_slug;
+			$replacements[22] = $delete_link;
 			
 			foreach ($replacements as $key => $value) $replacements[$key] = preg_replace('/\$(\d)/', '\\\$$1', $value);
 			$string = html_entity_decode(preg_replace($patterns, $replacements, $string), ENT_QUOTES, get_option('blog_charset', 'UTF-8'));
@@ -1605,6 +1608,7 @@ if (!class_exists('USP_Pro_Process')) {
 			$remove_query_arg = array_merge($errors_cleared, $return_args);
 			$redirect = remove_query_arg($remove_query_arg, $redirect);
 			$redirect = add_query_arg($add_query_arg, $redirect);
+			$redirect = apply_filters('usp_submission_redirect', $redirect);
 			do_action('usp_submission_redirect_before', $redirect);
 			wp_redirect(esc_url_raw($redirect));
 			exit;
@@ -2038,7 +2042,7 @@ if (!class_exists('USP_Pro_Process')) {
 				$enable_kses = apply_filters('usp_sanitize_content_kses', true); // e.g., <?php tags
 				$string = $enable_kses ? wp_kses($string, $allowedposttags) : $string;
 			} else {
-				$string = sanitize_text_field($string);
+				$string = wp_kses_post($string);
 			}
 			return apply_filters('usp_sanitize_content', $string);
 		}

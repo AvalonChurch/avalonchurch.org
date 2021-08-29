@@ -8,7 +8,7 @@
 
 if ( ! defined( 'ET_BUILDER_PRODUCT_VERSION' ) ) {
 	// Note, this will be updated automatically during grunt release task.
-	define( 'ET_BUILDER_PRODUCT_VERSION', '4.7.7' );
+	define( 'ET_BUILDER_PRODUCT_VERSION', '4.10.5' );
 }
 
 if ( ! defined( 'ET_BUILDER_VERSION' ) ) {
@@ -517,118 +517,118 @@ if ( ! function_exists( 'et_pb_get_svg_icons_list' ) ) :
 		$all_icons = array(
 			'add'                 =>
 				'<g>
-				<path d="M18 13h-3v-3a1 1 0 0 0-2 0v3h-3a1 1 0 0 0 0 2h3v3a1 1 0 0 0 2 0v-3h3a1 1 0 0 0 0-2z" fillRule="evenodd" />
+				<path d="M18 13h-3v-3a1 1 0 0 0-2 0v3h-3a1 1 0 0 0 0 2h3v3a1 1 0 0 0 2 0v-3h3a1 1 0 0 0 0-2z" fillRule="evenodd"></path>
 			</g>',
 			'delete'              =>
 				'<g>
-				<path d="M19 9h-3V8a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v1H9a1 1 0 1 0 0 2h10a1 1 0 0 0 .004-2H19zM9 20c.021.543.457.979 1 1h8c.55-.004.996-.45 1-1v-7H9v7zm2.02-4.985h2v4h-2v-4zm4 0h2v4h-2v-4z" fillRule="evenodd" />
+				<path d="M19 9h-3V8a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v1H9a1 1 0 1 0 0 2h10a1 1 0 0 0 .004-2H19zM9 20c.021.543.457.979 1 1h8c.55-.004.996-.45 1-1v-7H9v7zm2.02-4.985h2v4h-2v-4zm4 0h2v4h-2v-4z" fillRule="evenodd"></path>
 			</g>',
 			'setting'             =>
 				'<g>
-				<path d="M20.426 13.088l-1.383-.362a.874.874 0 0 1-.589-.514l-.043-.107a.871.871 0 0 1 .053-.779l.721-1.234a.766.766 0 0 0-.116-.917 6.682 6.682 0 0 0-.252-.253.768.768 0 0 0-.917-.116l-1.234.722a.877.877 0 0 1-.779.053l-.107-.044a.87.87 0 0 1-.513-.587l-.362-1.383a.767.767 0 0 0-.73-.567h-.358a.768.768 0 0 0-.73.567l-.362 1.383a.878.878 0 0 1-.513.589l-.107.044a.875.875 0 0 1-.778-.054l-1.234-.722a.769.769 0 0 0-.918.117c-.086.082-.17.166-.253.253a.766.766 0 0 0-.115.916l.721 1.234a.87.87 0 0 1 .053.779l-.043.106a.874.874 0 0 1-.589.514l-1.382.362a.766.766 0 0 0-.567.731v.357a.766.766 0 0 0 .567.731l1.383.362c.266.07.483.26.588.513l.043.107a.87.87 0 0 1-.053.779l-.721 1.233a.767.767 0 0 0 .115.917c.083.087.167.171.253.253a.77.77 0 0 0 .918.116l1.234-.721a.87.87 0 0 1 .779-.054l.107.044a.878.878 0 0 1 .513.589l.362 1.383a.77.77 0 0 0 .731.567h.356a.766.766 0 0 0 .73-.567l.362-1.383a.878.878 0 0 1 .515-.589l.107-.044a.875.875 0 0 1 .778.054l1.234.721c.297.17.672.123.917-.117.087-.082.171-.166.253-.253a.766.766 0 0 0 .116-.917l-.721-1.234a.874.874 0 0 1-.054-.779l.044-.107a.88.88 0 0 1 .589-.513l1.383-.362a.77.77 0 0 0 .567-.731v-.357a.772.772 0 0 0-.569-.724v-.005zm-6.43 3.9a2.986 2.986 0 1 1 2.985-2.986 3 3 0 0 1-2.985 2.987v-.001z" fillRule="evenodd" />
+				<path d="M20.426 13.088l-1.383-.362a.874.874 0 0 1-.589-.514l-.043-.107a.871.871 0 0 1 .053-.779l.721-1.234a.766.766 0 0 0-.116-.917 6.682 6.682 0 0 0-.252-.253.768.768 0 0 0-.917-.116l-1.234.722a.877.877 0 0 1-.779.053l-.107-.044a.87.87 0 0 1-.513-.587l-.362-1.383a.767.767 0 0 0-.73-.567h-.358a.768.768 0 0 0-.73.567l-.362 1.383a.878.878 0 0 1-.513.589l-.107.044a.875.875 0 0 1-.778-.054l-1.234-.722a.769.769 0 0 0-.918.117c-.086.082-.17.166-.253.253a.766.766 0 0 0-.115.916l.721 1.234a.87.87 0 0 1 .053.779l-.043.106a.874.874 0 0 1-.589.514l-1.382.362a.766.766 0 0 0-.567.731v.357a.766.766 0 0 0 .567.731l1.383.362c.266.07.483.26.588.513l.043.107a.87.87 0 0 1-.053.779l-.721 1.233a.767.767 0 0 0 .115.917c.083.087.167.171.253.253a.77.77 0 0 0 .918.116l1.234-.721a.87.87 0 0 1 .779-.054l.107.044a.878.878 0 0 1 .513.589l.362 1.383a.77.77 0 0 0 .731.567h.356a.766.766 0 0 0 .73-.567l.362-1.383a.878.878 0 0 1 .515-.589l.107-.044a.875.875 0 0 1 .778.054l1.234.721c.297.17.672.123.917-.117.087-.082.171-.166.253-.253a.766.766 0 0 0 .116-.917l-.721-1.234a.874.874 0 0 1-.054-.779l.044-.107a.88.88 0 0 1 .589-.513l1.383-.362a.77.77 0 0 0 .567-.731v-.357a.772.772 0 0 0-.569-.724v-.005zm-6.43 3.9a2.986 2.986 0 1 1 2.985-2.986 3 3 0 0 1-2.985 2.987v-.001z" fillRule="evenodd"></path>
 			</g>',
 			'background-color'    =>
 				'<g>
-				<path d="M19.4 14.6c0 0-1.5 3.1-1.5 4.4 0 0.9 0.7 1.6 1.5 1.6 0.8 0 1.5-0.7 1.5-1.6C20.9 17.6 19.4 14.6 19.4 14.6zM19.3 12.8l-4.8-4.8c-0.2-0.2-0.4-0.3-0.6-0.3 -0.3 0-0.5 0.1-0.7 0.3l-1.6 1.6L9.8 7.8c-0.4-0.4-1-0.4-1.4 0C8 8.1 8 8.8 8.4 9.1l1.8 1.8 -2.8 2.8c-0.4 0.4-0.4 1-0.1 1.4l4.6 4.6c0.2 0.2 0.4 0.3 0.6 0.3 0.3 0 0.5-0.1 0.7-0.3l6.1-6.1C19.5 13.4 19.5 13.1 19.3 12.8zM15.6 14.6c-1.7 1.7-4.5 1.7-6.2 0l2.1-2.1 1 1c0.4 0.4 1 0.4 1.4 0 0.4-0.4 0.4-1 0-1.4l-1-1 0.9-0.9 3.1 3.1L15.6 14.6z" fillRule="evenodd"/>
+				<path d="M19.4 14.6c0 0-1.5 3.1-1.5 4.4 0 0.9 0.7 1.6 1.5 1.6 0.8 0 1.5-0.7 1.5-1.6C20.9 17.6 19.4 14.6 19.4 14.6zM19.3 12.8l-4.8-4.8c-0.2-0.2-0.4-0.3-0.6-0.3 -0.3 0-0.5 0.1-0.7 0.3l-1.6 1.6L9.8 7.8c-0.4-0.4-1-0.4-1.4 0C8 8.1 8 8.8 8.4 9.1l1.8 1.8 -2.8 2.8c-0.4 0.4-0.4 1-0.1 1.4l4.6 4.6c0.2 0.2 0.4 0.3 0.6 0.3 0.3 0 0.5-0.1 0.7-0.3l6.1-6.1C19.5 13.4 19.5 13.1 19.3 12.8zM15.6 14.6c-1.7 1.7-4.5 1.7-6.2 0l2.1-2.1 1 1c0.4 0.4 1 0.4 1.4 0 0.4-0.4 0.4-1 0-1.4l-1-1 0.9-0.9 3.1 3.1L15.6 14.6z" fillRule="evenodd"></path>
 			</g>',
 			'background-image'    =>
 				'<g>
-				<path d="M22.9 7.5c-0.1-0.3-0.5-0.6-0.8-0.6H5.9c-0.4 0-0.7 0.2-0.8 0.6C5.1 7.6 5 7.7 5 7.9v12.2c0 0.1 0 0.2 0.1 0.4 0.1 0.3 0.5 0.5 0.8 0.6h16.2c0.4 0 0.7-0.2 0.8-0.6 0-0.1 0.1-0.2 0.1-0.4V7.9C23 7.7 23 7.6 22.9 7.5zM21 18.9H7v-10h14V18.9z" fillRule="evenodd"/>
-				<circle cx="10.5" cy="12.4" r="1.5"/>
-				<polygon points="15 16.9 13 13.9 11 16.9 "/>
-				<polygon points="17 10.9 15 16.9 19 16.9 "/>
+				<path d="M22.9 7.5c-0.1-0.3-0.5-0.6-0.8-0.6H5.9c-0.4 0-0.7 0.2-0.8 0.6C5.1 7.6 5 7.7 5 7.9v12.2c0 0.1 0 0.2 0.1 0.4 0.1 0.3 0.5 0.5 0.8 0.6h16.2c0.4 0 0.7-0.2 0.8-0.6 0-0.1 0.1-0.2 0.1-0.4V7.9C23 7.7 23 7.6 22.9 7.5zM21 18.9H7v-10h14V18.9z" fillRule="evenodd"></path>
+				<circle cx="10.5" cy="12.4" r="1.5"></circle>
+				<polygon points="15 16.9 13 13.9 11 16.9 "></polygon>
+				<polygon points="17 10.9 15 16.9 19 16.9 "></polygon>
 			</g>',
 			'background-gradient' =>
 				'<g>
-				<path d="M22.9 7.5c-0.1-0.3-0.5-0.6-0.8-0.6H5.9c-0.4 0-0.7 0.2-0.8 0.6C5.1 7.6 5 7.7 5 7.9v12.2c0 0.1 0 0.2 0.1 0.4 0.1 0.3 0.5 0.5 0.8 0.6h16.2c0.4 0 0.7-0.2 0.8-0.6 0-0.1 0.1-0.2 0.1-0.4V7.9C23 7.7 23 7.6 22.9 7.5zM21 18.9L7 8.9h14V18.9z" fillRule="evenodd"/>
+				<path d="M22.9 7.5c-0.1-0.3-0.5-0.6-0.8-0.6H5.9c-0.4 0-0.7 0.2-0.8 0.6C5.1 7.6 5 7.7 5 7.9v12.2c0 0.1 0 0.2 0.1 0.4 0.1 0.3 0.5 0.5 0.8 0.6h16.2c0.4 0 0.7-0.2 0.8-0.6 0-0.1 0.1-0.2 0.1-0.4V7.9C23 7.7 23 7.6 22.9 7.5zM21 18.9L7 8.9h14V18.9z" fillRule="evenodd"></path>
 			</g>',
 			'background-video'    =>
 				'<g>
-				<path d="M22.9 7.5c-0.1-0.3-0.5-0.6-0.8-0.6H5.9c-0.4 0-0.7 0.2-0.8 0.6C5.1 7.6 5 7.7 5 7.9v12.2c0 0.1 0 0.2 0.1 0.4 0.1 0.3 0.5 0.5 0.8 0.6h16.2c0.4 0 0.7-0.2 0.8-0.6 0-0.1 0.1-0.2 0.1-0.4V7.9C23 7.7 23 7.6 22.9 7.5zM21 18.9H7v-10h14V18.9z" fillRule="evenodd"/>
-				<polygon points="13 10.9 13 16.9 17 13.9 "/>
+				<path d="M22.9 7.5c-0.1-0.3-0.5-0.6-0.8-0.6H5.9c-0.4 0-0.7 0.2-0.8 0.6C5.1 7.6 5 7.7 5 7.9v12.2c0 0.1 0 0.2 0.1 0.4 0.1 0.3 0.5 0.5 0.8 0.6h16.2c0.4 0 0.7-0.2 0.8-0.6 0-0.1 0.1-0.2 0.1-0.4V7.9C23 7.7 23 7.6 22.9 7.5zM21 18.9H7v-10h14V18.9z" fillRule="evenodd"></path>
+				<polygon points="13 10.9 13 16.9 17 13.9 "></polygon>
 			</g>',
 			'swap'                =>
 				'<g>
-				<path d="M19 12h-3V9c0-0.5-0.5-1-1-1H8C7.5 8 7 8.5 7 9v7c0 0.5 0.5 1 1 1h3v3c0 0.5 0.5 1 1 1h7c0.5 0 1-0.5 1-1v-7C20 12.5 19.5 12 19 12zM18 19h-5v-2h2c0.5 0 1-0.5 1-1v-2h2V19z" fillRule="evenodd"/>
+				<path d="M19 12h-3V9c0-0.5-0.5-1-1-1H8C7.5 8 7 8.5 7 9v7c0 0.5 0.5 1 1 1h3v3c0 0.5 0.5 1 1 1h7c0.5 0 1-0.5 1-1v-7C20 12.5 19.5 12 19 12zM18 19h-5v-2h2c0.5 0 1-0.5 1-1v-2h2V19z" fillRule="evenodd"></path>
 			</g>',
 			'none'                =>
 				'<g>
-				<path d="M14 24c5.5 0 10-4.5 10-10S19.5 4 14 4 4 8.5 4 14s4.5 10 10 10zm0-17.5c4.1 0 7.5 3.4 7.5 7.5 0 1.5-.5 2.9-1.2 4.1L9.9 7.7c1.2-.7 2.6-1.2 4.1-1.2zM7.7 9.9l10.4 10.4c-1.2.8-2.6 1.2-4.1 1.2-4.1 0-7.5-3.4-7.5-7.5 0-1.5.5-2.9 1.2-4.1z"/>
+				<path d="M14 24c5.5 0 10-4.5 10-10S19.5 4 14 4 4 8.5 4 14s4.5 10 10 10zm0-17.5c4.1 0 7.5 3.4 7.5 7.5 0 1.5-.5 2.9-1.2 4.1L9.9 7.7c1.2-.7 2.6-1.2 4.1-1.2zM7.7 9.9l10.4 10.4c-1.2.8-2.6 1.2-4.1 1.2-4.1 0-7.5-3.4-7.5-7.5 0-1.5.5-2.9 1.2-4.1z"></path>
 			</g>',
 			'animation-none'      =>
 				'<g>
-				<path d="M14 24c5.5 0 10-4.5 10-10S19.5 4 14 4 4 8.5 4 14s4.5 10 10 10zm0-17.5c4.1 0 7.5 3.4 7.5 7.5 0 1.5-.5 2.9-1.2 4.1L9.9 7.7c1.2-.7 2.6-1.2 4.1-1.2zM7.7 9.9l10.4 10.4c-1.2.8-2.6 1.2-4.1 1.2-4.1 0-7.5-3.4-7.5-7.5 0-1.5.5-2.9 1.2-4.1z"/>
+				<path d="M14 24c5.5 0 10-4.5 10-10S19.5 4 14 4 4 8.5 4 14s4.5 10 10 10zm0-17.5c4.1 0 7.5 3.4 7.5 7.5 0 1.5-.5 2.9-1.2 4.1L9.9 7.7c1.2-.7 2.6-1.2 4.1-1.2zM7.7 9.9l10.4 10.4c-1.2.8-2.6 1.2-4.1 1.2-4.1 0-7.5-3.4-7.5-7.5 0-1.5.5-2.9 1.2-4.1z"></path>
 			</g>',
 			'animation-fade'      =>
 				'<g>
-				<circle cx="8.5" cy="19.5" r="1.5"/>
-				<circle cx="8.5" cy="14.5" r="1.5"/>
-				<circle cx="5" cy="12" r="1"/>
-				<circle cx="5" cy="17" r="1"/>
-				<circle cx="8.5" cy="9.5" r="1.5"/>
-				<path d="M15.7 4c-.4 0-.8.1-1.2.3-.6.3-.5.7-1.5.7-1.1 0-2 .9-2 2s.9 2 2 2c.3 0 .5.2.5.5s-.2.5-.5.5c-1.1 0-2 .9-2 2s.9 2 2 2c.3 0 .5.2.5.5s-.2.5-.5.5c-1.1 0-2 .9-2 2s.9 2 2 2c.3 0 .5.2.5.5s-.2.5-.5.5c-1.1 0-2 .9-2 2s.9 2 2 2c1 0 .9.4 1.4.7.4.2.8.3 1.2.3 4.3-.4 8.3-5.3 8.3-10.5s-4-10-8.2-10.5z"/>
+				<circle cx="8.5" cy="19.5" r="1.5"></circle>
+				<circle cx="8.5" cy="14.5" r="1.5"></circle>
+				<circle cx="5" cy="12" r="1"></circle>
+				<circle cx="5" cy="17" r="1"></circle>
+				<circle cx="8.5" cy="9.5" r="1.5"></circle>
+				<path d="M15.7 4c-.4 0-.8.1-1.2.3-.6.3-.5.7-1.5.7-1.1 0-2 .9-2 2s.9 2 2 2c.3 0 .5.2.5.5s-.2.5-.5.5c-1.1 0-2 .9-2 2s.9 2 2 2c.3 0 .5.2.5.5s-.2.5-.5.5c-1.1 0-2 .9-2 2s.9 2 2 2c.3 0 .5.2.5.5s-.2.5-.5.5c-1.1 0-2 .9-2 2s.9 2 2 2c1 0 .9.4 1.4.7.4.2.8.3 1.2.3 4.3-.4 8.3-5.3 8.3-10.5s-4-10-8.2-10.5z"></path>
 			</g>',
 			'animation-slide'     =>
 				'<g>
-				<path d="M22 4h-5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h5c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM10 14c0 .6.4 1 1 1h.6L10 16.6c-.4.4-.4 1 0 1.4.4.4 1 .4 1.4 0l3.3-3.3c.2-.2.3-.5.3-.7s-.1-.5-.3-.7L11.4 10c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l1.6 1.6H11c-.6 0-1 .4-1 1z"/>
-				<circle cx="7" cy="14" r="1.5"/>
-				<circle cx="3" cy="14" r="1"/>
+				<path d="M22 4h-5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h5c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM10 14c0 .6.4 1 1 1h.6L10 16.6c-.4.4-.4 1 0 1.4.4.4 1 .4 1.4 0l3.3-3.3c.2-.2.3-.5.3-.7s-.1-.5-.3-.7L11.4 10c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l1.6 1.6H11c-.6 0-1 .4-1 1z"></path>
+				<circle cx="7" cy="14" r="1.5"></circle>
+				<circle cx="3" cy="14" r="1"></circle>
 			</g>',
 			'animation-bounce'    =>
 				'<g>
-				<circle cx="21.5" cy="8.5" r="3.5"/>
-				<circle cx="16" cy="12" r="1.7"/>
-				<circle cx="13" cy="15" r="1.2"/>
-				<circle cx="11" cy="18" r="1"/>
-				<circle cx="9" cy="22" r="1"/>
-				<circle cx="7" cy="19" r="1"/>
-				<circle cx="4" cy="17" r="1"/>
+				<circle cx="21.5" cy="8.5" r="3.5"></circle>
+				<circle cx="16" cy="12" r="1.7"></circle>
+				<circle cx="13" cy="15" r="1.2"></circle>
+				<circle cx="11" cy="18" r="1"></circle>
+				<circle cx="9" cy="22" r="1"></circle>
+				<circle cx="7" cy="19" r="1"></circle>
+				<circle cx="4" cy="17" r="1"></circle>
 			</g>',
 			'animation-zoom'      =>
 				'<g>
-				<path d="M23.7 4.3c-.1-.1-.2-.2-.3-.2-.1-.1-.3-.1-.4-.1h-5c-.6 0-1 .4-1 1s.4 1 1 1h2.6l-3.1 3.1c-.2-.1-.3-.1-.5-.1h-6c-.2 0-.3 0-.5.1L7.4 6H10c.6 0 1-.4 1-1s-.4-1-1-1H5c-.1 0-.3 0-.4.1-.2.1-.4.3-.5.5-.1.1-.1.3-.1.4v5c0 .6.4 1 1 1s1-.4 1-1V7.4l3.1 3.1c-.1.2-.1.3-.1.5v6c0 .2 0 .3.1.5L6 20.6V18c0-.6-.4-1-1-1s-1 .4-1 1v5c0 .1 0 .3.1.4.1.2.3.4.5.5.1.1.3.1.4.1h5c.6 0 1-.4 1-1s-.4-1-1-1H7.4l3.1-3.1c.2 0 .3.1.5.1h6c.2 0 .3 0 .5-.1l3.1 3.1H18c-.6 0-1 .4-1 1s.4 1 1 1h5c.1 0 .3 0 .4-.1.2-.1.4-.3.5-.5.1-.1.1-.3.1-.4v-5c0-.6-.4-1-1-1s-1 .4-1 1v2.6l-3.1-3.1c0-.2.1-.3.1-.5v-6c0-.2 0-.3-.1-.5L22 7.4V10c0 .6.4 1 1 1s1-.4 1-1V5c0-.1 0-.3-.1-.4 0-.1-.1-.2-.2-.3z"/>
+				<path d="M23.7 4.3c-.1-.1-.2-.2-.3-.2-.1-.1-.3-.1-.4-.1h-5c-.6 0-1 .4-1 1s.4 1 1 1h2.6l-3.1 3.1c-.2-.1-.3-.1-.5-.1h-6c-.2 0-.3 0-.5.1L7.4 6H10c.6 0 1-.4 1-1s-.4-1-1-1H5c-.1 0-.3 0-.4.1-.2.1-.4.3-.5.5-.1.1-.1.3-.1.4v5c0 .6.4 1 1 1s1-.4 1-1V7.4l3.1 3.1c-.1.2-.1.3-.1.5v6c0 .2 0 .3.1.5L6 20.6V18c0-.6-.4-1-1-1s-1 .4-1 1v5c0 .1 0 .3.1.4.1.2.3.4.5.5.1.1.3.1.4.1h5c.6 0 1-.4 1-1s-.4-1-1-1H7.4l3.1-3.1c.2 0 .3.1.5.1h6c.2 0 .3 0 .5-.1l3.1 3.1H18c-.6 0-1 .4-1 1s.4 1 1 1h5c.1 0 .3 0 .4-.1.2-.1.4-.3.5-.5.1-.1.1-.3.1-.4v-5c0-.6-.4-1-1-1s-1 .4-1 1v2.6l-3.1-3.1c0-.2.1-.3.1-.5v-6c0-.2 0-.3-.1-.5L22 7.4V10c0 .6.4 1 1 1s1-.4 1-1V5c0-.1 0-.3-.1-.4 0-.1-.1-.2-.2-.3z"></path>
 			</g>',
 			'animation-flip'      =>
 				'<g>
-				<path d="M22 2.4l-7 2.9V7h-2v-.8L7.6 8.7c-.4.2-.6.5-.6.9v8.7c0 .4.2.7.6.9l5.4 2.5V21h2v1.7l7 2.9c.5.2 1-.2 1-.7V3.1c0-.5-.5-.9-1-.7zM15 19h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zM13 2h2v2.5h-2zM13 23.5h2V26h-2z"/>
+				<path d="M22 2.4l-7 2.9V7h-2v-.8L7.6 8.7c-.4.2-.6.5-.6.9v8.7c0 .4.2.7.6.9l5.4 2.5V21h2v1.7l7 2.9c.5.2 1-.2 1-.7V3.1c0-.5-.5-.9-1-.7zM15 19h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zM13 2h2v2.5h-2zM13 23.5h2V26h-2z"></path>
 			</g>',
 			'animation-fold'      =>
 				'<g>
-				<path d="M24 7h-4V3.4c0-.8-.6-1.4-1.3-1.4-.2 0-.5.1-.7.2l-6.5 3.9c-.9.6-1.5 1.6-1.5 2.6V23c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-6 10.5c0 .2-.1.4-.3.5L12 21.5V8.7c0-.4.2-.7.5-.9L18 4.5v13zM6 7h2v2H6zM6 23h2v2H6zM2.6 7.1c-.1 0-.1.1-.2.1v.1l-.1.1-.1.1c-.1.1-.2.3-.2.5v1h2V7H3c-.1 0-.2 0-.4.1zM2 23v1c0 .4.3.8.7.9.1.1.2.1.3.1h1v-2H2zM2 11h2v2H2zM2 19h2v2H2zM2 15h2v2H2z"/>
+				<path d="M24 7h-4V3.4c0-.8-.6-1.4-1.3-1.4-.2 0-.5.1-.7.2l-6.5 3.9c-.9.6-1.5 1.6-1.5 2.6V23c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-6 10.5c0 .2-.1.4-.3.5L12 21.5V8.7c0-.4.2-.7.5-.9L18 4.5v13zM6 7h2v2H6zM6 23h2v2H6zM2.6 7.1c-.1 0-.1.1-.2.1v.1l-.1.1-.1.1c-.1.1-.2.3-.2.5v1h2V7H3c-.1 0-.2 0-.4.1zM2 23v1c0 .4.3.8.7.9.1.1.2.1.3.1h1v-2H2zM2 11h2v2H2zM2 19h2v2H2zM2 15h2v2H2z"></path>
 			</g>',
 			'animation-roll'      =>
 				'<g>
-				<path d="M18.8 5c-5.3-2.7-11.8.2-14 5.6-1.1 2.8-1 6 .2 8.8.4 1 3.9 6.5 5 3.6.5-1.2-1.3-2.2-1.9-3-.8-1.2-1.4-2.5-1.6-3.9-.4-2.7.5-5.5 2.4-7.4 4-4 11.6-2.5 12.6 3.4.4 2.7-.9 5.5-3.4 6.6-2.6 1.1-6 0-6.8-2.8-.7-2.4 1.2-5.7 4-4.8 1.1.3 2 1.5 1.5 2.7-.3.7-1.7 1.2-1.6.1 0-.3.2-.4.2-.8-.1-.4-.5-.6-.9-.6-1.1.1-1.6 1.6-1.3 2.5.3 1.2 1.5 1.9 2.7 1.9 2.9 0 4.2-3.4 3.1-5.7-1.2-2.6-4.6-3.4-7-2.2-2.6 1.3-3.8 4.4-3.1 7.2 1.6 5.9 9.3 6.8 13.1 2.5 3.8-4.2 1.9-11.1-3.2-13.7z"/>
+				<path d="M18.8 5c-5.3-2.7-11.8.2-14 5.6-1.1 2.8-1 6 .2 8.8.4 1 3.9 6.5 5 3.6.5-1.2-1.3-2.2-1.9-3-.8-1.2-1.4-2.5-1.6-3.9-.4-2.7.5-5.5 2.4-7.4 4-4 11.6-2.5 12.6 3.4.4 2.7-.9 5.5-3.4 6.6-2.6 1.1-6 0-6.8-2.8-.7-2.4 1.2-5.7 4-4.8 1.1.3 2 1.5 1.5 2.7-.3.7-1.7 1.2-1.6.1 0-.3.2-.4.2-.8-.1-.4-.5-.6-.9-.6-1.1.1-1.6 1.6-1.3 2.5.3 1.2 1.5 1.9 2.7 1.9 2.9 0 4.2-3.4 3.1-5.7-1.2-2.6-4.6-3.4-7-2.2-2.6 1.3-3.8 4.4-3.1 7.2 1.6 5.9 9.3 6.8 13.1 2.5 3.8-4.2 1.9-11.1-3.2-13.7z"></path>
 			</g>',
 			'border-link'         =>
 				'<g>
- 				<path d="M14.71 17.71a3 3 0 0 1-2.12-.88l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 0 1.41 0l5-4.95a1 1 0 0 0 0-1.41l-1.46-1.42a1 1 0 0 0-1.41 0L16.1 9.07a1 1 0 0 1-1.41-1.41l1.43-1.43a3.07 3.07 0 0 1 4.24 0l1.41 1.41a3 3 0 0 1 0 4.24l-5 4.95a3 3 0 0 1-2.06.88z"/>
- 				<path d="M9.76 22.66a3 3 0 0 1-2.12-.88l-1.42-1.42a3 3 0 0 1 0-4.24l5-4.95a3.07 3.07 0 0 1 4.24 0l.71.71a1 1 0 0 1-1.41 1.41l-.76-.7a1 1 0 0 0-1.41 0l-5 4.95a1 1 0 0 0 0 1.41L9 20.36a1 1 0 0 0 1.41 0L11.82 19a1 1 0 0 1 1.41 1.41l-1.36 1.36a3 3 0 0 1-2.11.89z"/>
+ 				<path d="M14.71 17.71a3 3 0 0 1-2.12-.88l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 0 1.41 0l5-4.95a1 1 0 0 0 0-1.41l-1.46-1.42a1 1 0 0 0-1.41 0L16.1 9.07a1 1 0 0 1-1.41-1.41l1.43-1.43a3.07 3.07 0 0 1 4.24 0l1.41 1.41a3 3 0 0 1 0 4.24l-5 4.95a3 3 0 0 1-2.06.88z"></path>
+ 				<path d="M9.76 22.66a3 3 0 0 1-2.12-.88l-1.42-1.42a3 3 0 0 1 0-4.24l5-4.95a3.07 3.07 0 0 1 4.24 0l.71.71a1 1 0 0 1-1.41 1.41l-.76-.7a1 1 0 0 0-1.41 0l-5 4.95a1 1 0 0 0 0 1.41L9 20.36a1 1 0 0 0 1.41 0L11.82 19a1 1 0 0 1 1.41 1.41l-1.36 1.36a3 3 0 0 1-2.11.89z"></path>
  			</g>',
 			'border-all'          =>
 				'<g>
- 				<path d="M22 5H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-2 15H8V8h12z"/>
+ 				<path d="M22 5H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-2 15H8V8h12z"></path>
  			</g>',
 			'border-top'          =>
 				'<g>
- 				<path d="M17 21h2v2h-2zM5 9h2v2H5zM21 17h2v2h-2zM21 9h2v2h-2zM21 13h2v2h-2zM21 23h1a1 1 0 0 0 1-1v-1h-2zM5 17h2v2H5zM5 13h2v2H5zM13 21h2v2h-2zM9 21h2v2H9zM5 21v1a1 1 0 0 0 1 1h1v-2zM22 5H6a1 1 0 0 0-1 1v2h18V6a1 1 0 0 0-1-1z"/>
+ 				<path d="M17 21h2v2h-2zM5 9h2v2H5zM21 17h2v2h-2zM21 9h2v2h-2zM21 13h2v2h-2zM21 23h1a1 1 0 0 0 1-1v-1h-2zM5 17h2v2H5zM5 13h2v2H5zM13 21h2v2h-2zM9 21h2v2H9zM5 21v1a1 1 0 0 0 1 1h1v-2zM22 5H6a1 1 0 0 0-1 1v2h18V6a1 1 0 0 0-1-1z"></path>
  			</g>',
 			'border-right'        =>
 				'<g>
- 				<path d="M13 5h2v2h-2zM5 9h2v2H5zM9 5h2v2H9zM7 5H6a1 1 0 0 0-1 1v1h2zM5 13h2v2H5zM13 21h2v2h-2zM5 17h2v2H5zM9 21h2v2H9zM17 5h2v2h-2zM5 21v1a1 1 0 0 0 1 1h1v-2zM22 5h-2v18h2a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zM17 21h2v2h-2z"/>
+ 				<path d="M13 5h2v2h-2zM5 9h2v2H5zM9 5h2v2H9zM7 5H6a1 1 0 0 0-1 1v1h2zM5 13h2v2H5zM13 21h2v2h-2zM5 17h2v2H5zM9 21h2v2H9zM17 5h2v2h-2zM5 21v1a1 1 0 0 0 1 1h1v-2zM22 5h-2v18h2a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zM17 21h2v2h-2z"></path>
  			</g>',
 			'border-bottom'       =>
 				'<g>
- 				<path d="M9 5h2v2H9zM7 20H5v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2H7zM17 5h2v2h-2zM5 13h2v2H5zM5 9h2v2H5zM13 5h2v2h-2zM5 17h2v2H5zM21 9h2v2h-2zM21 17h2v2h-2zM22 5h-1v2h2V6a1 1 0 0 0-1-1zM21 13h2v2h-2zM7 5H6a1 1 0 0 0-1 1v1h2z"/>
+ 				<path d="M9 5h2v2H9zM7 20H5v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2H7zM17 5h2v2h-2zM5 13h2v2H5zM5 9h2v2H5zM13 5h2v2h-2zM5 17h2v2H5zM21 9h2v2h-2zM21 17h2v2h-2zM22 5h-1v2h2V6a1 1 0 0 0-1-1zM21 13h2v2h-2zM7 5H6a1 1 0 0 0-1 1v1h2z"></path>
  			</g>',
 			'border-left'         =>
 				'<g>
- 				<path d="M22 5h-1v2h2V6a1 1 0 0 0-1-1zM9 21h2v2H9zM21 17h2v2h-2zM13 21h2v2h-2zM21 13h2v2h-2zM9 5h2v2H9zM17 21h2v2h-2zM17 5h2v2h-2zM21 9h2v2h-2zM8 7V5H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h2V7zM21 23h1a1 1 0 0 0 1-1v-1h-2zM13 5h2v2h-2z"/>
+ 				<path d="M22 5h-1v2h2V6a1 1 0 0 0-1-1zM9 21h2v2H9zM21 17h2v2h-2zM13 21h2v2h-2zM21 13h2v2h-2zM9 5h2v2H9zM17 21h2v2h-2zM17 5h2v2h-2zM21 9h2v2h-2zM8 7V5H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h2V7zM21 23h1a1 1 0 0 0 1-1v-1h-2zM13 5h2v2h-2z"></path>
  			</g>',
 			'lock'                =>
 				'<g>
-				<path d="M20 12C19.9 11.7 19.3 11 19 11L18 11C18 8.1 16.2 6 14 6 11.8 6 10 8.1 10 11L9 11C8.6 11 8.1 11.6 8 12L8 13 8 19 8 20C8.1 20.3 8.7 20.9 9 21L19 21C19.4 21 19.9 20.4 20 20L20 19 20 14 20 12 20 12ZM14 8C15.1 8 16 9.4 16 11.1L12 11.1C12 9.4 12.9 8 14 8L14 8ZM18 19L10 19 10 13 18 13 18 19 18 19Z" fillRule="evenodd"/>
-				<path d="M14 18C14.6 18 15 17.6 15 17L15 15C15 14.4 14.6 14 14 14 13.4 14 13 14.4 13 15L13 15 13 17C13 17.6 13.4 18 14 18L14 18Z" fillRule="evenodd"/>
+				<path d="M20 12C19.9 11.7 19.3 11 19 11L18 11C18 8.1 16.2 6 14 6 11.8 6 10 8.1 10 11L9 11C8.6 11 8.1 11.6 8 12L8 13 8 19 8 20C8.1 20.3 8.7 20.9 9 21L19 21C19.4 21 19.9 20.4 20 20L20 19 20 14 20 12 20 12ZM14 8C15.1 8 16 9.4 16 11.1L12 11.1C12 9.4 12.9 8 14 8L14 8ZM18 19L10 19 10 13 18 13 18 19 18 19Z" fillRule="evenodd"></path>
+				<path d="M14 18C14.6 18 15 17.6 15 17L15 15C15 14.4 14.6 14 14 14 13.4 14 13 14.4 13 15L13 15 13 17C13 17.6 13.4 18 14 18L14 18Z" fillRule="evenodd"></path>
 			</g>',
 		);
 		return $all_icons;
@@ -1601,7 +1601,13 @@ function et_pb_process_computed_property() {
 	}
 	$module_slug       = isset( $_POST['module_type'] ) ? sanitize_text_field( $_POST['module_type'] ) : '';
 	$post_type         = isset( $_POST['post_type'] ) ? sanitize_text_field( $_POST['post_type'] ) : '';
-	$computed_property = isset( $_POST['computed_property'] ) ? sanitize_text_field( $_POST['computed_property'] ) : '';
+
+	// Since VB performance, it is introduced single ajax request for several property
+	// in that case, computed_property posted data can be as an array
+	// hence we get the raw post data value, then sanitize it afterward either as array or string.
+	// @phpcs:ignore ET.Sniffs.ValidatedSanitizedInput.InputNotSanitized -- Will be sanitized conditionally as string or array afterward.
+	$computed_property = isset( $_POST['computed_property'] ) ? $_POST['computed_property'] : '';
+	$computed_property = is_array( $computed_property ) ? array_map( 'sanitize_text_field', $computed_property ) : sanitize_text_field( $computed_property );
 
 	// get all fields for module.
 	$fields = ET_Builder_Element::get_module_fields( $post_type, $module_slug );
@@ -1609,13 +1615,36 @@ function et_pb_process_computed_property() {
 	// make sure only valid fields are being passed through.
 	$depends_on = array_intersect_key( $depends_on, $fields );
 
+	if ( is_array( $computed_property ) ) {
+		$results = array();
+
+		foreach ( $computed_property as $property ) {
+			if ( ! isset( $fields[ $property ], $fields[ $property ]['computed_callback'] ) ) {
+				continue;
+			}
+
+			$callback = $fields[ $property ]['computed_callback'];
+
+			if ( is_callable( $callback ) ) {
+				// @phpcs:ignore Generic.PHP.ForbiddenFunctions.Found -- The callback is hard-coded in module fields configuration.
+				$results[ $property ] = call_user_func( $callback, $depends_on, $conditional_tags, $current_page );
+			}
+		}
+
+		if ( empty( $results ) ) {
+			die( -1 );
+		}
+
+		die( wp_json_encode( $results ) );
+	}
+
 	// computed property field.
 	$field = $fields[ $computed_property ];
 
 	$callback = $field['computed_callback'];
 
 	if ( is_callable( $callback ) ) {
-		// @phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
+		// @phpcs:ignore Generic.PHP.ForbiddenFunctions.Found -- The callback is hard-coded in module fields configuration.
 		die( wp_json_encode( call_user_func( $callback, $depends_on, $conditional_tags, $current_page ) ) );
 	} else {
 		die( -1 );
@@ -1785,7 +1814,8 @@ function et_fb_process_to_shortcode( $object, $options = array(), $library_item_
 					}
 
 					// Encode backslash for custom CSS-related and json attributes.
-					$json_attributes = array( 'checkbox_options', 'radio_options', 'select_options' );
+					$json_attributes = array( 'checkbox_options', 'radio_options', 'select_options', 'conditional_logic_rules' );
+
 					if ( 0 === strpos( $attribute, 'custom_css_' ) || in_array( $attribute, $json_attributes, true ) ) {
 						$value = str_ireplace( '\\', '%92', $value );
 
@@ -3151,6 +3181,19 @@ endif;
 add_action( 'after_switch_theme', 'et_font_subset_force_check' );
 
 /**
+ * Preconnect to Google Fonts to allow async dns lookup.
+ */
+function et_builder_preconnect_google_fonts() {
+	$feature_manager = ET_Builder_Google_Fonts_Feature::instance();
+	$output_inline   = $feature_manager->is_option_enabled( 'google_fonts_inline' );
+
+	if ( $output_inline && et_core_use_google_fonts() ) {
+		echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />';
+	}
+}
+add_action( 'wp_enqueue_scripts', 'et_builder_preconnect_google_fonts', 9 );
+
+/**
  * Enqueue queued Google Fonts into WordPress' wp_enqueue_style as one request
  *
  * @return void
@@ -3163,7 +3206,6 @@ function et_builder_print_font() {
 		return;
 	}
 
-	$protocol       = is_ssl() ? 'https' : 'http';
 	$fonts          = wp_list_pluck( $et_fonts_queue, 'font' );
 	$subsets        = wp_list_pluck( $et_fonts_queue, 'subset' );
 	$unique_subsets = array_unique( explode( ',', implode( ',', $subsets ) ) );
@@ -3181,21 +3223,29 @@ function et_builder_print_font() {
 		$post_fonts_data = array();
 	}
 
-	if ( empty( $post_fonts_data ) ) {
+	if ( empty( $post_fonts_data ) || ! is_array( $post_fonts_data['family'] ) || ! is_array( $post_fonts_data['subset'] ) ) {
 		$post_fonts_data = array(
 			'family' => array(),
 			'subset' => array(),
 		);
 	}
 
+	$google_fonts_feature_cache_key = ET_Builder_Google_Fonts_Feature::_get_cache_index();
+
 	// We only need the difference in the fonts since the subsets might be needed
 	// in cases where a new font is added to the page and it is not yet present
 	// in the option cache.
-	$cached_fonts = $post_fonts_data['family'];
+	$cached_fonts          = $post_fonts_data['family'];
+	$cached_subsets        = $post_fonts_data['subset'];
+	$unique_cached_subsets = array_unique( explode( ',', implode( ',', $cached_subsets ) ) );
+	$cached_cache_key      = ! empty( $post_fonts_data['cache_key'] ) ? $post_fonts_data['cache_key'] : $google_fonts_feature_cache_key;
 
-	$fonts_diff = array_diff( $fonts, $cached_fonts );
+	// compare if things have changed since the post cache.
+	$fonts_diff     = array_diff( $fonts, $cached_fonts );
+	$subsets_diff   = array_diff( $unique_subsets, $unique_cached_subsets );
+	$cache_key_diff = $cached_cache_key !== $google_fonts_feature_cache_key;
 
-	if ( ! $fonts_diff ) {
+	if ( ! $fonts_diff && ! $subsets_diff ) {
 		// The `$fonts` variable stores all the fonts used on the page (cache does not matter)
 		// while the `$cached_fonts` one only stores the fonts that were lastly saved into
 		// the post meta. When we run `array_diff` we would only get a result if there
@@ -3204,7 +3254,7 @@ function et_builder_print_font() {
 		// `array_diff`. To fix this if the item count in `$fonts` is different
 		// than the one in `$cached_fonts` we update the post meta with the
 		// data from the `$fonts` variable to force unused fonts removal.
-		if ( count( $fonts ) !== count( $cached_fonts ) ) {
+		if ( count( $fonts ) !== count( $cached_fonts ) || ! empty( $cache_key_diff ) ) {
 			// Update the option for the current page with the new data.
 			$post_fonts_data = array(
 				'family' => et_core_sanitized_previously( $fonts ),
@@ -3221,13 +3271,37 @@ function et_builder_print_font() {
 
 	if ( et_core_use_google_fonts() ) {
 		// Append combined subset at the end of the URL as different query string.
-		$fonts_googleapi_url_args = array(
+		$google_fonts_url_args = array(
 			'family'  => implode( '|', $fonts ),
 			'subset'  => implode( ',', $unique_subsets ),
 			'display' => 'swap',
 		);
-		$fonts_googleapi_url      = add_query_arg( $fonts_googleapi_url_args, "$protocol://fonts.googleapis.com/css" );
-		wp_enqueue_style( 'et-builder-googlefonts', esc_url_raw( $fonts_googleapi_url ), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters --  Google fonts api does not have versions
+
+		$google_fonts_url = add_query_arg( $google_fonts_url_args, 'https://fonts.googleapis.com/css' );
+		$google_fonts_url = esc_url_raw( $google_fonts_url );
+		$feature_manager  = ET_Builder_Google_Fonts_Feature::instance();
+		$output_inline    = $feature_manager->is_option_enabled( 'google_fonts_inline' );
+
+		if ( $output_inline ) {
+			$contents = $feature_manager->get(
+				'google-fonts',
+				function() use ( $feature_manager, $google_fonts_url ) {
+					return $feature_manager->fetch( $google_fonts_url );
+				},
+				sanitize_text_field( et_core_esc_previously( $google_fonts_url ) )
+			);
+
+			// if something went wrong fetching the contents.
+			if ( false === $contents ) {
+				// phpcs:ignore WordPress.WP.EnqueuedResourceParameters --  Google fonts api does not have versions
+				wp_enqueue_style( 'et-builder-googlefonts', et_core_esc_previously( $google_fonts_url ), array(), null );
+			} else {
+				echo '<style id="et-builder-googlefonts-inline">' . $contents . '</style>';
+			}
+		} else {
+			// phpcs:ignore WordPress.WP.EnqueuedResourceParameters --  Google fonts api does not have versions
+			wp_enqueue_style( 'et-builder-googlefonts', et_core_esc_previously( $google_fonts_url ), array(), null );
+		}
 	}
 
 	// Create a merge of the existing fonts and subsets in the option and the newly added ones.
@@ -3236,8 +3310,9 @@ function et_builder_print_font() {
 
 	// Update the option for the current page with the new data.
 	$post_fonts_data = array(
-		'family' => array_unique( $updated_fonts ),
-		'subset' => array_unique( $updated_subsets ),
+		'family'    => array_unique( $updated_fonts ),
+		'subset'    => array_unique( $updated_subsets ),
+		'cache_key' => $google_fonts_feature_cache_key,
 	);
 
 	// Do not update post meta here, save the value to global variable and update it at `shutdown` hook.
@@ -3284,29 +3359,52 @@ function et_builder_preprint_font() {
 
 	$post_fonts_data = get_post_meta( $post_id, 'et_enqueued_post_fonts', true );
 
-	// No need to proceed if the proper data is missing from the cache.
-	if ( ! is_array( $post_fonts_data ) || ! isset( $post_fonts_data['family'], $post_fonts_data['subset'] ) ) {
+	// Bail early if the post fonts data is not an array.
+	if ( ! is_array( $post_fonts_data ) ) {
 		return;
 	}
 
-	$fonts = $post_fonts_data['family'];
+	$fonts_family = isset( $post_fonts_data['family'] ) ? $post_fonts_data['family'] : '';
+	$fonts_subset = isset( $post_fonts_data['subset'] ) ? $post_fonts_data['subset'] : '';
 
-	if ( ! $fonts ) {
+	// We expect both 'family' and 'subset' to contain an array so bail early if one of them does not contain an array.
+	if ( ! is_array( $fonts_family ) || ! is_array( $fonts_subset ) ) {
 		return;
 	}
 
-	$unique_subsets = $post_fonts_data['subset'];
-	$protocol       = is_ssl() ? 'https' : 'http';
+	$unique_subsets = array_filter( $fonts_subset );
 
-	$googlefonts_cached_url_args = array(
-		'family'  => implode( '|', $fonts ),
+	$google_fonts_url_args = array(
+		'family'  => implode( '|', $fonts_family ),
 		'subset'  => implode( ',', $unique_subsets ),
 		'display' => 'swap',
 	);
-	$googlefonts_cached_url      = add_query_arg( $googlefonts_cached_url_args, "$protocol://fonts.googleapis.com/css" );
 
-	// phpcs:ignore WordPress.WP.EnqueuedResourceParameters -- Google fonts api does not have versions.
-	wp_enqueue_style( 'et-builder-googlefonts-cached', esc_url_raw( $googlefonts_cached_url ), array(), null );
+	$google_fonts_url = add_query_arg( $google_fonts_url_args, 'https://fonts.googleapis.com/css' );
+	$google_fonts_url = esc_url_raw( $google_fonts_url );
+	$feature_manager  = ET_Builder_Google_Fonts_Feature::instance();
+	$output_inline    = $feature_manager->is_option_enabled( 'google_fonts_inline' );
+
+	if ( $output_inline ) {
+		$contents = $feature_manager->get(
+			'google-fonts',
+			function() use ( $feature_manager, $google_fonts_url ) {
+				return $feature_manager->fetch( $google_fonts_url );
+			},
+			sanitize_text_field( et_core_esc_previously( $google_fonts_url ) )
+		);
+
+		// if something went wrong fetching the contents.
+		if ( false === $contents ) {
+			// phpcs:ignore WordPress.WP.EnqueuedResourceParameters --  Google fonts api does not have versions
+			wp_enqueue_style( 'et-builder-googlefonts-cached', et_core_esc_previously( $google_fonts_url ), array(), null );
+		} else {
+			echo '<style id="et-builder-googlefonts-cached-inline">' . $contents . '</style>';
+		}
+	} else {
+		// phpcs:ignore WordPress.WP.EnqueuedResourceParameters -- Google fonts api does not have versions.
+		wp_enqueue_style( 'et-builder-googlefonts-cached', et_core_esc_previously( $google_fonts_url ), array(), null );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'et_builder_preprint_font' );
 
@@ -3798,20 +3896,8 @@ function et_builder_maybe_ensure_heartbeat_script() {
 	}
 	// phpcs:enable
 }
-
-/**
- * Enqueue dashicons in front-end if they are not enqueued (that happens when not logged in as admin).
- */
-function et_builder_maybe_enqueue_dashicons() {
-	if ( wp_style_is( 'dashicons' ) ) {
-		return;
-	}
-
-	wp_enqueue_style( 'dashicons' );
-}
 add_action( 'admin_print_scripts-post-new.php', 'et_builder_maybe_ensure_heartbeat_script', 9 );
 add_action( 'admin_print_scripts-post.php', 'et_builder_maybe_ensure_heartbeat_script', 9 );
-add_action( 'wp_enqueue_scripts', 'et_builder_maybe_enqueue_dashicons', 19 );
 add_action( 'wp_footer', 'et_builder_maybe_ensure_heartbeat_script', 19 );
 
 /**
@@ -5348,10 +5434,13 @@ if ( ! function_exists( 'et_pb_load_global_module' ) ) {
 				)
 			);
 
-			$query->the_post(); // Call the_post() to properly configure post data.
-
-			wp_reset_postdata();
 			if ( ! empty( $query->post ) ) {
+				// Call the_post() to properly configure post data. Make sure to call the_post() and
+				// wp_reset_postdata() only if the posts result exist to avoid unexpected issues.
+				$query->the_post();
+
+				wp_reset_postdata();
+
 				$global_shortcode = $query->post->post_content;
 
 				if ( '' !== $row_type && 'et_pb_row_inner' === $row_type ) {
@@ -8478,7 +8567,7 @@ if ( ! function_exists( 'et_pb_get_audio_player' ) ) :
 		$output = sprintf(
 			'<div class="et_audio_container">
 			    %1$s
-		    </div> <!-- .et_audio_container -->',
+		    </div>',
 			$shortcode_audio
 		);
 
@@ -8511,7 +8600,7 @@ if ( ! function_exists( 'et_divi_post_format_content' ) ) :
 					'<div class="et_audio_content%4$s"%5$s>
                         <h2><a href="%3$s">%1$s</a></h2>
                         %2$s
-				    </div> <!-- .et_audio_content -->',
+				    </div>',
 					esc_html( get_the_title() ),
 					et_core_intentionally_unescaped( et_pb_get_audio_player(), 'html' ),
 					esc_url( get_permalink() ),
@@ -8525,7 +8614,7 @@ if ( ! function_exists( 'et_divi_post_format_content' ) ) :
 					'<div class="et_quote_content%4$s"%5$s>
                         %1$s
                         <a href="%2$s" class="et_quote_main_link">%3$s</a>
-				    </div> <!-- .et_quote_content -->',
+				    </div>',
 					et_core_intentionally_unescaped( et_get_blockquote_in_content(), 'html' ),
 					esc_url( get_permalink() ),
 					esc_html__( 'Read more', 'et_builder' ),
@@ -8539,7 +8628,7 @@ if ( ! function_exists( 'et_divi_post_format_content' ) ) :
 					'<div class="et_link_content%5$s"%6$s>
                         <h2><a href="%2$s">%1$s</a></h2>
                         <a href="%3$s" class="et_link_main_url">%4$s</a>
-				    </div> <!-- .et_link_content -->',
+				    </div>',
 					esc_html( get_the_title() ),
 					esc_url( get_permalink() ),
 					esc_url( et_get_link_url() ),
@@ -9717,7 +9806,7 @@ if ( ! function_exists( 'et_custom_comments_display' ) ) :
 				);
 				$et_comment_reply_link   = get_comment_reply_link( array_merge( $args, $comment_reply_link_args ) );
 				?>
-			</div> <!-- .comment_postinfo -->
+			</div>
 
 			<div class="comment_area">
 				<?php if ( '0' === $comment->comment_approved ) : ?>
@@ -9732,9 +9821,9 @@ if ( ! function_exists( 'et_custom_comments_display' ) ) :
 					echo '<span class="reply-container">' . et_core_esc_previously( $et_comment_reply_link ) . '</span>';
 				}
 				?>
-				</div> <!-- end comment-content-->
-			</div> <!-- end comment_area-->
-		</article> <!-- .comment-body -->
+				</div>
+			</div>
+		</article>
 		<?php
 	}
 endif;
@@ -10723,6 +10812,15 @@ function et_fb_add_additional_attrs( $processed_attrs, $output ) {
 	foreach ( $processed_attrs as $attr => $value ) {
 		if ( ! preg_match( '~_hover(_enabled)?$~', $attr ) ) {
 			continue;
+		}
+
+		// If value starts with `gcid-` then it's a global color ID.
+		if ( strpos( $value, 'gcid-' ) === 0 ) {
+			$global_color_info = et_builder_get_global_color_info( $value );
+
+			if ( ! empty( $global_color_info['color'] ) ) {
+				$value = esc_attr( $global_color_info['color'] );
+			}
 		}
 
 		$allowlisted_attrs[ $attr ] = $value;
@@ -12337,4 +12435,118 @@ if ( ! function_exists( 'et_builder_generate_css_style' ) ) {
 
 		return sprintf( '%s: %s;', $args['style'], $args['prefix'] . $args['value'] . $args['suffix'] );
 	}
+}
+
+if ( ! function_exists( 'et_builder_default_colors_ajax_update_handler' ) ) :
+	/**
+	 * Default colors AJAX update handler.
+	 *
+	 * @since 4.9.0
+	 */
+	function et_builder_default_colors_ajax_update_handler() {
+		// Get nonce from $_POST.
+		$nonce = filter_input( INPUT_POST, 'et_builder_default_colors_nonce', FILTER_SANITIZE_STRING );
+
+		if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'et_builder_default_colors_update' ) ) {
+			wp_send_json_error();
+		}
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error();
+		}
+
+		// Get default_colors from $_POST.
+		$post_default_colors = filter_input( INPUT_POST, 'default_colors', FILTER_SANITIZE_STRING );
+		$default_colors      = sanitize_text_field( wp_unslash( $post_default_colors ) );
+
+		et_update_option( 'divi_color_palette', str_replace( ',', '|', $default_colors ) );
+
+		wp_send_json_success();
+	}
+endif;
+
+add_action( 'wp_ajax_et_builder_default_colors_update', 'et_builder_default_colors_ajax_update_handler' );
+
+if ( ! function_exists( 'et_builder_global_colors_ajax_save_handler' ) ) :
+	/**
+	 * Global colors AJAX save handler.
+	 *
+	 * @since 4.9.0
+	 */
+	function et_builder_global_colors_ajax_save_handler() {
+		// Get nonce from $_POST.
+		$nonce = filter_input( INPUT_POST, 'et_builder_global_colors_save_nonce', FILTER_SANITIZE_STRING );
+
+		if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'et_builder_global_colors_save' ) ) {
+			wp_send_json_error();
+		}
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error();
+		}
+
+		// Get colors from $_POST.
+		$post_colors   = filter_input( INPUT_POST, 'global_colors', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		$global_colors = array();
+
+		if ( is_array( $post_colors ) ) {
+			foreach ( $post_colors as $data_id => $data ) {
+				// Sanitize data_id (e.g: gcid-3330f0vf7 ).
+				$global_id = sanitize_text_field( $data_id );
+
+				foreach ( $data as $type => $value ) {
+					// Sanitize both type (e.g: color, active) and value (color value, yes/no).
+					$global_colors[ $global_id ][ sanitize_text_field( $type ) ] = sanitize_text_field( $value );
+				}
+			}
+		}
+
+		if ( empty( $global_colors ) ) {
+			wp_send_json_error();
+		}
+
+		// Global Color data has been sanitized above.
+		et_update_option( 'et_global_colors', $global_colors );
+		ET_Core_PageResource::remove_static_resources( 'all', 'all' );
+
+		wp_send_json_success();
+	}
+endif;
+
+add_action( 'wp_ajax_et_builder_global_colors_save', 'et_builder_global_colors_ajax_save_handler' );
+
+/**
+ * Get all global colors.
+ *
+ * @since 4.9.0
+ *
+ * @return array
+ */
+function et_builder_get_all_global_colors() {
+	return et_get_option( 'et_global_colors' );
+}
+
+/**
+ * Get a global color info by id.
+ *
+ * @since 4.9.0
+ *
+ * @param string $color_id Id of global color.
+ *
+ * @return array
+ */
+function et_builder_get_global_color_info( $color_id ) {
+	$colors = et_builder_get_all_global_colors();
+
+	if ( empty( $colors ) || ! array_key_exists( $color_id, $colors ) ) {
+		return null;
+	}
+
+	// if replaced value exists, return color info with that replaced id.
+	if ( isset( $colors[ $color_id ]['replaced_with'] ) ) {
+		$replaced_id = $colors[ $color_id ]['replaced_with'];
+		return $colors[ $replaced_id ];
+	}
+
+	return $colors[ $color_id ];
 }

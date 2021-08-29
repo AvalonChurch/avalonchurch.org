@@ -129,12 +129,25 @@ if (!class_exists('USP_Pro_Forms')) {
 			);
 			return $caps;	
 		}
+		
 		public function create_post_examples() {
+			
+			if (!is_admin()) return;
+			
 			global $usp_advanced;
-			if ($usp_advanced['form_demos']) {
+			
+			if (isset($usp_advanced['form_demos']) && $usp_advanced['form_demos']) {
+				
 				include_once('usp-demos.php');
-				$existing_demo_1 = get_page_by_title('USP Form Demo', ARRAY_A, 'usp_form');
-				if (!$existing_demo_1) {
+				
+				// Demo: Submit
+				
+				$demo_submit = new WP_Query(array('post_type' => 'usp_form', 'meta_key' => 'usp_shortcode', 'meta_value' => '[usp_form id="submit"]'));
+				$demo_exists = $demo_submit->have_posts() ? true : false;
+				wp_reset_postdata();
+				
+				if (!$demo_exists) {
+					
 					$form_demo = array(
 						'comment_status' => 'closed',
 						'ping_status'    => 'closed',
@@ -144,14 +157,21 @@ if (!class_exists('USP_Pro_Forms')) {
 						'post_title'     => 'USP Form Demo',
 						'post_type'      => 'usp_form',
 					);
+					
 					$postID = wp_insert_post($form_demo);
-					$shortcode = '[usp_form id="submit"]';
-					add_post_meta($postID, 'usp_shortcode', $shortcode, true);
-					$alt = 'default';
-					$this->add_custom_fields($postID, $alt);
+					add_post_meta($postID, 'usp_shortcode', '[usp_form id="submit"]', true);
+					$this->add_custom_fields($postID, 'default');
+					
 				}
-				$existing_demo_2 = get_page_by_title('Contact Form Demo', ARRAY_A, 'usp_form');
-				if (!$existing_demo_2) {
+				
+				// Demo: Contact
+				
+				$demo_contact = new WP_Query(array('post_type' => 'usp_form', 'meta_key' => 'usp_shortcode', 'meta_value' => '[usp_form id="contact"]'));
+				$demo_exists = $demo_contact->have_posts() ? true : false;
+				wp_reset_postdata();
+				
+				if (!$demo_exists) {
+					
 					$form_demo = array(
 						'comment_status' => 'closed',
 						'ping_status'    => 'closed',
@@ -161,14 +181,21 @@ if (!class_exists('USP_Pro_Forms')) {
 						'post_title'     => 'Contact Form Demo',
 						'post_type'      => 'usp_form',
 					);
+					
 					$postID = wp_insert_post($form_demo);
-					$shortcode = '[usp_form id="contact"]';
-					add_post_meta($postID, 'usp_shortcode', $shortcode, true);
-					$alt = 'contact';
-					$this->add_custom_fields($postID, $alt);
+					add_post_meta($postID, 'usp_shortcode', '[usp_form id="contact"]', true);
+					$this->add_custom_fields($postID, 'contact');
+					
 				}
-				$existing_demo_3 = get_page_by_title('User Registration Demo', ARRAY_A, 'usp_form');
-				if (!$existing_demo_3) {
+				
+				// Demo: Register
+				
+				$demo_register = new WP_Query(array('post_type' => 'usp_form', 'meta_key' => 'usp_shortcode', 'meta_value' => '[usp_form id="register"]'));
+				$demo_exists = $demo_register->have_posts() ? true : false;
+				wp_reset_postdata();
+				
+				if (!$demo_exists) {
+					
 					$form_demo = array(
 						'comment_status' => 'closed',
 						'ping_status'    => 'closed',
@@ -178,14 +205,21 @@ if (!class_exists('USP_Pro_Forms')) {
 						'post_title'     => 'User Registration Demo',
 						'post_type'      => 'usp_form',
 					);
+					
 					$postID = wp_insert_post($form_demo);
-					$shortcode = '[usp_form id="register"]';
-					add_post_meta($postID, 'usp_shortcode', $shortcode, true);
-					$alt = 'register';
-					$this->add_custom_fields($postID, $alt);
+					add_post_meta($postID, 'usp_shortcode', '[usp_form id="register"]', true);
+					$this->add_custom_fields($postID, 'register');
+					
 				}
-				$existing_demo_4 = get_page_by_title('Image Preview Demo', ARRAY_A, 'usp_form');
-				if (!$existing_demo_4) {
+				
+				// Demo: Preview
+				
+				$demo_preview = new WP_Query(array('post_type' => 'usp_form', 'meta_key' => 'usp_shortcode', 'meta_value' => '[usp_form id="preview"]'));
+				$demo_exists = $demo_preview->have_posts() ? true : false;
+				wp_reset_postdata();
+				
+				if (!$demo_exists) {
+					
 					$image_demo = array(
 						'comment_status' => 'closed',
 						'ping_status'    => 'closed',
@@ -195,14 +229,21 @@ if (!class_exists('USP_Pro_Forms')) {
 						'post_title'     => 'Image Preview Demo',
 						'post_type'      => 'usp_form',
 					);
+					
 					$postID = wp_insert_post($image_demo);
-					$shortcode = '[usp_form id="preview"]';
-					add_post_meta($postID, 'usp_shortcode', $shortcode, true);
-					$alt = 'preview';
-					$this->add_custom_fields($postID, $alt);
+					add_post_meta($postID, 'usp_shortcode', '[usp_form id="preview"]', true);
+					$this->add_custom_fields($postID, 'preview');
+					
 				}
-				$existing_demo_5 = get_page_by_title('Classic Form Demo', ARRAY_A, 'usp_form');
-				if (!$existing_demo_5) {
+				
+				// Demo: Classic
+				
+				$demo_classic = new WP_Query(array('post_type' => 'usp_form', 'meta_key' => 'usp_shortcode', 'meta_value' => '[usp_form id="classic"]'));
+				$demo_exists = $demo_classic->have_posts() ? true : false;
+				wp_reset_postdata();
+				
+				if (!$demo_exists) {
+					
 					$classic_demo = array(
 						'comment_status' => 'closed',
 						'ping_status'    => 'closed',
@@ -212,14 +253,21 @@ if (!class_exists('USP_Pro_Forms')) {
 						'post_title'     => 'Classic Form Demo',
 						'post_type'      => 'usp_form',
 					);
+					
 					$postID = wp_insert_post($classic_demo);
-					$shortcode = '[usp_form id="classic"]';
-					add_post_meta($postID, 'usp_shortcode', $shortcode, true);
-					$alt = 'classic';
-					$this->add_custom_fields($postID, $alt);
+					add_post_meta($postID, 'usp_shortcode', '[usp_form id="classic"]', true);
+					$this->add_custom_fields($postID, 'classic');
+					
 				}
-				$existing_demo_6 = get_page_by_title('Starter Form Demo', ARRAY_A, 'usp_form');
-				if (!$existing_demo_6) {
+				
+				// Demo: Starter
+				
+				$demo_starter = new WP_Query(array('post_type' => 'usp_form', 'meta_key' => 'usp_shortcode', 'meta_value' => '[usp_form id="starter"]'));
+				$demo_exists = $demo_starter->have_posts() ? true : false;
+				wp_reset_postdata();
+				
+				if (!$demo_exists) {
+					
 					$starter_demo = array(
 						'comment_status' => 'closed',
 						'ping_status'    => 'closed',
@@ -229,14 +277,17 @@ if (!class_exists('USP_Pro_Forms')) {
 						'post_title'     => 'Starter Form Demo',
 						'post_type'      => 'usp_form',
 					);
+					
 					$postID = wp_insert_post($starter_demo);
-					$shortcode = '[usp_form id="starter"]';
-					add_post_meta($postID, 'usp_shortcode', $shortcode, true);
-					$alt = 'starter';
-					$this->add_custom_fields($postID, $alt);
+					add_post_meta($postID, 'usp_shortcode', '[usp_form id="starter"]', true);
+					$this->add_custom_fields($postID, 'starter');
+					
 				}
+				
 			}
+			
 		}
+		
 		public function add_columns($columns) {
 			unset($columns['author'], $columns['date'], $columns['title']);
 			return array_merge($columns, array('title'=>esc_html__('Title', 'usp-pro'), 'author'=>esc_html__('Author', 'usp-pro'), 'shortcode'=>esc_html__('Shortcode', 'usp-pro'), 'date'=>esc_html__('Date', 'usp-pro')));
@@ -376,7 +427,7 @@ if (!class_exists('USP_Pro_Forms')) {
 					add_post_meta($postID, '[usp_custom_field form="register" id="3"]', 'name#nickname|for#nickname|label#Nickname|placeholder#Nickname', true);
 					add_post_meta($postID, '[usp_custom_field form="register" id="4"]', 'name#firstname|for#firstname|label#First Name|placeholder#First Name', true);
 					add_post_meta($postID, '[usp_custom_field form="register" id="5"]', 'name#lastname|for#lastname|label#Last Name|placeholder#Last Name', true);
-					add_post_meta($postID, '[usp_custom_field form="register" id="6"]', 'name#description|for#description|label#Description|placeholder#Description', true);
+					add_post_meta($postID, '[usp_custom_field form="register" id="6"]', 'field#textarea|name#description|for#description|label#Description|placeholder#Description', true);
 				} elseif ($alt === 'starter') {
 					add_post_meta($postID, '[usp_custom_field form="starter" id="1"]', 'field#input_checkbox|desc#Checkboxes|checkboxes#Option 1:Option 2:Option 3|checkboxes_checked#Option 1|data-required#false', true);
 					add_post_meta($postID, '[usp_custom_field form="starter" id="2"]', 'field#input_radio|desc#Radio Field|radio_inputs#Option 1:Option 2:Option 3|radio_checked#Option 1|data-required#false', true);

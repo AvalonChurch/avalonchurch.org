@@ -89,7 +89,7 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 				'text'     => array(
 					'label'           => et_builder_i18n( 'Text' ),
 					'css'             => array(
-						'line_height' => "{$this->main_css_element} p",
+						'line_height' => "{$this->main_css_element}",
 						'color'       => "{$this->main_css_element}.et_pb_text",
 					),
 					'line_height'     => array(
@@ -121,7 +121,7 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 					'label'       => esc_html__( 'Unordered List', 'et_builder' ),
 					'css'         => array(
 						'main'        => "{$this->main_css_element} ul li",
-						'color'       => "{$this->main_css_element}.et_pb_text ul li",
+						'color'       => "{$this->main_css_element}.et_pb_text ul li, {$this->main_css_element}.et_pb_text ol li > ul li",
 						'line_height' => "{$this->main_css_element} ul li",
 						'item_indent' => "{$this->main_css_element} ul",
 					),
@@ -503,7 +503,16 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 		return $fields;
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		$multi_view                      = et_pb_multi_view_options( $this );
 		$ul_type_values                  = et_pb_responsive_options()->get_property_values( $this->props, 'ul_type' );
 		$ul_position_values              = et_pb_responsive_options()->get_property_values( $this->props, 'ul_position' );
@@ -598,7 +607,7 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 				%5$s
 				%4$s
 				%1$s
-			</div> <!-- .et_pb_text -->',
+			</div>',
 			$content,
 			$this->module_classname( $render_slug ),
 			$this->module_id(),
@@ -611,4 +620,6 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Text();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Text();
+}

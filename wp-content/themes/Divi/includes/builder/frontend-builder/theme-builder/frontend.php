@@ -216,14 +216,10 @@ function et_theme_builder_frontend_override_partial( $partial, $name, $action = 
 function et_theme_builder_extract_head( $html ) {
 	// We could use DOMDocument here to guarantee proper parsing but we need
 	// the most performant solution since we cannot reliably cache the result.
-	$matches = array();
-	$matched = preg_match( '/^[\s\S]*?<head[\s\S]*?>([\s\S]*?)<\/head>[\s\S]*$/i', $html, $matches );
+	$head = array();
+	preg_match( '/^[\s\S]*?<head[\s\S]*?>([\s\S]*?)<\/head>[\s\S]*$/i', $html, $head );
 
-	if ( $matched && ! isset( $matches[1] ) ) {
-		return '';
-	}
-
-	return trim( $matches[1] );
+	return ! empty( $head[1] ) ? trim( $head[1] ) : '';
 }
 
 /**
@@ -335,18 +331,45 @@ function et_theme_builder_frontend_render_layout( $layout_type, $layout_id ) {
 		$result = ET_Builder_Element::setup_advanced_styles_manager( $layout->ID );
 	}
 
-	$manager = $result['manager'];
+	$advanced_styles_manager = $result['manager'];
+	if ( isset( $result['deferred'] ) ) {
+		$deferred_styles_manager = $result['deferred'];
+	}
 
-	if ( ! $manager->has_file() ) {
-		$styles = et_pb_get_page_custom_css( $layout->ID ) . ET_Builder_Element::get_style( false, $layout->ID ) . ET_Builder_Element::get_style( true, $layout->ID );
+	// Pass styles to page resource which will handle their output.
+	/**
+	 * Filters whether Critical CSS feature is enabled or not.
+	 *
+	 * @since 4.10.0
+	 *
+	 * @param bool $enabled Critical CSS enabled value.
+	 */
+	$is_critical_enabled = apply_filters( 'et_builder_critical_css_enabled', false );
 
-		if ( $styles ) {
-			$manager->set_data( $styles, 40 );
+	if ( ET_Builder_Element::$forced_inline_styles || ! $advanced_styles_manager->has_file() ) {
+		$custom = et_pb_get_page_custom_css( $layout->ID );
 
-			// Output the styles inline in the footer on first render as we are already
-			// past "head-late" where they will be enqueued once static files are generated.
-			$manager->write_file_location = 'footer';
-			$manager->set_output_location( 'footer' );
+		$critical = $is_critical_enabled ? ET_Builder_Element::get_style( false, $layout->ID, true ) . ET_Builder_Element::get_style( true, $layout->ID, true ) : [];
+		$styles   = ET_Builder_Element::get_style( false, $layout->ID ) . ET_Builder_Element::get_style( true, $layout->ID );
+
+		if ( empty( $critical ) ) {
+			// No critical styles defined, just enqueue everything as usual.
+			$styles = $custom . $styles;
+			if ( ! empty( $styles ) ) {
+				if ( isset( $deferred_styles_manager ) ) {
+					$deferred_styles_manager->set_data( $styles, 40 );
+				} else {
+					$advanced_styles_manager->set_data( $styles, 40 );
+				}
+			}
+		} else {
+			// Add page css to the critical section.
+			$critical = $custom . $critical;
+			$advanced_styles_manager->set_data( $critical, 40 );
+			if ( ! empty( $styles ) ) {
+				// Defer everything else.
+				$deferred_styles_manager->set_data( $styles, 40 );
+			}
 		}
 	}
 

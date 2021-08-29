@@ -224,7 +224,16 @@ class ET_Builder_Module_Bar_Counters extends ET_Builder_Module {
 		);
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		$video_background = $this->video_background();
 
 		// Module classname
@@ -267,7 +276,7 @@ class ET_Builder_Module_Bar_Counters extends ET_Builder_Module {
 		$output = sprintf(
 			'<ul%3$s class="%2$s"%4$s>
 				%1$s
-			</ul> <!-- .et_pb_counters -->',
+			</ul>',
 			$this->content,
 			$this->module_classname( $render_slug ),
 			$this->module_id(),
@@ -278,4 +287,6 @@ class ET_Builder_Module_Bar_Counters extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Bar_Counters();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Bar_Counters();
+}

@@ -222,7 +222,16 @@ class ET_Builder_Module_Fullwidth_Image extends ET_Builder_Module {
 		return array_merge( $fields, $filters );
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		$multi_view        = et_pb_multi_view_options( $this );
 		$sticky            = et_pb_sticky_options();
 		$src               = $this->props['src'];
@@ -306,8 +315,6 @@ class ET_Builder_Module_Fullwidth_Image extends ET_Builder_Module {
 			'src'    => '{{src}}',
 			'alt'    => esc_attr( $alt ),
 			'title'  => esc_attr( $title_text ),
-			'height' => 'auto',
-			'width'  => 'auto',
 		);
 
 		$image_attachment_class = et_pb_media_options()->get_image_attachment_class( $this->props, 'src' );
@@ -373,4 +380,6 @@ class ET_Builder_Module_Fullwidth_Image extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Fullwidth_Image();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Fullwidth_Image();
+}

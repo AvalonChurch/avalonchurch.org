@@ -162,7 +162,16 @@ class ET_Builder_Module_Button extends ET_Builder_Module {
 		return et_pb_get_alignment( $text_orientation );
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		$multi_view     = et_pb_multi_view_options( $this );
 		$button_url     = $this->props['button_url'];
 		$button_rel     = $this->props['button_rel'];
@@ -325,4 +334,6 @@ class ET_Builder_Module_Button extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Button();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Button();
+}

@@ -521,7 +521,16 @@ class ET_Builder_Module_Portfolio extends ET_Builder_Module_Type_PostBased {
 		return $previous_page >= 1 ? get_pagenum_link( $previous_page ) : null;
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		global $post;
 		$sticky             = et_pb_sticky_options();
 		$multi_view         = et_pb_multi_view_options( $this );
@@ -706,7 +715,7 @@ class ET_Builder_Module_Portfolio extends ET_Builder_Module_Type_PostBased {
 					endif;
 					?>
 
-				</div><!-- .et_pb_portfolio_item -->
+				</div>
 				<?php
 				ET_Post_Stack::pop();
 			}
@@ -834,7 +843,7 @@ class ET_Builder_Module_Portfolio extends ET_Builder_Module_Type_PostBased {
 			%3$s',
 			$this->module_classname( $render_slug ),
 			$posts,
-			( ! $container_is_closed ? '</div> <!-- .et_pb_portfolio -->' : '' ),
+			( ! $container_is_closed ? '</div>' : '' ),
 			$this->module_id(),
 			$video_background, // #5
 			$parallax_image_background,
@@ -848,4 +857,6 @@ class ET_Builder_Module_Portfolio extends ET_Builder_Module_Type_PostBased {
 	}
 }
 
-new ET_Builder_Module_Portfolio();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Portfolio();
+}

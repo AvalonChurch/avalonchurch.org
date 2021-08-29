@@ -564,7 +564,7 @@ $starter_form = '<p>'. $usp_intro_starter .'</p>'. "\n\n" .
 
 <h2>Notes</h2>
 
-<p>To learn more about USP Pro, check out the <a href="https://plugin-planet.com/docs/usp/">documentation at Plugin Planet</a>. You also can find a list of useful resources in the plugin settings, under the "Tools" tab, in the "Helpful Resources" section. Before submitting this form (yes, it is an actual working form!), make sure to complete the few required fields: Post Title, Post Content, the Captcha, and Agree to Terms. You can fill out other fields as well, to see how they work.</p>
+<p>To learn more about USP Pro, check out the <a href="https://plugin-planet.com/category/docs+usp-pro/">documentation at Plugin Planet</a>. You also can find a list of useful resources in the plugin settings, under the "Tools" tab, in the "Helpful Resources" section. Before submitting this form (yes, it is an actual working form!), make sure to complete the few required fields: Post Title, Post Content, the Captcha, and Agree to Terms. You can fill out other fields as well, to see how they work.</p>
 
 <p>Note: this is a post-submission form. To create and customize other types of forms, like registration forms and contact forms, check out the other USP Form Demos, located on the USP Forms menu in the WP Admin Area. You can also make combo forms, as explained in this tutorial for <a href="https://plugin-planet.com/usp-pro-contact-submit-register/">making a combo contact, submit, and register form</a>.</p>
 

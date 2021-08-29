@@ -53,7 +53,7 @@ function usp_input_taxonomy($args) {
 	$default = esc_html__('Please select..', 'usp-pro');
 	if     (isset($args['default']) && !empty($args['default']) && $args['default'] !== 'null') $default = sanitize_text_field($args['default']);
 	elseif (isset($args['default']) && !empty($args['default']) && $args['default'] === 'null') $default = false;
-	$default_html = ($default) ? '<option value="">'. $default .'</option>'. "\n" : "\n";
+	$default_html = ($default) ? '<option value="" disabled selected>'. $default .'</option>'. "\n" : "\n";
 	
 	// multiple select
 	$multiple = '';

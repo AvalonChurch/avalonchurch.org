@@ -28,6 +28,8 @@
 </head>
 <body <?php body_class(); ?>>
 <?php
+	wp_body_open();
+
 	$product_tour_enabled = et_builder_is_product_tour_enabled();
 	$page_container_style = $product_tour_enabled ? ' style="padding-top: 0px;"' : ''; ?>
 	<div id="page-container"<?php echo et_core_intentionally_unescaped( $page_container_style, 'fixed_string' ); ?>>
@@ -73,7 +75,7 @@
 				if ( true === $show_header_social_icons ) {
 					get_template_part( 'includes/social_icons', 'header' );
 				} ?>
-				</div> <!-- #et-info -->
+				</div>
 
 			<?php endif; // true === $et_contact_info_defined ?>
 
@@ -104,10 +106,10 @@
 
 					et_show_cart_total();
 				?>
-				</div> <!-- #et-secondary-menu -->
+				</div>
 
-			</div> <!-- .container -->
-		</div> <!-- #top-header -->
+			</div>
+		</div>
 	<?php
 		$top_header = ob_get_clean();
 
@@ -177,15 +179,15 @@
 				<?php if ( '' !== ( $et_email = et_get_option( 'header_email' ) ) ) : ?>
 					<a href="<?php echo esc_attr( 'mailto:' . $et_email ); ?>"><span id="et-info-email"><?php echo esc_html( $et_email ); ?></span></a>
 				<?php endif; ?>
-				</div> <!-- #et-info -->
+				</div>
 
 			<?php endif; // true === $et_contact_info_defined ?>
 			<?php if ( $et_contact_info_defined || true === $show_header_social_icons || false !== et_get_option( 'show_search_icon', true ) || class_exists( 'woocommerce' ) || is_customize_preview() ) { ?>
 				<?php if ( 'fullscreen' === et_get_option( 'header_style', 'left' ) ) { ?>
-					</div> <!-- .et_pb_top_menu_inner -->
+					</div>
 				<?php } ?>
 
-				</div> <!-- .et_slide_menu_top -->
+				</div>
 			<?php } ?>
 
 			<div class="et_pb_fullscreen_nav_container">
@@ -239,12 +241,21 @@
 					? $user_logo
 					: $template_directory_uri . '/images/logo.png';
 
+				// Get logo image size based on attachment URL.
+				$logo_size   = et_get_attachment_size_by_url( $logo );
+				$logo_width  = ( ! empty( $logo_size ) && is_numeric( $logo_size[0] ) )
+						? $logo_size[0]
+						: '93'; // 93 is the width of the default logo.
+				$logo_height = ( ! empty( $logo_size ) && is_numeric( $logo_size[1] ) )
+						? $logo_size[1]
+						: '43'; // 43 is the height of the default logo.
+
 				ob_start();
 			?>
 				<div class="logo_container">
 					<span class="logo_helper"></span>
 					<a href="<?php echo esc_url( home_url( '/' ) ); ?>">
-						<img src="<?php echo esc_attr( $logo ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" id="logo" data-height-percentage="<?php echo esc_attr( et_get_option( 'logo_height', '54' ) ); ?>" />
+						<img src="<?php echo esc_attr( $logo ); ?>" width="<?php echo esc_attr( $logo_width ); ?>" height="<?php echo esc_attr( $logo_height ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" id="logo" data-height-percentage="<?php echo esc_attr( et_get_option( 'logo_height', '54' ) ); ?>" />
 					</a>
 				</div>
 			<?php
@@ -314,8 +325,8 @@
 					do_action( 'et_header_top' );
 
 					?>
-				</div> <!-- #et-top-navigation -->
-			</div> <!-- .container -->
+				</div>
+			</div>
 			<div class="et_search_outer">
 				<div class="container et_search_form_container">
 					<form role="search" method="get" class="et-search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
@@ -337,7 +348,7 @@
 					<span class="et_close_search_field"></span>
 				</div>
 			</div>
-		</header> <!-- #main-header -->
+		</header>
 	<?php
 		$main_header = ob_get_clean();
 

@@ -644,7 +644,16 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 		$et_pb_slider[ $background_color_hover_key ]   = self::$_->array_get( $this->props, $background_color_hover_key, '' );
 	}
 
-	function render( $attrs, $content = null, $render_slug ) {
+	/**
+	 * Renders the module output.
+	 *
+	 * @param  array  $attrs       List of attributes.
+	 * @param  string $content     Content being processed.
+	 * @param  string $render_slug Slug of module that is used for rendering output.
+	 *
+	 * @return string
+	 */
+	public function render( $attrs, $content, $render_slug ) {
 		$multi_view              = et_pb_multi_view_options( $this );
 		$show_arrows             = $this->props['show_arrows'];
 		$show_pagination         = $this->props['show_pagination'];
@@ -748,9 +757,9 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 			'<div%3$s class="%1$s"%5$s>
 				<div class="et_pb_slides">
 					%2$s
-				</div> <!-- .et_pb_slides -->
+				</div>
 				%4$s
-			</div> <!-- .et_pb_slider -->
+			</div>
 			',
 			$this->module_classname( $render_slug ),
 			$content,
@@ -805,4 +814,6 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Slider();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Slider();
+}
