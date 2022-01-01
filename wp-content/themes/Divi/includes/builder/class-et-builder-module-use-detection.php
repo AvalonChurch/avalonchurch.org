@@ -104,6 +104,7 @@ class ET_Builder_Module_Use_Detection {
 				'button_icon',
 				'hover_icon',
 				'scroll_down_icon',
+				'social_network',
 				'show_in_lightbox',
 				'fullwidth',
 				'scroll_vertical_motion_enable',
@@ -116,8 +117,22 @@ class ET_Builder_Module_Use_Detection {
 			]
 		);
 
+		/**
+		 * The "gallery" shortcode is not part of the Divi modules but is used for enqueuing MagnificPopup
+		 * when Divi Gallery is enabled under Theme Options > Enable Divi Gallery, so we need to include
+		 * it in late detection for edge cases such as shortcodes hardcoded into child themes.
+		 */
+		$additional_valid_slugs = apply_filters(
+			'et_builder_valid_module_slugs',
+			[
+				'gallery',
+			]
+		);
+
+		$valid_slugs = array_unique( array_merge( $this->_valid_slugs, $additional_valid_slugs ) );
+
 		// Log the shortcode tags used.
-		if ( in_array( $tag, $this->_valid_slugs, true ) ) {
+		if ( in_array( $tag, $valid_slugs, true ) ) {
 			$this->_modules_used[] = $tag;
 			$this->_modules_used   = array_unique( $this->_modules_used );
 

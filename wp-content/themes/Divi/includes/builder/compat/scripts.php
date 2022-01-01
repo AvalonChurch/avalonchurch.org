@@ -5,7 +5,7 @@
  *
  * @package Divi
  * @subpackage Builder
- * @since ??
+ * @since 4.10.5
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,8 +22,14 @@ add_filter( 'et_builder_enable_jquery_body', function( $enabled, $content = '' )
 	}
 
 	$services = [
+		'et_builder_disable_jquery_body',
+		'slick.js',
 		'webforms/bbox-min.js',
 		'www.cognitoforms.com',
+		'mailchimp.com',
+		'mindbodyonline.com/javascripts',
+		'static.smartrecruiters.com/job-widget/',
+		'default.salsalabs.org/api/widget/',
 	];
 
 	$services = array_filter( $services, 'preg_quote' );

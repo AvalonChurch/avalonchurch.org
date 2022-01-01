@@ -155,10 +155,11 @@ function et_is_dynamic_front_end_request() {
 			! is_admin()
 			&& ! wp_doing_ajax()
 			&& ! wp_doing_cron()
-			// Disable when in builder preview modes.
+			// Disable when in preview modes.
 			&& ! is_customize_preview()
 			&& ! is_et_pb_preview()
 			&& ! ET_GB_Block_Layout::is_layout_block_preview()
+			&& ! is_preview()
 			// Disable when using the visual builder.
 			&& ! et_fb_is_enabled()
 			// Disable on paginated index pages when blog style mode is enabled and when using the Divi Builder plugin.
@@ -217,7 +218,14 @@ function et_should_generate_dynamic_assets() {
 		}
 	}
 
-	return $should_generate_assets;
+	/**
+	 * Filters whether to generate dynamic assets.
+	 *
+	 * @since 4.10.6
+	 *
+	 * @param bool $should_generate_assets
+	 */
+	return apply_filters( 'et_should_generate_dynamic_assets', (bool) $should_generate_assets );
 }
 
 /**
@@ -243,7 +251,14 @@ function et_use_dynamic_css() {
 		}
 	}
 
-	return $et_use_dynamic_css;
+	/**
+	 * Filters whether to use dynamic CSS.
+	 *
+	 * @since 4.10.6
+	 *
+	 * @param bool $et_use_dynamic_css
+	 */
+	return apply_filters( 'et_use_dynamic_css', (bool) $et_use_dynamic_css );
 }
 
 /**
@@ -293,7 +308,14 @@ function et_disable_js_on_demand() {
 		}
 	}
 
-	return $et_disable_js_on_demand;
+	/**
+	 * Filters whether to disable JS on demand.
+	 *
+	 * @since 4.10.6
+	 *
+	 * @param bool $et_disable_js_on_demand
+	 */
+	return apply_filters( 'et_disable_js_on_demand', (bool) $et_disable_js_on_demand );
 }
 
 /**
@@ -318,7 +340,7 @@ function et_dynamic_icons_default_value() {
  * This method will collect all active block widgets first. Later on, the result will be
  * cached to improve the performance.
  *
- * @since ??
+ * @since 4.10.5
  *
  * @return array List of active block widgets.
  */
@@ -362,7 +384,7 @@ function et_get_active_block_widgets() {
 /**
  * Check whether current block widget is active or not.
  *
- * @since ??
+ * @since 4.10.5
  *
  * @param string $block_widget_name Block widget name.
  *

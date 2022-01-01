@@ -28,6 +28,14 @@ if ( ! defined( 'ET_BUILDER_PLACEHOLDER_PORTRAIT_IMAGE_DATA' ) ) {
 	define( 'ET_BUILDER_PLACEHOLDER_PORTRAIT_IMAGE_DATA', 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDUwMCA1MDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxwYXRoIGZpbGw9IiNFQkVCRUIiIGQ9Ik0wIDBoNTAwdjUwMEgweiIvPgogICAgICAgIDxyZWN0IGZpbGwtb3BhY2l0eT0iLjEiIGZpbGw9IiMwMDAiIHg9IjY4IiB5PSIzMDUiIHdpZHRoPSIzNjQiIGhlaWdodD0iNTY4IiByeD0iMTgyIi8+CiAgICAgICAgPGNpcmNsZSBmaWxsLW9wYWNpdHk9Ii4xIiBmaWxsPSIjMDAwIiBjeD0iMjQ5IiBjeT0iMTcyIiByPSIxMDAiLz4KICAgIDwvZz4KPC9zdmc+Cg==' );
 }
 
+// phpcs:ignore WordPress.Security.NonceVerification -- Only checking arg is set.
+if ( isset( $_REQUEST['et_check_mod_pagespeed'] ) ) {
+	// This is an internal request used to check response headers, hence we exit early.
+	// Must still output some html or else Mod Pagepeed won't add any header.
+	echo '<html><head/></html>';
+	die();
+}
+
 // Detect Codeception and load additional code required by tests.
 if ( class_exists( 'Codeception\TestCase\WPTestCase' ) ) {
 	foreach ( glob( ET_BUILDER_DIR . 'tests/codeception/wpunit/*.php' ) as $test_file ) {
@@ -126,6 +134,16 @@ require_once ET_BUILDER_DIR . 'feature/gutenberg/EditorTypography.php';
 require_once ET_BUILDER_DIR . 'core.php';
 require_once ET_BUILDER_DIR . 'conditions.php';
 require_once ET_BUILDER_DIR . 'post/PostStack.php';
+
+if ( ! (
+	is_admin() ||
+	wp_doing_ajax() ||
+	is_customize_preview() ||
+	is_et_pb_preview()
+) ) {
+	require_once ET_BUILDER_DIR . 'feature/DoNotCachePage.php';
+}
+
 require_once ET_BUILDER_DIR . 'feature/ClassicEditor.php';
 require_once ET_BUILDER_DIR . 'feature/AjaxCache.php';
 require_once ET_BUILDER_DIR . 'feature/post-content.php';
@@ -134,6 +152,7 @@ if ( et_builder_is_critical_enabled() ) {
 	require_once ET_BUILDER_DIR . 'feature/CriticalCSS.php';
 }
 
+require_once ET_BUILDER_DIR . 'feature/content-retriever/ContentRetriever.php';
 require_once ET_BUILDER_DIR . 'feature/dynamic-assets/dynamic-assets.php';
 require_once ET_BUILDER_DIR . 'feature/dynamic-assets/class-dynamic-assets.php';
 require_once ET_BUILDER_DIR . 'feature/dynamic-content.php';
@@ -145,7 +164,10 @@ require_once ET_BUILDER_DIR . 'frontend-builder/theme-builder/theme-builder.php'
 require_once ET_BUILDER_DIR . 'feature/global-presets/Settings.php';
 require_once ET_BUILDER_DIR . 'feature/global-presets/History.php';
 require_once ET_BUILDER_DIR . 'feature/window.php';
+require_once ET_BUILDER_DIR . 'feature/ajax-data/AjaxData.php';
+require_once ET_BUILDER_DIR . 'feature/display-conditions/DisplayConditions.php';
 require_once ET_BUILDER_DIR . 'feature/BlockTemplates.php';
+require_once ET_BUILDER_DIR . 'feature/icon-manager/ExtendedFontIcons.php';
 
 // Conditional Includes.
 if ( et_is_woocommerce_plugin_active() ) {
@@ -678,6 +700,10 @@ function et_is_ignore_waypoints() {
 		return true;
 	}
 
+	if ( class_exists( 'PUM_Shortcode_Popup' ) ) {
+		return true;
+	}
+
 	// always return false if not in divi plugin
 	if ( ! et_is_builder_plugin_active() ) {
 		return false;
@@ -1011,7 +1037,8 @@ function et_builder_load_frontend_builder() {
 
 	$et_current_memory_limit = et_core_get_memory_limit();
 
-	if ( $et_current_memory_limit < 256 ) {
+	// Set memory limit when there is a limit set, and that is less than 256M.
+	if ( $et_current_memory_limit && $et_current_memory_limit < 256 ) {
 		@ini_set( 'memory_limit', '256M' );
 	}
 

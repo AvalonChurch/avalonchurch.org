@@ -106,7 +106,7 @@ class ET_Dynamic_Assets {
 	private $_owners = array(
 		'divi',
 		'extra',
-		'builder',
+		'divi-builder',
 	);
 
 	/**
@@ -215,6 +215,13 @@ class ET_Dynamic_Assets {
 	private $_late_custom_gutters = array();
 
 	/**
+	 * Default Gutter widths found during early detection.
+	 *
+	 * @var array
+	 */
+	private $_default_gutters = array();
+
+	/**
 	 * Gutter widths found during late detection.
 	 *
 	 * @var array
@@ -262,6 +269,20 @@ class ET_Dynamic_Assets {
 	 * @var bool
 	 */
 	private $_late_custom_icon = false;
+
+	/**
+	 * Whether social icons are found during late detection.
+	 *
+	 * @var bool
+	 */
+	private $_late_social_icon = false;
+
+	/**
+	 * Whether FontAwesome icons are found during late detection.
+	 *
+	 * @var bool
+	 */
+	private $_late_fa_icon = false;
 
 	/**
 	 * Whether lightbox use is found during late detection.
@@ -362,6 +383,41 @@ class ET_Dynamic_Assets {
 	private $_enqueued_assets = array();
 
 	/**
+	 * Whether to load resources to print all Divi icons ( icons_all.scss ).
+	 *
+	 * @var bool
+	 */
+	private $_use_divi_icons = false;
+
+	/**
+	 * Whether to load resources to print FA icons ( icons_fa_all.scss ).
+	 *
+	 * @var bool
+	 */
+	private $_use_fa_icons = false;
+
+	/**
+	 * Whether to load resources to print icons used in Social Follow Module ( icons_base_social.scss ).
+	 *
+	 * @var bool
+	 */
+	private $_use_social_icons = false;
+
+	/**
+	 * Global asset list found during early detection.
+	 *
+	 * @var array
+	 */
+	private $_early_global_asset_list = array();
+
+	/**
+	 * Global asset list found during late detection.
+	 *
+	 * @var array
+	 */
+	private $_late_global_asset_list = array();
+
+	/**
 	 * Constructor
 	 */
 	private function __construct() {
@@ -420,6 +476,7 @@ class ET_Dynamic_Assets {
 		}
 
 		global $post;
+		global $shortname;
 
 		if ( $this->is_taxonomy() ) {
 			$this->_object_id = intval( get_queried_object()->term_id );
@@ -436,6 +493,14 @@ class ET_Dynamic_Assets {
 			return;
 		}
 
+		if ( 'divi' === $shortname ) {
+			$this->_owner = 'divi';
+		} elseif ( 'extra' === $shortname ) {
+			$this->_owner = 'extra';
+		} elseif ( et_is_builder_plugin_active() ) {
+			$this->_owner = 'divi-builder';
+		}
+
 		$this->_post_id           = ! empty( $post ) ? intval( $post->ID ) : -1;
 		$this->_tb_template_ids   = $this->get_theme_builder_template_ids();
 		$this->_post_content      = ! empty( $post ) ? $post->post_content : '';
@@ -443,7 +508,7 @@ class ET_Dynamic_Assets {
 		$this->_cache_dir_path    = et_core_cache_dir()->path;
 		$this->_cache_dir_url     = et_core_cache_dir()->url;
 		$this->_product_dir       = et_is_builder_plugin_active() ? ET_BUILDER_PLUGIN_URI : get_template_directory_uri();
-		$this->_cpt_suffix        = et_builder_post_is_of_custom_post_type( $this->_post_id ) && et_pb_is_pagebuilder_used( $this->_post_id ) && ! et_is_builder_plugin_active() ? '_cpt' : '';
+		$this->_cpt_suffix        = et_builder_should_wrap_styles() && ! et_is_builder_plugin_active() ? '_cpt' : '';
 		$this->is_rtl             = is_rtl();
 		$this->_rtl_suffix        = $this->is_rtl ? '_rtl' : '';
 		$this->_page_builder_used = is_singular() ? et_pb_is_pagebuilder_used( $this->_post_id ) : false;
@@ -503,7 +568,7 @@ class ET_Dynamic_Assets {
 		if ( $this->is_taxonomy() ) {
 			$queried     = get_queried_object();
 			$taxonomy    = sanitize_key( $queried->taxonomy );
-			$folder_name = "{$taxonomy}/" . $this->_object_id;
+			$folder_name = "taxonomy/{$taxonomy}/" . $this->_object_id;
 		} elseif ( is_search() ) {
 			$folder_name = 'search';
 		} elseif ( is_author() ) {
@@ -557,12 +622,6 @@ class ET_Dynamic_Assets {
 		if ( is_null( self::$_is_cachable_request ) ) {
 			self::$_is_cachable_request = true;
 
-			// Bail if the request is invalid.
-			if ( ! self::_is_valid_request() ) {
-				self::$_is_cachable_request = false;
-				return self::$_is_cachable_request;
-			}
-
 			// Bail if this is not a front-end page request.
 			if ( ! et_should_generate_dynamic_assets() ) {
 				self::$_is_cachable_request = false;
@@ -602,6 +661,11 @@ class ET_Dynamic_Assets {
 			return false;
 		}
 
+		// Bail if feed since CSS isn't needed for RSS/Atom.
+		if ( is_feed() ) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -613,16 +677,9 @@ class ET_Dynamic_Assets {
 	public function get_style_css_handle() {
 		global $shortname;
 
-		$child_theme_suffix  = is_child_theme() ? '-parent' : '';
+		$child_theme_suffix  = is_child_theme() && ! et_is_builder_plugin_active() ? '-parent' : '';
 		$inline_style_suffix = et_core_is_inline_stylesheet_enabled() ? '-inline' : '';
-
-		if ( 'divi' === $shortname ) {
-			$product_prefix = 'divi-style';
-		} elseif ( 'extra' === $shortname ) {
-			$product_prefix = 'extra-style';
-		} else {
-			$product_prefix = 'divi-builder-style';
-		}
+		$product_prefix      = $this->_owner . '-style';
 
 		$handle = 'divi-builder-style' === $product_prefix . $inline_style_suffix ? $product_prefix : $product_prefix . $child_theme_suffix . $inline_style_suffix;
 
@@ -648,7 +705,6 @@ class ET_Dynamic_Assets {
 		$base_path = et_core_cache_dir()->path;
 
 		foreach ( $dynamic_assets as $dynamic_asset ) {
-			global $shortname;
 
 			// Ignore empty files.
 			$abs_file = str_replace( $base_url, $base_path, $dynamic_asset );
@@ -670,16 +726,8 @@ class ET_Dynamic_Assets {
 			$is_css      = 'css' === $type;
 			$late_slug   = true === $is_late ? '-late' : '';
 
-			if ( 'divi' === $shortname ) {
-				$style_prefix = 'divi';
-			} elseif ( 'extra' === $shortname ) {
-				$style_prefix = 'extra';
-			} else {
-				$style_prefix = 'divi-builder';
-			}
-
 			$deps   = array( $this->get_style_css_handle() );
-			$handle = $style_prefix . '-dynamic' . $late_slug;
+			$handle = $this->_owner . '-dynamic' . $late_slug;
 
 			if ( wp_style_is( $handle ) ) {
 				continue;
@@ -701,23 +749,7 @@ class ET_Dynamic_Assets {
 			}
 		}
 
-		$css_handle = '';
-
-		// enqueue head styles.
-		foreach ( $head as $handle => $asset ) {
-			$is_css           = 'css' === $asset->type;
-			$enqueue_function = $is_css ? 'wp_enqueue_style' : 'wp_enqueue_script';
-			$css_handle       = $is_css ? $handle : $css_handle;
-
-			$enqueue_function(
-				$handle,
-				$asset->src,
-				$asset->deps,
-				$version,
-				$asset->in_footer
-			);
-		}
-
+		// Enqueue inline styles.
 		if ( ! empty( $body ) ) {
 			$this->_enqueued_assets = (object) [
 				'head' => $head,
@@ -728,21 +760,38 @@ class ET_Dynamic_Assets {
 			$path      = $cache_dir->path;
 			$url       = $cache_dir->url;
 			$styles    = '';
+			$handle    = '';
 
 			foreach ( $this->_enqueued_assets->body as $handle => $asset ) {
 				$file    = str_replace( $url, $path, $asset->src );
 				$styles .= et_()->WPFS()->get_contents( $file );
 			}
 
-			if ( empty( $css_handle ) ) {
-				// If no Dynamic CSS file was enqued, append the critical CSS to the last enqueued stylesheet.
-				global $wp_styles;
-				$css_handle = end( $wp_styles->queue );
-			}
+			$handle .= '-critical';
 
-			wp_add_inline_style( $css_handle, $styles );
+			// Create empty style which will enqueue no external file but still allow us
+			// to add inline content to it.
+			wp_register_style( $handle, false, array( $this->get_style_css_handle() ), $version );
+			wp_enqueue_style( $handle );
+			wp_add_inline_style( $handle, $styles );
+
 			add_filter( 'style_loader_tag', [ $this, 'defer_head_style' ], 10, 4 );
 		}
+
+		// Enqueue styles.
+		foreach ( $head as $handle => $asset ) {
+			$is_css           = 'css' === $asset->type;
+			$enqueue_function = $is_css ? 'wp_enqueue_style' : 'wp_enqueue_script';
+
+			$enqueue_function(
+				$handle,
+				$asset->src,
+				$asset->deps,
+				$version,
+				$asset->in_footer
+			);
+		}
+
 	}
 
 	/**
@@ -763,8 +812,15 @@ class ET_Dynamic_Assets {
 			return $tag;
 		}
 
+		// Use 'prefetch' when Mod PageSpeed is detected because it removes 'preload' links.
+		$rel = et_builder_is_mod_pagespeed_enabled() ? 'prefetch' : 'preload';
+
+		/* This filter is documented in /includes/builder/feature/CriticalCSS.php */
+		$rel = apply_filters( 'et_deferred_styles_rel', $rel );
+
 		return sprintf(
-			"<link rel='preload' id='%s-css' href='%s' as='style' media='%s' onload=\"%s\" />\n",
+			"<link rel='%s' id='%s-css' href='%s' as='style' media='%s' onload=\"%s\" />\n",
+			$rel,
 			$handle,
 			$href,
 			$media,
@@ -897,9 +953,8 @@ class ET_Dynamic_Assets {
 			return;
 		}
 
-		$_owner              = 'all' === $this->_owner ? '*' : $this->_owner;
 		$late_assets         = array();
-		$late_files          = (array) glob( "{$this->_cache_dir_path}/{$this->_folder_name}/et-{$_owner}-dynamic*late*" );
+		$late_files          = (array) glob( "{$this->_cache_dir_path}/{$this->_folder_name}/et-{$this->_owner}-dynamic*late*" );
 		$style_handle        = $this->get_style_css_handle();
 		$inline_style_suffix = et_core_is_inline_stylesheet_enabled() ? '-inline' : '';
 
@@ -957,7 +1012,7 @@ class ET_Dynamic_Assets {
 
 		if ( $this->_need_late_generation ) {
 			$this->_processed_shortcodes = $this->_missed_shortcodes;
-			$global_assets_list          = $this->get_late_global_assets_list();
+			$global_assets_list          = $this->get_new_array_values( $this->get_late_global_assets_list(), $this->_early_global_asset_list );
 		} else {
 			$this->_presets_attributes   = $this->get_preset_attributes( $this->_all_content );
 			$this->_processed_shortcodes = $this->_early_shortcodes;
@@ -987,6 +1042,7 @@ class ET_Dynamic_Assets {
 		}
 
 		$shortcode_assets_list = $this->get_shortcode_assets_list();
+
 		if ( empty( $split_global_data ) ) {
 			$assets_data = $this->get_assets_data( array_merge( $global_assets_list, $shortcode_assets_list ) );
 			$this->generate_dynamic_assets_files( $assets_data );
@@ -1005,7 +1061,6 @@ class ET_Dynamic_Assets {
 			// Gotta reset this or else `get_assets_data` not going to return the correct set...
 			$this->_processed_files = [];
 			$btf_assets_data        = $this->get_assets_data( array_merge( $split_global_data->btf, $btf_shortcode_assets_list ) );
-
 			$this->generate_dynamic_assets_files( $atf_assets_data, 'critical' );
 			$this->generate_dynamic_assets_files( $btf_assets_data );
 		}
@@ -1047,7 +1102,7 @@ class ET_Dynamic_Assets {
 
 		$assets_data           = array();
 		$newly_processed_files = array();
-		$files_with_url        = array( 'signup', 'icons_base', 'icons_base_social', 'icons_all' );
+		$files_with_url        = array( 'signup', 'icons_base', 'icons_base_social', 'icons_all', 'icons_fa_all' );
 
 		foreach ( $asset_list as $asset => $asset_data ) {
 			foreach ( $asset_data as $file_type => $files ) {
@@ -1106,41 +1161,77 @@ class ET_Dynamic_Assets {
 			return array();
 		}
 
-		$assets_prefix = et_get_dynamic_assets_path();
-		$assets_list   = array();
-		$dynamic_icons = et_use_dynamic_icons();
-
-		// Load the icon font needed based on the icons being used.
-		$use_all_icons = false;
-
+		$assets_prefix     = et_get_dynamic_assets_path();
+		$dynamic_icons     = et_use_dynamic_icons();
 		$social_icons_deps = array(
 			'et_pb_social_media_follow',
 			'et_pb_team_member',
 		);
 
-		$use_social_icons = $this->check_for_dependency( $social_icons_deps, $this->_processed_shortcodes );
+		if ( ! $this->_use_divi_icons || ! $this->_use_fa_icons ) {
+			if ( empty( $this->_presets_attributes ) ) {
+				$this->_presets_attributes = $this->get_preset_attributes( $this->_all_content );
+			}
+			// Check for icons existence in presets.
+			$icon_fields_in_presets          = array_intersect( et_pb_get_font_icon_field_names(), array_keys( $this->_presets_attributes ) );
+			$maybe_presets_contain_divi_icon = false;
+			$maybe_presets_contain_fa_icon   = false;
+			if ( ! empty( $icon_fields_in_presets ) ) {
+				foreach ( $icon_fields_in_presets as $icon_field_in_presets ) {
+					if ( ! $this->_use_divi_icons && et_pb_maybe_divi_font_icon( $this->_presets_attributes[ $icon_field_in_presets ] ) ) {
+						$maybe_presets_contain_divi_icon = true;
+						if ( $this->_use_fa_icons || $maybe_presets_contain_fa_icon ) {
+							break;
+						} else {
+							continue;
+						}
+					}
+					if ( ! $this->_use_fa_icons && et_pb_maybe_fa_font_icon( $this->_presets_attributes[ $icon_field_in_presets ] ) ) {
+						$maybe_presets_contain_fa_icon = true;
+						if ( $this->_use_divi_icons || $maybe_presets_contain_divi_icon ) {
+							break;
+						}
+					}
+				}
+			}
 
-		if ( 'on' !== $dynamic_icons || $this->check_if_attribute_exits( 'icon', $this->_all_content ) || $this->check_if_class_exits( 'et-pb-icon', $this->_all_content ) ) {
-			$use_all_icons = true;
+			$maybe_post_contains_divi_icon = $this->_use_divi_icons || $maybe_presets_contain_divi_icon || ( $this->check_for_dependency( et_pb_get_font_icon_modules(), $this->_processed_shortcodes ) && et_pb_check_if_post_contains_divi_font_icon( $this->_all_content ) );
+
+			// Load the icon font needed based on the icons being used.
+			$this->_use_divi_icons = $this->_use_divi_icons || ( 'on' !== $dynamic_icons || $maybe_post_contains_divi_icon || $this->check_if_class_exits( 'et-pb-icon', $this->_all_content ) );
+			$this->_use_fa_icons   = $this->_use_fa_icons || $maybe_presets_contain_fa_icon || ( $this->check_for_dependency( et_pb_get_font_icon_modules(), $this->_processed_shortcodes ) && et_pb_check_if_post_contains_fa_font_icon( $this->_all_content ) );
 		}
 
-		if ( $use_all_icons ) {
-			$assets_list['et_icons_all'] = array(
+		if ( ! $this->_use_social_icons ) {
+			$this->_use_social_icons = $this->check_for_dependency( $social_icons_deps, $this->_processed_shortcodes );
+			if ( $this->_use_social_icons && ! $this->_use_fa_icons ) {
+				$this->_use_fa_icons = et_pb_check_if_post_contains_network_with_fa_icon( $this->_all_content );
+			}
+		}
+
+		if ( $this->_use_divi_icons ) {
+			$this->_early_global_asset_list['et_icons_all'] = array(
 				'css' => "{$assets_prefix}/css/icons_all.css",
 			);
-		} elseif ( $use_social_icons ) {
-			$assets_list['et_icons_social'] = array(
+		} elseif ( $this->_use_social_icons ) {
+			$this->_early_global_asset_list['et_icons_social'] = array(
 				'css' => "{$assets_prefix}/css/icons_base_social.css",
 			);
 		} else {
-			$assets_list['et_icons_base'] = array(
+			$this->_early_global_asset_list['et_icons_base'] = array(
 				'css' => "{$assets_prefix}/css/icons_base.css",
+			);
+		}
+
+		if ( $this->_use_fa_icons ) {
+			$this->_early_global_asset_list['et_icons_fa'] = array(
+				'css' => "{$assets_prefix}/css/icons_fa_all.css",
 			);
 		}
 
 		// Only include the following assets on post feeds and posts that aren't using the builder.
 		if ( ( is_single() && ! $this->_page_builder_used ) || ( is_home() && ! is_front_page() ) || ! is_singular() ) {
-			$assets_list['et_post_formats'] = array(
+			$this->_early_global_asset_list['et_post_formats'] = array(
 				'css' => array(
 					"{$assets_prefix}/css/post_formats{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/slider_base{$this->_cpt_suffix}.css",
@@ -1155,20 +1246,23 @@ class ET_Dynamic_Assets {
 
 		// Load posts styles on posts and post feeds.
 		if ( ! is_page() ) {
-			$assets_list['et_posts'] = array(
+			$this->_early_global_asset_list['et_posts'] = array(
 				'css' => "{$assets_prefix}/css/posts{$this->_cpt_suffix}.css",
 			);
 		}
 
 		if ( $this->is_rtl ) {
-			$assets_list['et_divi_shared_conditional_rtl'] = array(
+			$this->_early_global_asset_list['et_divi_shared_conditional_rtl'] = array(
 				'css' => "{$assets_prefix}/css/shared-conditional-style{$this->_cpt_suffix}-rtl.css",
 			);
 		}
 
+		// Check for specialty sections.
+		preg_match_all( '/specialty="\w+"/', $this->_all_content, $specialty_values );
+		$specialty_used = et_check_if_particular_value_is_on( $specialty_values[0] );
+
 		// Check for custom gutter widths.
 		preg_match_all( '/gutter_width="\w+"/', $this->_all_content, $matches );
-		preg_match_all( '/specialty="\w+"/', $this->_all_content, $specialty_values );
 
 		$page_custom_gutter = is_singular() ? [ intval( get_post_meta( $this->_post_id, '_et_pb_gutter_width', true ) ) ] : [];
 
@@ -1179,18 +1273,17 @@ class ET_Dynamic_Assets {
 			}
 		}
 
-		$customizer_gutter  = intval( et_get_option( 'gutter_width', '3' ) );
-		$default_gutters    = array_merge( (array) $page_custom_gutter, (array) $customizer_gutter );
-		$no_of_gutters      = substr_count( $this->_all_content, 'use_custom_gutter' );
-		$preset_gutter_val  = ! empty( $this->_presets_attributes['use_custom_gutter'] ) && 'on' === $this->_presets_attributes['use_custom_gutter'] ?
-								(array) $this->_presets_attributes['gutter_width'] : array();
-		$specialty_used     = et_check_if_particular_value_is_on( $specialty_values[0] );
+		$customizer_gutter      = intval( et_get_option( 'gutter_width', '3' ) );
+		$this->_default_gutters = array_merge( (array) $page_custom_gutter, (array) $customizer_gutter );
+		$no_of_gutters          = substr_count( $this->_all_content, 'use_custom_gutter' );
+		$preset_gutter_val      = ! empty( $this->_presets_attributes['use_custom_gutter'] ) && 'on' === $this->_presets_attributes['use_custom_gutter'] ?
+			(array) $this->_presets_attributes['gutter_width'] : array();
 
 		if ( $no_of_gutters > count( $matches[0] ) && ! in_array( 'gutter_width="3"', $matches[0], true ) ) {
 			array_push( $matches[0], 'gutter_width="3"' );
 		}
 		// Here we are combining the custom gutters in the page with Default gutters and then keeping only the unique gutters.
-		$gutter_widths = $this->get_unique_array_values( et_get_content_gutter_widths( $matches[0] ), $default_gutters, $preset_gutter_val );
+		$gutter_widths = $this->get_unique_array_values( et_get_content_gutter_widths( $matches[0] ), $this->_default_gutters, $preset_gutter_val );
 		$gutter_length = count( $gutter_widths );
 
 		$grid_items_deps = array(
@@ -1198,6 +1291,7 @@ class ET_Dynamic_Assets {
 			'et_pb_fullwidth_portfolio',
 			'et_pb_portfolio',
 			'et_pb_gallery',
+			'et_pb_wc_gallery',
 			'et_pb_blog',
 			'et_pb_sidebar',
 			'et_pb_shop',
@@ -1206,12 +1300,12 @@ class ET_Dynamic_Assets {
 		$grid_items_used = $this->check_for_dependency( $grid_items_deps, $this->_processed_shortcodes );
 
 		if ( ! empty( $gutter_widths ) ) {
-			$assets_list = array_merge( $assets_list, $this->get_gutters_asset_list( $gutter_length, $gutter_widths, $specialty_used, $grid_items_used ) );
+			$this->_early_global_asset_list = array_merge( $this->_early_global_asset_list, $this->get_gutters_asset_list( $gutter_length, $gutter_widths, $specialty_used, $grid_items_used ) );
 		}
 
 		// Load WooCommerce css when WooCommerce is active.
 		if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
-			$assets_list['et_divi_woocommerce_modules'] = array(
+			$this->_early_global_asset_list['et_divi_woocommerce_modules'] = array(
 				'css' => array(
 					"{$assets_prefix}/css/woocommerce{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/woocommerce_shared{$this->_cpt_suffix}.css",
@@ -1221,7 +1315,7 @@ class ET_Dynamic_Assets {
 
 		// Load PageNavi css when PageNavi is active.
 		if ( is_plugin_active( 'wp-pagenavi/wp-pagenavi.php' ) ) {
-			$assets_list['et_divi_wp_pagenavi'] = array(
+			$this->_early_global_asset_list['et_divi_wp_pagenavi'] = array(
 				'css' => "{$assets_prefix}/css/wp-page_navi{$this->_cpt_suffix}.css",
 			);
 		}
@@ -1229,7 +1323,7 @@ class ET_Dynamic_Assets {
 		$show_in_lightbox = $this->check_if_attribute_exits( 'show_in_lightbox', $this->_all_content );
 
 		if ( $show_in_lightbox ) {
-			$assets_list['et_jquery_magnific_popup'] = array(
+			$this->_early_global_asset_list['et_jquery_magnific_popup'] = array(
 				'css' => "{$assets_prefix}/css/magnific_popup.css",
 			);
 		}
@@ -1238,7 +1332,7 @@ class ET_Dynamic_Assets {
 
 		// Load animation assets if any module uses animations.
 		if ( $has_animation_style || in_array( 'et_pb_circle_counter', $this->_processed_shortcodes, true ) ) {
-			$assets_list['animations'] = array(
+			$this->_early_global_asset_list['animations'] = array(
 				'css' => "{$assets_prefix}/css/animations{$this->_cpt_suffix}.css",
 			);
 		}
@@ -1246,21 +1340,41 @@ class ET_Dynamic_Assets {
 		$sticky_used = $this->check_if_attribute_exits( 'sticky_position', $this->_all_content );
 
 		if ( $sticky_used ) {
-			$assets_list['sticky'] = array(
+			$this->_early_global_asset_list['sticky'] = array(
 				'css' => "{$assets_prefix}/css/sticky_elements{$this->_cpt_suffix}.css",
 			);
 		}
 
+		// Collect and pass all needed assets arguments.
+		$assets_args = array(
+			'assets_prefix'       => $assets_prefix,
+			'dynamic_icons'       => $dynamic_icons,
+			'cpt_suffix'          => $this->_cpt_suffix,
+			'use_all_icons'       => $this->_use_divi_icons,
+			'show_in_lightbox'    => $show_in_lightbox,
+			'has_animation_style' => $has_animation_style,
+			'sticky_used'         => $sticky_used,
+			// Gutter/grid items processed info.
+			'gutter_widths'       => $gutter_widths,
+			'gutter_length'       => $gutter_length,
+			'specialty_used'      => $specialty_used,
+			'grid_items_used'     => $grid_items_used,
+		);
+
 		/**
 		 * Use this filter to add additional assets to the global asset list.
 		 *
-		 * @param array $asset_list Current global assets on the list.
+		 * @param array             $this->_early_global_asset_list Current global assets on the list.
+		 * @param array             $assets_args Additional assets arguments.
+		 * @param ET_Dynamic_Assets $this        Instance of ET_Dynamic_Assets class.
 		 *
 		 * @since 4.10.0
+		 * @since 4.11.0 Pass new parameters $assets_args and $this. 3rd-party plugins can
+		 *               use it to call some private functions (i.e. gutter assets).
 		 */
-		$assets_list = apply_filters( 'et_global_assets_list', $assets_list );
+		$this->_early_global_asset_list = apply_filters( 'et_global_assets_list', $this->_early_global_asset_list, $assets_args, $this );
 
-		return $assets_list;
+		return $this->_early_global_asset_list;
 	}
 
 	/**
@@ -1275,23 +1389,33 @@ class ET_Dynamic_Assets {
 		}
 
 		$assets_prefix   = et_get_dynamic_assets_path();
-		$assets_list     = array();
 		$grid_items_used = '';
 
 		if ( $this->_late_custom_icon ) {
-			$assets_list['et_icons_all'] = array(
+			$this->_late_global_asset_list['et_icons_all'] = array(
 				'css' => "{$assets_prefix}/css/icons_all.css",
+			);
+		} elseif ( $this->_late_social_icon ) {
+			$this->_late_global_asset_list['et_icons_social'] = array(
+				'css' => "{$assets_prefix}/css/icons_base_social.css",
+			);
+		}
+
+		if ( $this->_late_fa_icon ) {
+			$this->_late_global_asset_list['et_icons_fa'] = array(
+				'css' => "{$assets_prefix}/css/icons_fa_all.css",
 			);
 		}
 
 		$gutter_length = count( $this->_late_custom_gutters );
-		$gutter_widths = $this->get_unique_array_values( et_get_content_gutter_widths( $this->_late_gutter_width ) );
+		$gutter_widths = $this->get_unique_array_values( $this->_late_gutter_width, $this->_default_gutters );
 
 		$grid_items_deps = array(
 			'et_pb_filterable_portfolio',
 			'et_pb_fullwidth_portfolio',
 			'et_pb_portfolio',
 			'et_pb_gallery',
+			'et_pb_wc_gallery',
 			'et_pb_blog',
 			'et_pb_sidebar',
 			'et_pb_shop',
@@ -1300,37 +1424,57 @@ class ET_Dynamic_Assets {
 		$grid_items_used = $this->check_for_dependency( $grid_items_deps, $this->_processed_shortcodes );
 
 		if ( ! empty( $gutter_widths ) ) {
-			$assets_list = array_merge( $assets_list, $this->get_gutters_asset_list( $gutter_length, $gutter_widths, $this->_late_use_specialty, $grid_items_used ) );
+			$this->_late_global_asset_list = array_merge( $this->_late_global_asset_list, $this->get_gutters_asset_list( $gutter_length, $gutter_widths, $this->_late_use_specialty, $grid_items_used ) );
 		}
 
 		if ( $this->_late_show_in_lightbox ) {
-			$assets_list['et_jquery_magnific_popup'] = array(
+			$this->_late_global_asset_list['et_jquery_magnific_popup'] = array(
 				'css' => "{$assets_prefix}/css/magnific_popup.css",
 			);
 		}
 
 		if ( $this->_late_animation_style ) {
-			$assets_list['animations'] = array(
+			$this->_late_global_asset_list['animations'] = array(
 				'css' => "{$assets_prefix}/css/animations{$this->_cpt_suffix}.css",
 			);
 		}
 
 		if ( $this->_late_use_sticky ) {
-			$assets_list['sticky'] = array(
+			$this->_late_global_asset_list['sticky'] = array(
 				'css' => "{$assets_prefix}/css/sticky_elements{$this->_cpt_suffix}.css",
 			);
 		}
 
+		// Collect and pass all needed assets arguments.
+		$assets_args = array(
+			'assets_prefix'       => $assets_prefix,
+			'dynamic_icons'       => et_use_dynamic_icons(),
+			'cpt_suffix'          => $this->_cpt_suffix,
+			'use_all_icons'       => $this->_late_custom_icon,
+			'show_in_lightbox'    => $this->_late_show_in_lightbox,
+			'has_animation_style' => $this->_late_animation_style,
+			'sticky_used'         => $this->_late_use_sticky,
+			// Gutter/grid items processed info.
+			'gutter_widths'       => $gutter_widths,
+			'gutter_length'       => $gutter_length,
+			'specialty_used'      => $this->_late_use_specialty,
+			'grid_items_used'     => $grid_items_used,
+		);
+
 		/**
 		 * Use this filter to add additional assets to the late global asset list.
 		 *
-		 * @param array $asset_list Current late global assets on the list.
+		 * @param array             $this->_late_global_asset_list Current late global assets on the list.
+		 * @param array             $assets_args                   Additional assets arguments.
+		 * @param ET_Dynamic_Assets $this                          Instance of ET_Dynamic_Assets class.
 		 *
-		 * @since 4.10.2
+		 * @since 4.10.0
+		 * @since 4.11.0 Pass new parameters $assets_args and $this. 3rd-party plugins can
+		 *               use it to call some private functions (i.e. gutter assets).
 		 */
-		$assets_list = apply_filters( 'et_late_global_assets_list', $assets_list );
+		$this->_late_global_asset_list = apply_filters( 'et_late_global_assets_list', $this->_late_global_asset_list, $assets_args, $this );
 
-		return $assets_list;
+		return $this->_late_global_asset_list;
 	}
 
 
@@ -1458,7 +1602,10 @@ class ET_Dynamic_Assets {
 				),
 			),
 			'et_pb_button'                => array(
-				'css' => "{$assets_prefix}/css/button{$this->_cpt_suffix}.css",
+				'css' => array(
+					"{$assets_prefix}/css/button{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
+				),
 			),
 			'et_pb_circle_counter'        => array(
 				'css' => "{$assets_prefix}/css/circle_counter{$this->_cpt_suffix}.css",
@@ -1470,6 +1617,7 @@ class ET_Dynamic_Assets {
 				'css' => array(
 					"{$assets_prefix}/css/comments{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/comments_shared{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 				),
 			),
 			'et_pb_contact_form'          => array(
@@ -1478,6 +1626,7 @@ class ET_Dynamic_Assets {
 					"{$assets_prefix}/css/forms{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/forms{$specialty_suffix}{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/fields{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 				),
 			),
 			'et_pb_countdown_timer'       => array(
@@ -1485,6 +1634,7 @@ class ET_Dynamic_Assets {
 			),
 			'et_pb_cta'                   => array(
 				'css' => "{$assets_prefix}/css/cta{$this->_cpt_suffix}.css",
+				"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 			),
 			'et_pb_divider'               => array(
 				'css' => "{$assets_prefix}/css/divider{$this->_cpt_suffix}.css",
@@ -1502,6 +1652,7 @@ class ET_Dynamic_Assets {
 			),
 			'et_pb_fullwidth_header'      => array(
 				'css' => "{$assets_prefix}/css/fullwidth_header{$this->_cpt_suffix}.css",
+				"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 			),
 			'et_pb_fullwidth_image'       => array(
 				'css' => array(
@@ -1539,12 +1690,14 @@ class ET_Dynamic_Assets {
 					"{$assets_prefix}/css/slider_base{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/slider_controls{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/posts{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 				),
 			),
 			'et_pb_fullwidth_post_title'  => array(
 				'css' => array(
 					"{$assets_prefix}/css/post_title{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/fullwidth_post_title{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 				),
 			),
 			'et_pb_fullwidth_slider'      => array(
@@ -1553,6 +1706,7 @@ class ET_Dynamic_Assets {
 					"{$assets_prefix}/css/slider_modules{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/slider_base{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/slider_controls{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 				),
 			),
 			'et_pb_gallery'               => array(
@@ -1584,6 +1738,7 @@ class ET_Dynamic_Assets {
 					"{$assets_prefix}/css/forms{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/forms{$specialty_suffix}{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/fields{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 				),
 			),
 			'et_pb_map'                   => array(
@@ -1591,8 +1746,8 @@ class ET_Dynamic_Assets {
 			),
 			'et_pb_menu'                  => array(
 				'css' => array(
-					"{$assets_prefix}/css/menu{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/menus{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/menu{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/header_animations.css",
 					"{$assets_prefix}/css/header_shared{$this->_cpt_suffix}.css",
 				),
@@ -1614,16 +1769,23 @@ class ET_Dynamic_Assets {
 					"{$assets_prefix}/css/slider_modules{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/slider_base{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/slider_controls{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 				),
 			),
 			'et_pb_post_nav'              => array(
 				'css' => "{$assets_prefix}/css/post_nav{$this->_cpt_suffix}.css",
 			),
 			'et_pb_post_title'            => array(
-				'css' => "{$assets_prefix}/css/post_title{$this->_cpt_suffix}.css",
+				'css' => array(
+					"{$assets_prefix}/css/post_title{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
+				),
 			),
 			'et_pb_pricing_tables'        => array(
-				'css' => "{$assets_prefix}/css/pricing_tables{$this->_cpt_suffix}.css",
+				'css' => array(
+					"{$assets_prefix}/css/pricing_tables{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
+				),
 			),
 			'et_pb_search'                => array(
 				'css' => "{$assets_prefix}/css/search{$this->_cpt_suffix}.css",
@@ -1646,6 +1808,7 @@ class ET_Dynamic_Assets {
 					"{$assets_prefix}/css/forms{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/forms{$specialty_suffix}{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/fields{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 				),
 			),
 			'et_pb_slider'                => array(
@@ -1654,6 +1817,7 @@ class ET_Dynamic_Assets {
 					"{$assets_prefix}/css/slider_modules{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/slider_base{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/slider_controls{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 				),
 			),
 			'et_pb_social_media_follow'   => array(
@@ -1699,6 +1863,7 @@ class ET_Dynamic_Assets {
 			'et_pb_wc_add_to_cart'        => array(
 				'css' => array(
 					"{$assets_prefix}/css/woo_add_to_cart{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 				),
 			),
 			'et_pb_wc_breadcrumb'         => array(
@@ -1709,6 +1874,7 @@ class ET_Dynamic_Assets {
 			'et_pb_wc_cart_notice'        => array(
 				'css' => array(
 					"{$assets_prefix}/css/woo_cart_notice{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/buttons{$this->_cpt_suffix}.css",
 				),
 			),
 			'et_pb_wc_description'        => array(
@@ -1720,7 +1886,8 @@ class ET_Dynamic_Assets {
 				'css' => array(
 					"{$assets_prefix}/css/gallery{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/overlay{$this->_cpt_suffix}.css",
-					"{$assets_prefix}/css/magnific_popup{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/grid_items{$this->_cpt_suffix}.css",
+					"{$assets_prefix}/css/magnific_popup.css",
 					"{$assets_prefix}/css/slider_base{$this->_cpt_suffix}.css",
 					"{$assets_prefix}/css/slider_controls{$this->_cpt_suffix}.css",
 				),
@@ -1778,6 +1945,9 @@ class ET_Dynamic_Assets {
 					"{$assets_prefix}/css/woo_title{$this->_cpt_suffix}.css",
 				),
 			),
+			'et_pb_icon'                  => array(
+				'css' => "{$assets_prefix}/css/icon{$this->_cpt_suffix}.css",
+			),
 		);
 
 		/**
@@ -1816,11 +1986,17 @@ class ET_Dynamic_Assets {
 		$global_modules = $this->get_unique_array_values( $matches[1], $this->_global_modules );
 
 		// If there are no global modules `$matches[1]` would be an empty array.
+
+		// When a Global module is added, the shortcode is also added in post content. But afterwards if the Global
+		// module is changed, the respective shortcode in post content doesn't change accordingly.
+		// Here We are detecting the changes using the `global_module` attribute. We are appending the *actual*
+		// Global module content at the end, and we need to put the Global module content at beginning,
+		// otherwise the Dynamic Asset mechanism won't be able to detect the changes.
 		if ( ! empty( $global_modules ) ) {
 			foreach ( $global_modules as $global_post_id ) {
 				$global_module = get_post( $global_post_id );
 
-				$content .= $global_module->post_content;
+				$content = $global_module->post_content . $content;
 			}
 		}
 
@@ -1936,37 +2112,6 @@ class ET_Dynamic_Assets {
 	}
 
 	/**
-	 * Check if current request is valid.
-	 *
-	 * @return bool
-	 * @since 4.10.0
-	 */
-	protected function _is_valid_request() {
-		$is_valid          = false;
-		$active_theme      = wp_get_theme()->get( 'Name' );
-		$is_builder_active = et_is_builder_plugin_active();
-
-		$parent_theme = wp_get_theme( get_template() )->get( 'Name' );
-
-		if ( $is_builder_active
-			|| in_array( strtolower( $active_theme ), $this->_owners, true )
-			|| in_array( strtolower( $parent_theme ), $this->_owners, true ) ) {
-
-			if ( $is_builder_active ) {
-				$this->_owner = 'builder';
-			} elseif ( $parent_theme ) {
-				$this->_owner = strtolower( $parent_theme );
-			} else {
-				$this->_owner = strtolower( $active_theme );
-			}
-
-			$is_valid = true;
-		}
-
-		return $is_valid;
-	}
-
-	/**
 	 * Merge multiple arrays and returns an array with unique values.
 	 *
 	 * @since 4.10.0
@@ -1983,6 +2128,26 @@ class ET_Dynamic_Assets {
 		}
 
 		return array_values( array_unique( $merged_array ) );
+	}
+
+	/**
+	 * Find array values in array_1 that do not exist in array_2.
+	 *
+	 * @param array $array_1 First array.
+	 * @param array $array_2 Second array.
+	 *
+	 * @since ??
+	 */
+	public function get_new_array_values( $array_1, $array_2 ) {
+		$new_array_values = array();
+
+		foreach ( $array_1 as $key => $value ) {
+			if ( empty( $array_2[ $key ] ) ) {
+				$new_array_values[ $key ] = $value;
+			}
+		}
+
+		return $new_array_values;
 	}
 
 	/**
@@ -2015,76 +2180,109 @@ class ET_Dynamic_Assets {
 	 * @since 4.10.0
 	 */
 	public function get_late_attributes( $detected_attributes = array() ) {
-		$late_attributes = ET_Builder_Module_Use_Detection::instance()->get_module_attr_values_used();
+		if ( ! $this->_early_attributes ) {
+			$late_attributes = ET_Builder_Module_Use_Detection::instance()->get_module_attr_values_used();
 
-		if ( empty( $this->_presets_attributes ) ) {
-			$this->_presets_attributes = $this->get_preset_attributes( $this->_all_content );
-		}
-
-		$late_attributes = array_merge( $late_attributes, $this->_presets_attributes );
-
-		if ( $this->_early_attributes !== $late_attributes ) {
-			$this->_need_late_generation = true;
-
-			$this->metadata_set( '_et_dynamic_cached_attributes', $late_attributes );
-		}
-
-		foreach ( $late_attributes as $attribute => $value ) {
-			if ( ! is_array( $value ) ) {
-				$value = (array) $value;
+			if ( empty( $this->_presets_attributes ) ) {
+				$this->_presets_attributes = $this->get_preset_attributes( $this->_all_content );
 			}
 
-			switch ( $attribute ) {
-				case 'gutter_width':
-					$this->_late_gutter_width = ! empty( $value ) ? $value : (array) 3;
-					break;
+			$attributes = array_merge( $late_attributes, $this->_presets_attributes );
 
-				case 'animation_style':
-					$this->_late_animation_style = ! empty( $value );
-					break;
+			$this->metadata_set( '_et_dynamic_cached_attributes', $attributes );
 
-				case 'sticky_position':
-					$this->_late_use_sticky = ! empty( $value );
-					break;
+			$this->_need_late_generation = true;
+		}
 
-				case 'specialty':
-					$this->_late_use_specialty = ! empty( $value ) && in_array( 'on', $value, true );
-					break;
+		if ( $this->_early_attributes ) {
+			$attributes = $this->_early_attributes;
 
-				case 'use_custom_gutter':
-					$this->_late_custom_gutters = ! empty( $value ) ? $value : array();
-					break;
+			$this->_need_late_generation = true;
+		}
 
-				case 'font_icon':
-				case 'button_icon': // Intentional fallthrough.
-				case 'hover_icon': // Intentional fallthrough.
-				case 'scroll_down_icon': // Intentional fallthrough.
-					$this->_late_custom_icon = ! empty( $value );
-					break;
+		if ( $attributes ) {
+			foreach ( $attributes as $attribute => $value ) {
+				if ( ! is_array( $value ) ) {
+					$value = (array) $value;
+				}
 
-				case 'show_in_lightbox':
-					$this->_late_show_in_lightbox = ! empty( $value ) && in_array( 'on', $value, true );
-					break;
+				// Determine whether we need to load the FA resources for the font icon options.
+				if ( in_array( $attribute, et_pb_get_font_icon_field_names(), true ) ) {
+					foreach ( $value as $font_icon_value ) {
+						if ( et_pb_maybe_fa_font_icon( $font_icon_value ) ) {
+							$this->_late_fa_icon = true;
+							break;
+						}
+					}
 
-				case 'fullwidth':
-					$this->_late_is_fullwidth = ! empty( $value ) && in_array( 'on', $value, true );
-					break;
+					foreach ( $value as $font_icon_value ) {
+						if ( et_pb_maybe_divi_font_icon( $font_icon_value ) ) {
+							$this->_late_custom_icon = true;
+							break;
+						}
+					}
+				}
 
-				case 'show_content':
-					$this->_late_show_content = ! empty( $value ) && in_array( 'on', $value, true );
-					break;
+				switch ( $attribute ) {
+					case 'gutter_width':
+						$this->_late_gutter_width = ! empty( $value ) ? array_map( 'intval', $value ) : array();
+						break;
 
-				case 'scroll_vertical_motion_enable':
-				case 'scroll_horizontal_motion_enable': // Intentional fallthrough.
-				case 'scroll_fade_enable': // Intentional fallthrough.
-				case 'scroll_scaling_enable': // Intentional fallthrough.
-				case 'scroll_rotating_enable': // Intentional fallthrough.
-				case 'scroll_blur_enable': // Intentional fallthrough.
-					$this->_late_use_motion_effect = ! empty( $value );
-					break;
+					case 'animation_style':
+						$this->_late_animation_style = ! empty( $value );
+						break;
 
-				default:
-					break;
+					case 'sticky_position':
+						$this->_late_use_sticky = ! empty( $value );
+						break;
+
+					case 'specialty':
+						$this->_late_use_specialty = ! empty( $value ) && in_array( 'on', $value, true );
+						break;
+
+					case 'use_custom_gutter':
+						$this->_late_custom_gutters = ! empty( $value ) ? $value : array();
+						break;
+
+					case 'show_in_lightbox':
+						$this->_late_show_in_lightbox = ! empty( $value ) && in_array( 'on', $value, true );
+						break;
+
+					case 'fullwidth':
+						$this->_late_is_fullwidth = ! empty( $value ) && in_array( 'on', $value, true );
+						break;
+
+					case 'show_content':
+						$this->_late_show_content = ! empty( $value ) && in_array( 'on', $value, true );
+						break;
+
+					case 'social_network':
+						foreach ( $value as $social_network_value ) {
+							if ( in_array( $social_network_value, et_pb_get_social_net_fa_icons(), true ) ) {
+								$this->_late_fa_icon = true;
+								break;
+							}
+						}
+						foreach ( $value as $social_network_value ) {
+							if ( in_array( $social_network_value, et_pb_get_social_net_divi_icons(), true ) ) {
+								$this->_late_social_icon = true;
+								break;
+							}
+						}
+						break;
+
+					case 'scroll_vertical_motion_enable':
+					case 'scroll_horizontal_motion_enable': // Intentional fallthrough.
+					case 'scroll_fade_enable': // Intentional fallthrough.
+					case 'scroll_scaling_enable': // Intentional fallthrough.
+					case 'scroll_rotating_enable': // Intentional fallthrough.
+					case 'scroll_blur_enable': // Intentional fallthrough.
+						$this->_late_use_motion_effect = ! empty( $value );
+						break;
+
+					default:
+						break;
+				}
 			}
 		}
 	}
@@ -2244,6 +2442,9 @@ class ET_Dynamic_Assets {
 			$jquery_mobile_deps = array(
 				'et_pb_portfolio',
 				'et_pb_slider',
+				'et_pb_post_slider',
+				'et_pb_fullwidth_slider',
+				'et_pb_fullwidth_post_slider',
 				'et_pb_video_slider',
 				'et_slide',
 				'et_tabs',
@@ -2384,9 +2585,6 @@ class ET_Dynamic_Assets {
 	 * @since 4.10.0
 	 */
 	public function get_preset_attributes( $content ) {
-		preg_match_all( '/_module_preset="[a-z0-9][a-z0-9-]*[a-z0-9]"/', $content, $presets );
-
-		$presets_ids         = et_get_non_default_preset_ids( $presets[0] );
 		$all_builder_presets = et_get_option( 'builder_global_presets', (object) array(), '', true );
 		$presets_attributes  = array();
 
@@ -2398,9 +2596,7 @@ class ET_Dynamic_Assets {
 			}
 
 			foreach ( $module_presets->presets as $key => $value ) {
-				if ( in_array( $key, $presets_ids, true ) ) {
-					$presets_attributes = array_merge( $presets_attributes, (array) $value->settings );
-				}
+				$presets_attributes = array_merge( $presets_attributes, (array) $value->settings );
 			}
 		}
 
@@ -2431,7 +2627,7 @@ class ET_Dynamic_Assets {
 	 * @param string $class   class to check.
 	 * @param string $content to search for class in.
 	 *
-	 * @since ??
+	 * @since 4.10.5
 	 */
 	public function check_if_class_exits( $class, $content ) {
 		return preg_match( '/class=".*' . preg_quote( $class, '/' ) . '/', $content );

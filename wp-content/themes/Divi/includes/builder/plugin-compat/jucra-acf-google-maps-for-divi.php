@@ -4,7 +4,7 @@
  *
  * @package Divi
  * @subpackage Builder
- * @since ??
+ * @since 4.10.5
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin compatibility for Jucra ACF Maps.
  *
- * @since ??
+ * @since 4.10.5
  *
  * @link https://www.jucra.com/display-acf-maps-in-a-divi-theme-builder-page/
  */
@@ -39,7 +39,7 @@ class ET_Builder_Plugin_Compat_Jucra_ACF_Maps extends ET_Builder_Plugin_Compat_B
 	/**
 	 * Disable JQuery Body feature when showing a map
 	 *
-	 * @since ??
+	 * @since 4.10.5
 	 *
 	 * @param bool   $enabled Whether the feature should be enabled or not.
 	 * @param string $content TB/Post Content.

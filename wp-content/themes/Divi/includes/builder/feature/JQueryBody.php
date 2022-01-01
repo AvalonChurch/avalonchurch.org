@@ -332,7 +332,7 @@ class ET_Builder_JQuery_Body {
 			/**
 			 * Filters whether JQuery Body feature is enabled or not.
 			 *
-			 * @since ??
+			 * @since 4.10.5
 			 *
 			 * @param bool $enabled JQuery Body enabled value.
 			 * @param string $content TB/Post Content.

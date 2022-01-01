@@ -51,7 +51,7 @@ class ET_Builder_Plugin_Compat_The_Events_Calendar extends ET_Builder_Plugin_Com
 	/**
 	 * Disable JQuery Body feature when showing calendar.
 	 *
-	 * @since ??
+	 * @since 4.10.5
 	 *
 	 * @param bool $enabled Whether the feature should be enabled or not.
 	 *
